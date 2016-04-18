@@ -43,3 +43,4 @@ def profile_modify(request):
         return render_to_response('pages/profile_modify.html', args)
 
 def product(request):
+    return render_to_response('pages/product.html')
