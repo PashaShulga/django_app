@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect, render_to_response
 from django.contrib import auth
-# from django.contrib.auth.forms import PasswordResetForm, default_token_generator, AuthenticationForm
 from .form import UserCreationForm, PasswordResetRequestForm, SetPasswordForm, AuthenticationForm
 from django.core.context_processors import csrf
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
@@ -17,6 +15,7 @@ from django.views.generic import *
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
+from web.create_user_db import create_db
 
 
 def registration(request):
@@ -30,6 +29,10 @@ def registration(request):
             new_user = auth.authenticate(username=new_user_form.cleaned_data['username'],
                                          password=new_user_form.cleaned_data['password2'])
             auth.login(request, new_user)
+            try:
+                create_db("DB_%s" % (new_user_form.cleaned_data['username'],))
+            except:
+                pass
             return redirect('/')
         else:
             args['form'] = new_user_form

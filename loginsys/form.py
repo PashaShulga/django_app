@@ -95,3 +95,21 @@ class AuthenticationForm(forms.Form):
         self.instance.username = self.cleaned_data.get('username')
         password_validation.validate_password(self.cleaned_data.get('password'), self.instance)
         return password
+
+
+class ModifyFrofile(forms.Form):
+    error_messages = {
+        'password_mismatch': _("The two password fields didn't match."),
+    }
+
+    username = forms.CharField(label="", max_length=30, strip=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'})
+    )
+    email = forms.EmailField(label="",
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'E-mail'}))
+    first_name = forms.CharField(label="", max_length=30, strip=False,
+                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
+    last_name = forms.CharField(label="", max_length=30, strip=False,
+                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
+    company = forms.CharField(label="", max_length=30, strip=False,
+                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company'}))
