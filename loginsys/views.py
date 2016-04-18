@@ -16,6 +16,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
 from web.create_user_db import create_db
+from django.utils.translation import ugettext_lazy as _
 
 
 def registration(request):
@@ -26,14 +27,15 @@ def registration(request):
         new_user_form = UserCreationForm(request.POST)
         if new_user_form.is_valid():
             new_user_form.save()
-            new_user = auth.authenticate(username=new_user_form.cleaned_data['username'],
-                                         password=new_user_form.cleaned_data['password2'])
+            username = new_user_form.cleaned_data['username']
+            password = new_user_form.cleaned_data['password2']
+            new_user = auth.authenticate(username=username, password=password)
             auth.login(request, new_user)
             try:
-                create_db("DB_%s" % (new_user_form.cleaned_data['username'],))
+                create_db("DB_%s" % (username,), password, username)
+                return redirect('/')
             except:
-                pass
-            return redirect('/')
+                args['error'] = _("Warning! Database is not create, try again or inform staff")
         else:
             args['form'] = new_user_form
     return render_to_response("reg.html", args)

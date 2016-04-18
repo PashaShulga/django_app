@@ -20,11 +20,9 @@ class Client(models.Model):
 
 class UserBD(models.Model):
     id = models.AutoField(primary_key=True)
-    username = models.OneToOneField('auth.User', on_delete=models.CASCADE)
+    username = models.CharField(max_length=30)
     title = models.CharField(max_length=30)
     password = models.CharField(max_length=512)
 
     class Meta:
         db_table = 'user_db'
-
-
