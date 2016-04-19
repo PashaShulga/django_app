@@ -166,7 +166,6 @@ class PasswordResetConfirmView(FormView):
     success_url = '/auth/login/'
     form_class = SetPasswordForm
 
-    @method_decorator(login_required)
     def post(self, request, uidb64=None, token=None, *arg, **kwargs):
         """
         View that checks the hash in a password reset link and presents a

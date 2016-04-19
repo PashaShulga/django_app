@@ -10,12 +10,13 @@ class Client(models.Model):
     phone = models.CharField(max_length=15)
     website = models.CharField(max_length=512)
     user = models.ForeignKey('auth.User')
+    company_logo = models.ImageField(upload_to='/static/images/')
 
     class Meta:
         db_table = 'client'
 
-    def __str__(self):
-        return "%s" % (self.user.username,)
+    # def __str__(self):
+    #     return "%s" % (self.user.username,)
 
 
 class UserBD(models.Model):

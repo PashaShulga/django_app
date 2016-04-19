@@ -97,7 +97,7 @@ class AuthenticationForm(forms.Form):
         return password
 
 
-class ModifyFrofile(forms.Form):
+class ModifyProfile(forms.Form):
     error_messages = {
         'password_mismatch': _("The two password fields didn't match."),
     }
@@ -107,3 +107,7 @@ class ModifyFrofile(forms.Form):
                                  widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
     company = forms.CharField(label="", max_length=30, strip=False,
                                  widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company'}))
+
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField()
