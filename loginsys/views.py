@@ -32,7 +32,7 @@ def registration(request):
             new_user = auth.authenticate(username=username, password=password)
             auth.login(request, new_user)
             try:
-                create_db("DB_%s" % (username,), password, username)
+                create_db("db_%s" % (username,), password, username)
                 return redirect('/')
             except:
                 args['error'] = _("Warning! Database is not create, try again or inform staff")

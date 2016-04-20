@@ -3,8 +3,10 @@ from django.contrib import auth
 from loginsys.form import ModifyProfile, UploadFileForm
 from django.contrib.auth.models import User
 from django.core.context_processors import csrf
-from web.models import Client
+from web.models import Client, UserBD
 from .upload_handler import UploadHandler
+from django.db import connections
+from django.conf import settings
 
 
 def home(request):
@@ -58,7 +60,17 @@ def profile_modify(request):
 
 
 def product(request):
-    return render_to_response('pages/product.html')
+    if auth.get_user(request).username:
+        user_db = UserBD.objects.filter(username=auth.get_user(request).username)
+        if user_db.exists():
+            settings.DATABASES['userdb']['NAME'] = user_db[0].title
+            settings.DATABASES['userdb']['PASSWORD'] = user_db[0].password
+            settings.DATABASES['userdb']['USER'] = user_db[0].username
+            cursor = connections['userdb'].cursor()
+        if request.POST:
+            pass
+        return render_to_response('pages/product.html')
+    return redirect('/auth/login/')
 
 
 def upload_file(request):

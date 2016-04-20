@@ -56,7 +56,9 @@ class UserCreationForm(forms.ModelForm):
 
 
 class PasswordResetRequestForm(forms.Form):
-    email_or_username = forms.CharField(label=("Email Or Username"), max_length=254)
+    email_or_username = forms.CharField(label="", max_length=254,
+                                        widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                      'placeholder': 'Email of Username'}))
 
 
 class SetPasswordForm(forms.Form):
@@ -110,4 +112,4 @@ class ModifyProfile(forms.Form):
 
 
 class UploadFileForm(forms.Form):
-    file = forms.FileField()
+    file = forms.FileField(label='')

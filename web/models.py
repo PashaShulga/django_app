@@ -1,5 +1,6 @@
 from django.db import models
-from django.db.utils import ConnectionHandler, ConnectionRouter
+from django.db import connection
+from django.conf import settings
 
 
 class Client(models.Model):
