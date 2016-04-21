@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^profile/modify/$', profile_modify),
     url(r'^profile/$', profile),
     url(r'^product/$', product),
-    # url(r'^upload_file/$', 'web.views.upload_file'),
+    url(r'^upload_file/$', upload_file),
     url(r'^', home),
 ]
 

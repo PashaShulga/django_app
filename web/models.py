@@ -1,7 +1,4 @@
 from django.db import models
-from django.db import connections, ConnectionHandler
-from django.db.models.query import QuerySet
-# from south.db import db
 
 
 class Client(models.Model):
@@ -49,7 +46,8 @@ class UserBD(models.Model):
 
 
 class Product(models.Model):
-    # id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
+    # user = UserBD.objects.all()
 
     class Meta:
         managed = False
@@ -63,9 +61,12 @@ def update_settings():
     db = UserBD.objects.all()
     if db.exists():
         for user in db:
-            if user.title != DATABASES['userdb']['NAME'] and user.title is not None:
-                DATABASES['userdb']['NAME'] = user.title
-                DATABASES['userdb']['USER'] = user.username
-                DATABASES['userdb']['PASSWORD'] = user.password
-
+            DATABASES.update({user.username: {"NAME": user.title,
+                                     "PASSWORD": user.password,
+                                     "USER": user.username,
+                                     'ENGINE': 'django.db.backends.postgresql',
+                                     'HOST': '127.0.0.1',
+                                    'PORT': '5432',}
+                              })
+    print(DATABASES)
 update_settings()

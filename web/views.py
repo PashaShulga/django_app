@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, render_to_response
 from django.contrib import auth
-from loginsys.form import ModifyProfile, UploadFileForm
+from loginsys.form import *
 from django.contrib.auth.models import User
 from django.core.context_processors import csrf
 from web.models import Client, UserBD
@@ -60,32 +60,45 @@ def profile_modify(request):
 
 
 def product(request):
+    args = {}
     if auth.get_user(request).username:
         user_db = UserBD.objects.filter(username=auth.get_user(request).username)
         if user_db.exists():
-            settings.DATABASES['userdb']['NAME'] = user_db[0].title
-            settings.DATABASES['userdb']['PASSWORD'] = user_db[0].password
-            settings.DATABASES['userdb']['USER'] = user_db[0].username
-            c = connections['userdb'].cursor()
+            c = connections[auth.get_user(request).username].cursor()
             try:
-                c.execute('select * from product')
+                c.execute("select column_name from information_schema.columns WHERE table_name = 'product'")
+                buf = []
+                for it in c.fetchall()[1:]:
+                    buf.append(it[0])
+                args['titles'] = buf
+
+                c.execute("select * from product")
+
+                items = []
+                for it in c.fetchall()[0][1:]:
+                    items.append(it)
+                args['items'] = items
             except Exception as e:
                 print(e)
             finally:
                 c.close()
         if request.POST:
             pass
-        return render_to_response('pages/product.html')
+        print(args)
+        return render_to_response('pages/product.html', args)
     return redirect('/auth/login/')
 
 
 def upload_file(request):
     args = {}
     args.update(csrf(request))
-    args['form'] = UploadFileForm()
-    if request.POST:
-        form = UploadFileForm(request.POST, request.FILES)
+    args['user'] = ''
+    if auth.get_user(request).is_staff:
+        args['user'] = 'is_staff'
+        args['form'] = AdditionalForm()
+        form = AdditionalForm(request.POST)
         if form.is_valid():
-            UploadHandler(request.FILES['file']).handler()
-
+            name_column, type_column = form.cleaned_data['name_column'], form.cleaned_data['type_column']
+            c = connections[form.cleaned_data['user']].cursor()
+            c.execute("ALTER TABLE product ADD COLUMN %s %s" % (name_column, type_column))
     return render_to_response('pages/upload_file.html', args)

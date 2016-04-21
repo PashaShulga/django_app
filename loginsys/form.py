@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth import password_validation
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.db import connections
+from web.models import Client, UserBD, Product
 
 
 class UserCreationForm(forms.ModelForm):
@@ -113,3 +115,11 @@ class ModifyProfile(forms.Form):
 
 class UploadFileForm(forms.Form):
     file = forms.FileField(label='')
+
+
+class AdditionalForm(forms.Form):
+    name_column = forms.CharField(label='Column name', max_length=30)
+    type_column = forms.CharField(label='Column type', max_length=30)
+    l = []
+    CHOICES = ((it.username, it.username) for it in UserBD.objects.all())
+    user = forms.ChoiceField(choices=CHOICES)

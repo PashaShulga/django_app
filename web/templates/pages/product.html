@@ -23,20 +23,20 @@
 
                                 <div class="col-sm-12">
                                     <div class="well-sm">
-                                    {% include "pages/upload_file.html" %}
+{#                                    {% include "pages/upload_file.html" %}#}
                                         </div>
                                     <hr>
                                     <div class="text-center">
                                     <form class="input-group" method="post">
-                                        <input type="text" placeholder="Column 1" required>
+                                        <input type="text" placeholder="Column 1" >
                                         &nbsp;
-                                        <input type="text" placeholder="Column 2" required>
+                                        <input type="text" placeholder="Column 2">
                                         &nbsp;
-                                        <input type="text" placeholder="Column 3" required>
+                                        <input type="text" placeholder="Column 3">
                                         &nbsp;
-                                        <input type="text" placeholder="Column 4" required>
+                                        <input type="text" placeholder="Column 4" >
                                         &nbsp;
-                                        <input type="text" placeholder="Column 5" required>
+                                        <input type="text" placeholder="Column 5" >
                                         &nbsp;
                                         <input type="submit" class="btn btn-info" value="POST">
                                     </form>
@@ -52,38 +52,20 @@
                                                 <th class="sorting_asc" tabindex="0" aria-controls="dataTables-example"
                                                     rowspan="1" colspan="1" aria-sort="ascending"
                                                     aria-label="Rendering engine: activate to sort column descending"
-                                                    style="width: 189px;">Rendering engine
+                                                    style="width: 189px;">{{ title }}
                                                 </th>
                                             {% endfor %}
-{#                                            <th class="sorting" tabindex="0" aria-controls="dataTables-example"#}
-{#                                                rowspan="1" colspan="1"#}
-{#                                                aria-label="Browser: activate to sort column ascending"#}
-{#                                                style="width: 229px;">Browser#}
-{#                                            </th>#}
-{#                                            <th class="sorting" tabindex="0" aria-controls="dataTables-example"#}
-{#                                                rowspan="1" colspan="1"#}
-{#                                                aria-label="Platform(s): activate to sort column ascending"#}
-{#                                                style="width: 210px;">Platform(s)#}
-{#                                            </th>#}
-{#                                            <th class="sorting" tabindex="0" aria-controls="dataTables-example"#}
-{#                                                rowspan="1" colspan="1"#}
-{#                                                aria-label="Engine version: activate to sort column ascending"#}
-{#                                                style="width: 165px;">Engine version#}
-{#                                            </th>#}
-{#                                            <th class="sorting" tabindex="0" aria-controls="dataTables-example"#}
-{#                                                rowspan="1" colspan="1"#}
-{#                                                aria-label="CSS grade: activate to sort column ascending"#}
-{#                                                style="width: 124px;">CSS grade#}
-{#                                            </th>#}
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr class="gradeA odd" role="row">
-                                            <td class="sorting_1">Gecko</td>
-                                            <td>Firefox 1.0</td>
-                                            <td>Win 98+ / OSX.2+</td>
-                                            <td class="center">1.7</td>
-                                            <td class="center">A</td>
+                                            {% for item in items %}
+                                                <td class="center">{{ item }}</td>
+{#                                                <td>Firefox 1.0</td>#}
+{#                                                <td>Win 98+ / OSX.2+</td>#}
+{#                                                <td class="center">1.7</td>#}
+{#                                                <td class="center">A</td>#}
+                                            {% endfor %}
                                         </tr>
                                         </tbody>
                                     </table>
