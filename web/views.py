@@ -66,7 +66,13 @@ def product(request):
             settings.DATABASES['userdb']['NAME'] = user_db[0].title
             settings.DATABASES['userdb']['PASSWORD'] = user_db[0].password
             settings.DATABASES['userdb']['USER'] = user_db[0].username
-            cursor = connections['userdb'].cursor()
+            c = connections['userdb'].cursor()
+            try:
+                c.execute('select * from product')
+            except Exception as e:
+                print(e)
+            finally:
+                c.close()
         if request.POST:
             pass
         return render_to_response('pages/product.html')

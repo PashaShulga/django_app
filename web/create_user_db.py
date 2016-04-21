@@ -11,6 +11,7 @@ def create_db(dbname, password, username):
         session.execute("CREATE USER %s PASSWORD '%s'" % (username, password))
         session.execute('CREATE DATABASE %s' % (dbname,))
         session.execute('GRANT ALL PRIVILEGES ON DATABASE %s TO %s' % (dbname, username))
+        session.execute('CREATE TABLE product(id SERIAL NOT NULL PRIMARY KEY)')
         session.connection().connection.set_isolation_level(1)
         add_user_in_maindb = UserBD(username=username, password=password, title=dbname)
         add_user_in_maindb.save()
