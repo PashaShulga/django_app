@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'^profile/$', profile),
     url(r'^product/$', product),
     url(r'^upload_file/$', upload_file),
-    url(r'^', home),
+    # url(r'^', home),
 ]
 
 
