@@ -1,6 +1,8 @@
 from django.conf.urls import url, include
 from django.contrib import admin
 from web.views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -10,6 +12,6 @@ urlpatterns = [
     url(r'^product/$', product),
     url(r'^upload_file/$', upload_file),
     url(r'^', home),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
