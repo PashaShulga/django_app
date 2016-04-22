@@ -137,6 +137,7 @@ USE_TZ = True
 # STATIC_ROOT = '/var/www/django_app/static/'
 
 STATIC_URL = '/static/'
+STATIC_ROOT = "/var/www/django_app/static/"
 
 STATICFILES_DIRS = [
     '/var/www/django_app/static/',
