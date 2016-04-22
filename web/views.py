@@ -93,7 +93,7 @@ def product(request):
     return redirect('/auth/login/')
 
 
-def upload_file(request):
+def add_column(request):
     args = {}
     args.update(csrf(request))
     args['user'] = ''
@@ -105,4 +105,4 @@ def upload_file(request):
             name_column, type_column = form.cleaned_data['name_column'], form.cleaned_data['type_column']
             c = connections[form.cleaned_data['user']].cursor()
             c.execute("ALTER TABLE product ADD COLUMN %s %s" % (name_column, type_column))
-    return render_to_response('pages/upload_file.html', args)
+    return render_to_response('pages/add_column.html', args)

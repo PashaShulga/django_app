@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^profile/modify/$', profile_modify),
     url(r'^profile/$', profile),
     url(r'^product/$', product),
-    url(r'^upload_file/$', upload_file),
+    url(r'^add_column/$', add_column),
     url(r'^', home),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
