@@ -138,7 +138,7 @@ USE_TZ = True
 STATIC_URL = 'http://185.69.153.214:8000/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static/"),
+    os.path.join(BASE_DIR, "static"),
     ]
 
 
