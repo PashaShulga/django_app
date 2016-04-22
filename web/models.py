@@ -28,23 +28,6 @@ class UserBD(models.Model):
         db_table = 'user_db'
 
 
-# class ProductQuery(object):
-#     def create_con(self):
-#         users = UserBD.objects.all()
-#         items = []
-#         col_name = []
-#         for user in users:
-#             connections._databases['userdb']['USER'] = user.username
-#             connections._databases['userdb']['PASSWORD'] = user.password
-#             connections._databases['userdb']['NAME'] = user.title
-#             c = connections['userdb'].cursor()
-#             c.execute('select * from product')
-#             items.append(c.fetchall())
-#             c.execute("select column_name from information_schema.columns WHERE table_name = 'product'")
-#             col_name.append(c.fetchall())
-#         return items, col_name
-
-
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
     # user = UserBD.objects.all()
@@ -53,19 +36,19 @@ class Product(models.Model):
         managed = False
         db_table = "product"
 
-
-def update_settings():
-    from django.conf import settings
-    DATABASES = settings.DATABASES
-
-    db = UserBD.objects.all()
-    if db.exists():
-        for user in db:
-            DATABASES.update({user.username: {"NAME": user.title,
-                                     "PASSWORD": user.password,
-                                     "USER": user.username,
-                                     'ENGINE': 'django.db.backends.postgresql',
-                                     'HOST': '127.0.0.1',
-                                    'PORT': '5432',}
-                              })
+#
+# def update_settings():
+#     from django.conf import settings
+#     DATABASES = settings.DATABASES
+#
+#     db = UserBD.objects.all()
+#     if db.exists():
+#         for user in db:
+#             DATABASES.update({user.username: {"NAME": user.title,
+#                                      "PASSWORD": user.password,
+#                                      "USER": user.username,
+#                                      'ENGINE': 'django.db.backends.postgresql',
+#                                      'HOST': '127.0.0.1',
+#                                     'PORT': '5432',}
+#                               })
 # update_settings()
