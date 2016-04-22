@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from web.models import UserBD
-con = create_engine('postgresql+psycopg2://%s:%s@127.0.0.1:5432/postgres' % ('postgres', "Reload_777"))
+con = create_engine('postgresql+psycopg2://%s:%s@127.0.0.1:5432/milanaled' % ('milanaled_user', "qwerty"))
 
 
 def create_db(dbname, password, username):
