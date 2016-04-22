@@ -18,14 +18,14 @@ class Client(models.Model):
     #     return "%s" % (self.user.username,)
 
 
-# class UserBD(models.Model):
-#     id = models.AutoField(primary_key=True)
-#     username = models.CharField(max_length=30)
-#     title = models.CharField(max_length=30)
-#     password = models.CharField(max_length=512)
-#
-#     class Meta:
-#         db_table = 'user_db'
+class UserBD(models.Model):
+    id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=30)
+    title = models.CharField(max_length=30)
+    password = models.CharField(max_length=512)
+
+    class Meta:
+        db_table = 'user_db'
 
 
 class Product(models.Model):
