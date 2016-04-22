@@ -68,5 +68,4 @@ def update_settings():
                                      'HOST': '127.0.0.1',
                                     'PORT': '5432',}
                               })
-    print(DATABASES)
 update_settings()

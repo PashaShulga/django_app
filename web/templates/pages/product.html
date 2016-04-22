@@ -28,16 +28,11 @@
                                     <hr>
                                     <div class="text-center">
                                     <form class="input-group" method="post">
-                                        <input type="text" placeholder="Column 1" >
+                                        {% csrf_token %}
+                                        {% for input in inputs%}
+                                        <input type="text" name="column{{ input }}" id="column{{ input }}" placeholder="Column {{ input }}" >
                                         &nbsp;
-                                        <input type="text" placeholder="Column 2">
-                                        &nbsp;
-                                        <input type="text" placeholder="Column 3">
-                                        &nbsp;
-                                        <input type="text" placeholder="Column 4" >
-                                        &nbsp;
-                                        <input type="text" placeholder="Column 5" >
-                                        &nbsp;
+                                        {% endfor %}
                                         <input type="submit" class="btn btn-info" value="POST">
                                     </form>
                                     </div>
@@ -55,18 +50,28 @@
                                                     style="width: 189px;">{{ title }}
                                                 </th>
                                             {% endfor %}
+                                        <th class="sorting_asc" aria-controls="dataTables-example"
+                                                    rowspan="1" colspan="1" aria-sort="ascending"
+                                                    aria-label="Rendering engine: activate to sort column descending"
+                                                    style="width: 189px;">Tool
+                                                </th>
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        {% for item in items %}
                                         <tr class="gradeA odd" role="row">
-                                            {% for item in items %}
-                                                <td class="center">{{ item }}</td>
-{#                                                <td>Firefox 1.0</td>#}
-{#                                                <td>Win 98+ / OSX.2+</td>#}
-{#                                                <td class="center">1.7</td>#}
-{#                                                <td class="center">A</td>#}
-                                            {% endfor %}
+                                        {% for i in item %}
+                                                <td class="center">{{ i }}</td>
+
+                                        {% endfor %}
+                                        <td class="center">
+                                                <form method="post">
+                                                    <input type="button" onclick="change();" value="Change">
+                                                    <input type="button" value="Delete">
+                                                </form>
+                                                </td>
                                         </tr>
+                                         {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>

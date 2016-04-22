@@ -61,31 +61,39 @@ def profile_modify(request):
 
 def product(request):
     args = {}
+    args.update(csrf(request))
+    items = []
+    title_list = []
     if auth.get_user(request).username:
         user_db = UserBD.objects.filter(username=auth.get_user(request).username)
+        c = connections[auth.get_user(request).username].cursor()
         if user_db.exists():
-            c = connections[auth.get_user(request).username].cursor()
             try:
                 c.execute("select column_name from information_schema.columns WHERE table_name = 'product'")
-                buf = []
                 for it in c.fetchall()[1:]:
-                    buf.append(it[0])
-                args['titles'] = buf
+                    title_list.append(it[0])
+                args['titles'] = title_list
+                args['inputs'] = range(0, len(title_list))
+                if request.POST:
+                    list_ = []
+                    for iter in range(0, len(title_list)):
+                        list_.append(request.POST['column'+str(iter)])
 
+                    s = 'insert into product {}'.format(tuple(title_list)).replace("'", '"')
+                    s2 = ' VALUES {}'.format(tuple(list_))
+                    c.execute(s+s2)
                 c.execute("select * from product")
+                # print(c.fetchall())
+                arr = []
+                for i in c.fetchall():
+                    arr.append(i[1:])
+                args['items'] = arr
 
-                items = []
-                for it in c.fetchall()[0][1:]:
-                    items.append(it)
-                args['items'] = items
             except Exception as e:
                 print(e)
             finally:
                 c.close()
-        if request.POST:
-            pass
-        print(args)
-        return render_to_response('pages/product.html', args)
+            return render_to_response('pages/product.html', args)
     return redirect('/auth/login/')
 
 
