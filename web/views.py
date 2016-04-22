@@ -62,7 +62,6 @@ def profile_modify(request):
 def product(request):
     args = {}
     args.update(csrf(request))
-    items = []
     title_list = []
     if auth.get_user(request).username:
         user_db = UserBD.objects.filter(username=auth.get_user(request).username)
@@ -78,17 +77,14 @@ def product(request):
                     list_ = []
                     for iter in range(0, len(title_list)):
                         list_.append(request.POST['column'+str(iter)])
-
                     s = 'insert into product {}'.format(tuple(title_list)).replace("'", '"')
                     s2 = ' VALUES {}'.format(tuple(list_))
                     c.execute(s+s2)
                 c.execute("select * from product")
-                # print(c.fetchall())
                 arr = []
                 for i in c.fetchall():
                     arr.append(i[1:])
                 args['items'] = arr
-
             except Exception as e:
                 print(e)
             finally:
