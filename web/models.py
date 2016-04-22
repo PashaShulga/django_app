@@ -3,11 +3,11 @@ from django.db import models
 
 class Client(models.Model):
     id = models.AutoField(primary_key=True)
-    company_name = models.CharField(max_length=128)
-    address = models.CharField(max_length=255)
-    postal_code = models.CharField(max_length=20)
-    phone = models.CharField(max_length=15)
-    website = models.CharField(max_length=512)
+    company_name = models.CharField(max_length=130)
+    address = models.CharField(max_length=256)
+    postal_code = models.CharField(max_length=30)
+    phone = models.CharField(max_length=20)
+    website = models.CharField(max_length=520)
     user = models.ForeignKey('auth.User')
     company_logo = models.ImageField(upload_to='/static/images/')
 
@@ -20,16 +20,16 @@ class Client(models.Model):
 
 class UserBD(models.Model):
     id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=30)
-    title = models.CharField(max_length=30)
-    password = models.CharField(max_length=512)
+    username = models.CharField(max_length=40)
+    title = models.CharField(max_length=40)
+    password = models.CharField(max_length=520)
 
     class Meta:
-        db_table = 'user_db'
+        db_table = "user_db"
 
 
 class Product(models.Model):
-    # id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     # user = UserBD.objects.all()
 
     class Meta:
