@@ -37,18 +37,21 @@ class Product(models.Model):
         db_table = "product"
 
 
-# def update_settings():
-#     from django.conf import settings
-#     DATABASES = settings.DATABASES
-#
-#     db = UserBD.objects.all()
-#     if db.exists():
-#         for user in db:
-#             DATABASES.update({user.username: {"NAME": user.title,
-#                                      "PASSWORD": user.password,
-#                                      "USER": user.username,
-#                                      'ENGINE': 'django.db.backends.postgresql',
-#                                      'HOST': '127.0.0.1',
-#                                     'PORT': '5432',}
-#                               })
-# update_settings()
+def update_settings():
+    from django.conf import settings
+    DATABASES = settings.DATABASES
+    try:
+
+        db = UserBD.objects.all()
+        if db.exists():
+            for user in db:
+                DATABASES.update({user.username: {"NAME": user.title,
+                                         "PASSWORD": user.password,
+                                         "USER": user.username,
+                                         'ENGINE': 'django.db.backends.postgresql',
+                                         'HOST': '127.0.0.1',
+                                        'PORT': '5432',}
+                                  })
+    except Exception as e:
+        print(e)
+update_settings()
