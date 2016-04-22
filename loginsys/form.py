@@ -118,9 +118,8 @@ class UploadFileForm(forms.Form):
 
 
 class AdditionalForm(forms.Form):
-    pass
-#     name_column = forms.CharField(label='Column name', max_length=30)
-#     type_column = forms.CharField(label='Column type', max_length=30)
-#     l = []
-#     CHOICES = ((it.username, it.username) for it in UserBD.objects.all())
-#     user = forms.ChoiceField(choices=CHOICES)
+    name_column = forms.CharField(label='Column name', max_length=30)
+    type_column = forms.CharField(label='Column type', max_length=30)
+    l = []
+    CHOICES = ((it.username, it.username) for it in UserBD.objects.all())
+    user = forms.ChoiceField(choices=CHOICES)

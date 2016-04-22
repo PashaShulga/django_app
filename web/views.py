@@ -101,7 +101,7 @@ def upload_file(request):
         args['user'] = 'is_staff'
         args['form'] = AdditionalForm()
         form = AdditionalForm(request.POST)
-        if form.is_valid():
+        if request.POST and form.is_valid():
             name_column, type_column = form.cleaned_data['name_column'], form.cleaned_data['type_column']
             c = connections[form.cleaned_data['user']].cursor()
             c.execute("ALTER TABLE product ADD COLUMN %s %s" % (name_column, type_column))
