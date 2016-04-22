@@ -1,9 +1,5 @@
 from django.contrib import admin
-from django.contrib.admin.options import InlineModelAdmin
-from web.models import Client, UserBD, Product
-from django.db import connections
-from django.conf import settings
-from loginsys.form import AdditionalForm
+from web.models import Client
 
 #
 # class MultiDBModelAdmin(admin.ModelAdmin):
