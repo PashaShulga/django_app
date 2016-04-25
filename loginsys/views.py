@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, render_to_response
 from django.contrib import auth
-from .form import UserCreationForm, PasswordResetRequestForm, SetPasswordForm, AuthenticationForm
+from .form import UserCreationForm, PasswordResetRequestForm, SetPasswordForm, AuthenticationForm, ChangePassForm
 from django.core.context_processors import csrf
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
@@ -133,15 +133,15 @@ class ResetPasswordRequestView(FormView):
                     for user in associated_users:
                         c = {
                             'email': user.email,
-                            'domain': 'example.com',  # or your domain
-                            'site_name': 'example',
+                            'domain': request.META['HTTP_HOST'],  # or your domain
+                            'site_name': 'your site',
                             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                             'user': user,
                             'token': default_token_generator.make_token(user),
                             'protocol': 'http',
                         }
                         subject_template_name = 'password_reset_subject.txt'
-                        email_template_name = 'test_template.html'
+                        email_template_name = 'password_reset_email.html'
                         subject = loader.render_to_string(subject_template_name, c)
                         # Email subject *must not* contain newlines
                         subject = ''.join(subject.splitlines())
@@ -173,8 +173,6 @@ class PasswordResetConfirmView(FormView):
         """
         UserModel = get_user_model()
         form = self.form_class(request.POST)
-        # args = {}
-        # args.update(csrf(request))
         assert uidb64 is not None and token is not None  # checked by URLconf
         try:
             uid = urlsafe_base64_decode(uidb64)
@@ -189,10 +187,39 @@ class PasswordResetConfirmView(FormView):
                 user.save()
                 messages.success(request, 'Password has been reset.')
                 return self.form_valid(form)
-                # return redirect('/', args)
             else:
                 messages.error(request, 'Password reset has not been unsuccessful.')
                 return self.form_invalid(form)
         else:
             messages.error(request,'The reset password link is no longer valid.')
             return self.form_invalid(form)
+
+
+class ChangePassword(FormView):
+    template_name = "change_password.html"
+    success_url = '/auth/change_password/'
+    form_class = ChangePassForm
+
+    def post(self, request, *args, **kwargs):
+        UserModel = get_user_model()
+        form = self.form_class(request.POST)
+        user_object = auth.get_user(request)
+        try:
+            user = UserModel._default_manager.get(pk=user_object.id)
+        except:
+            user = None
+        if user:
+            if form.is_valid():
+                old_password = form.cleaned_data['old_password']
+                c_p = user_object.check_password(old_password)
+                if c_p:
+                    user.set_password(form.clean_new_password2())
+                    user.save()
+                    messages.success(request, "Password has been changed.")
+                    return self.form_valid(form)
+                else:
+                    messages.error(request, "Warning! You old password incorrect, please try againe.")
+                    return self.form_invalid(form)
+            else:
+                messages.error(request, "Warning! Password change has not been unsuccessful.")
+                return self.form_invalid(form)
