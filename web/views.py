@@ -7,7 +7,7 @@ from web.models import Client, UserBD
 from .upload_handler import UploadHandler
 from django.db import connections
 from django.conf import settings
-
+from .xls_parse import XLSParse
 
 def home(request):
     args = {}
@@ -63,6 +63,8 @@ def product(request):
     args = {}
     args.update(csrf(request))
     title_list = []
+    # upform = UploadFileForm
+    args['form'] = UploadFileForm()
     if auth.get_user(request).username:
         user_db = UserBD.objects.filter(username=auth.get_user(request).username)
         c = connections[auth.get_user(request).username].cursor()
@@ -74,6 +76,11 @@ def product(request):
                 args['titles'] = title_list
                 args['inputs'] = range(0, len(title_list))
                 if request.POST:
+                    upform = UploadFileForm(request.POST, request.FILES)
+                    if upform.is_valid():
+                        UploadHandler(request.FILES['file']).handler()
+
+                        XLSParse(request.FILES['file'], request).parse()
                     list_ = []
                     for iter in range(0, len(title_list)):
                         list_.append(request.POST['column'+str(iter)])
@@ -91,6 +98,18 @@ def product(request):
                 c.close()
             return render_to_response('pages/product.html', args)
     return redirect('/auth/login/')
+
+
+def upload_file(request):
+    args = {}
+    args.update(csrf(request))
+    args['form'] = UploadFileForm()
+    if request.POST:
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            UploadHandler(request.FILES['file']).handler()
+
+    return render_to_response('pages/xls_uploader.html', args)
 
 
 def add_column(request):

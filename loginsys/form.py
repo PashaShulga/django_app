@@ -140,7 +140,7 @@ class ModifyProfile(forms.Form):
 
 
 class UploadFileForm(forms.Form):
-    file = forms.FileField(label='')
+    file = forms.FileField(label='Choose the file')
 
 
 class AdditionalForm(forms.Form):

@@ -12,5 +12,6 @@ class UploadHandler(object):
             with open(self._path+str(self._file), 'wb+') as destination:
                 for chunk in self._file.chunks():
                     destination.write(chunk)
+                    print('Uploading...')
         except:
             pass

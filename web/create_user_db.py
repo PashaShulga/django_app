@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from web.models import UserBD
-con = create_engine('postgresql+psycopg2://%s:%s@127.0.0.1:5432/milanaled' % ('milanaled_user', "qwerty"))
+con = create_engine('postgresql+psycopg2://%s:%s@127.0.0.1:5432/postgres' % ('postgres', "Reload_777"))
 
 
 def create_db(dbname, password, username):
@@ -21,6 +21,10 @@ def create_db(dbname, password, username):
         s = sessionmaker(bind=c)()
         s.connection().connection.set_isolation_level(0)
         s.execute("CREATE TABLE product(id SERIAL NOT NULL PRIMARY KEY)")
+        s.execute("CREATE TABLE files(id SERIAL NOT NULL PRIMARY KEY, file CHAR(255))")
         s.connection().connection.set_isolation_level(1)
     except Exception as e:
         print(e)
+
+# session = sessionmaker(bind=con)()
+# session.connection().connection.set_isolation_level(0)

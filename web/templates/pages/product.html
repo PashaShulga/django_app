@@ -23,7 +23,7 @@
 
                                 <div class="col-sm-12">
                                     <div class="well-sm">
-{#                                    {% include "pages/add_column.html" %}#}
+                                    {% include "pages/xls_uploader.html" %}
                                         </div>
                                     <hr>
                                     <div class="text-center">
@@ -66,8 +66,9 @@
                                         {% endfor %}
                                         <td class="center">
                                                 <form method="post">
-                                                    <input type="button" onclick="change();" value="Change">
-                                                    <input type="button" value="Delete">
+                                                    {% csrf_token %}
+                                                    <input type="button" value="Change">
+                                                    <input type="submit" value="Delete">
                                                 </form>
                                                 </td>
                                         </tr>

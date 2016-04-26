@@ -14,8 +14,8 @@ class Client(models.Model):
     class Meta:
         db_table = 'client'
 
-    # def __str__(self):
-    #     return "%s" % (self.user.username,)
+        # def __str__(self):
+        #     return "%s" % (self.user.username,)
 
 
 class UserBD(models.Model):
@@ -30,7 +30,6 @@ class UserBD(models.Model):
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
-    # user = UserBD.objects.all()
 
     class Meta:
         managed = False
@@ -46,12 +45,14 @@ def update_settings():
         if db.exists():
             for user in db:
                 DATABASES.update({user.username: {"NAME": user.title,
-                                         "PASSWORD": user.password,
-                                         "USER": user.username,
-                                         'ENGINE': 'django.db.backends.postgresql',
-                                         'HOST': '127.0.0.1',
-                                        'PORT': '5432',}
+                                                  "PASSWORD": user.password,
+                                                  "USER": user.username,
+                                                  'ENGINE': 'django.db.backends.postgresql',
+                                                  'HOST': '127.0.0.1',
+                                                  'PORT': '5432',}
                                   })
     except Exception as e:
         print(e)
+
+
 update_settings()
