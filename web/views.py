@@ -6,8 +6,9 @@ from django.core.context_processors import csrf
 from web.models import Client, UserBD
 from .upload_handler import UploadHandler
 from django.db import connections
-from django.conf import settings
 from .xls_parse import XLSParse
+import datetime
+import json
 
 def home(request):
     args = {}
@@ -88,10 +89,45 @@ def product(request):
                     s2 = ' VALUES {}'.format(tuple(list_))
                     c.execute(s+s2)
                 c.execute("select * from product")
-                arr = []
-                for i in c.fetchall():
-                    arr.append(i[1:])
-                args['items'] = arr
+                l = []
+                data = c.fetchall()
+                for conversion in data:
+                    l.append(list(conversion[1:]))
+                counter = 0
+                res = {}
+                ls = []
+                while counter < len(data):
+                    for i in title_list:
+                        for k in l[counter]:
+                            if type(k) == datetime.date:
+                                res[i] = k.strftime("%Y-%m-%d %H:%M:%S")
+                            else:
+                                res[i] = k
+                            del l[counter][0]
+                            break
+                    counter += 1
+                    b = json.dumps(res.copy())
+                    ls.append(json.loads(b))
+                args['items'] = json.dumps(ls)
+
+                fields = []
+                c.execute("SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'product'")
+                for i in c.fetchall()[1:]:
+                    i = list(i)
+                    if i[1] == "character" or i[1] == "date":
+                        i[1] = "text"
+                    elif i[1] == "integer":
+                        i[1] = "number"
+                    fi = {
+                        "name": i[0],
+                        "type": i[1],
+                        "width": 100,
+                        "validate": "required"
+                    }
+                    b = json.dumps(fi)
+                    fields.append(json.loads(b))
+                print(fields.append({"type": "control"}))
+                args['fields'] = json.dumps(fields)
             except Exception as e:
                 print(e)
             finally:

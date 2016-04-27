@@ -35,7 +35,7 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    {% block product_header %}{% endblock %}
 </head>
 <body>
 {% include "pages/header.html" %}
@@ -46,7 +46,7 @@
         {% block main %}{% endblock %}
         {% block profile %}{% endblock %}
         {% block profile_modify %}{% endblock %}
-        {% block product %}{% endblock %}
+        {% block product_content %}{% endblock %}
         {% block upload_file %}{% endblock %}
         {% block change_pass %}{% endblock %}
     </div>
@@ -76,15 +76,15 @@
         });
     });
 </script>
-<script>
-  document.forms.upload.onsubmit = function() {
-    var input = this.elements.myfile;
-    var file = input.files[0];
-    if (file) {
-      upload(file);
-    }
-    return false;
-  }
-</script>
+{#<script>#}
+{#  document.forms.upload.onsubmit = function() {#}
+{#    var input = this.elements.myfile;#}
+{#    var file = input.files[0];#}
+{#    if (file) {#}
+{#      upload(file);#}
+{#    }#}
+{#    return false;#}
+{#  }#}
+{#</script>#}
 </body>
 </html>

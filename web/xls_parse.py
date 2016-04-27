@@ -4,7 +4,7 @@ from web.models import UserBD
 from django.db import connections
 from django.contrib import auth
 import datetime
-import time
+
 
 class XLSParse(object):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -74,6 +74,6 @@ class XLSParse(object):
         d = []
         while k < len(columns_name):
             for data in sheet_ranges:
-                d.append([ i.value.strftime('%Y-%m-%d %H:%M:%S') if type(i.value) == datetime.datetime else i.value for i in data])
+                d.append([i.value.strftime('%Y-%m-%d %H:%M:%S') if type(i.value) == datetime.datetime else i.value for i in data])
             k += 1
         self.queryset(columns_name, d)
