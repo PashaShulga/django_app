@@ -17,8 +17,8 @@ def home(request):
     args = {}
     args['sitename'] = 'You site'
     if auth.get_user(request).username:
-        if Client.objects.filter(user=auth.get_user(request).username).exists():
-            client = Client.objects.filter(user=auth.get_user(request).username)
+        client = Client.objects.filter(user__username=auth.get_user(request).username)
+        if client.exists():
             print(client[0].company_logo)
             args['brand'] = client[0].company_logo
         return render_to_response('pages/index.html', args)
