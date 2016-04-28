@@ -41,6 +41,7 @@ class XLSParse(object):
                         title_list.append(it[0])
                     for iter_ in args[1][1:]:
                         print(iter_)
+                        #TODO: delete this print!!!
                         s = 'insert into product {}'.format(tuple(title_list)).replace("'", '"')
                         s2 = ' VALUES {}'.format(tuple(iter_))
                         c.execute(s+s2)
@@ -60,7 +61,6 @@ class XLSParse(object):
                 break
             counter += 1
 
-        counter = 0
         buff[0] = [k.value for k in buff[0]]
         buff[1] = [y.value for y in buff[1]]
 

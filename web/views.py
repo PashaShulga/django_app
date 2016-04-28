@@ -1,14 +1,17 @@
-from django.shortcuts import render, redirect, render_to_response
+from django.shortcuts import render, redirect, render_to_response, HttpResponse
 from django.contrib import auth
 from loginsys.form import *
 from django.contrib.auth.models import User
 from django.core.context_processors import csrf
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from web.models import Client, UserBD
 from .upload_handler import UploadHandler
 from django.db import connections
 from .xls_parse import XLSParse
 import datetime
 import json
+from django.http import QueryDict
+
 
 def home(request):
     args = {}
@@ -60,6 +63,68 @@ def profile_modify(request):
         return render_to_response('pages/profile_modify.html', args)
 
 
+@csrf_exempt
+def product_update(request):
+    args = {}
+    # args.update(csrf(request))
+    if request.is_ajax():
+        c = connections[auth.get_user(request).username].cursor()
+        if request.method == "PUT":
+            obj = QueryDict(request.body)
+            obj = dict(obj)
+            obj.pop('csrfmiddlewaretoken')
+            id = obj.pop('id')
+            keys = obj.keys()
+            values = [i[0] for i in obj.values()]
+            rem = []
+            for u in keys:
+                for y in values:
+                    res = "{}='{}'".format(u, y)
+                    del values[0]
+                    break
+                rem.append(res)
+            q = str(tuple(rem)).replace("(", '').replace(")", '').replace('"', '')
+            quer = "update product set {} WHERE id= {}".format(q, id[0])
+            print(quer)
+            c.execute(quer)
+    return HttpResponse("Ok")
+
+
+@csrf_exempt
+def product_insert(request):
+    args = {}
+    # args.update(csrf(request))
+    if request.is_ajax():
+        c = connections[auth.get_user(request).username].cursor()
+        try:
+            obj = request.POST
+            obj = dict(obj)
+            obj.pop('csrfmiddlewaretoken')
+            keys = obj.keys()
+            values = [i[0] for i in obj.values()]
+            # for i in obj.values():
+            #     values.append(i[0])
+
+            s1 = "insert into product {}".format(tuple(keys)).replace("'", '"')
+            s2 = " values {}".format(tuple(values))
+            c.execute(s1+s2)
+        except Exception as e:
+            print(e)
+        finally:
+            c.close()
+    return HttpResponse("ok")
+
+
+@csrf_exempt
+def product_delete(request):
+    args = {}
+    # args.update(csrf(request))
+    if request.is_ajax():
+        print(request)
+    return HttpResponse("ok")
+
+
+@ensure_csrf_cookie
 def product(request):
     args = {}
     args.update(csrf(request))
@@ -72,9 +137,11 @@ def product(request):
         if user_db.exists():
             try:
                 c.execute("select column_name from information_schema.columns WHERE table_name = 'product'")
-                for it in c.fetchall()[1:]:
+                result = c.fetchall()
+                for it in result:
                     title_list.append(it[0])
                 args['titles'] = title_list
+                args['id'] = result[0]
                 args['inputs'] = range(0, len(title_list))
                 if request.POST:
                     upform = UploadFileForm(request.POST, request.FILES)
@@ -92,7 +159,7 @@ def product(request):
                 l = []
                 data = c.fetchall()
                 for conversion in data:
-                    l.append(list(conversion[1:]))
+                    l.append(list(conversion))
                 counter = 0
                 res = {}
                 ls = []
@@ -100,7 +167,7 @@ def product(request):
                     for i in title_list:
                         for k in l[counter]:
                             if type(k) == datetime.date:
-                                res[i] = k.strftime("%Y-%m-%d %H:%M:%S")
+                                res[i] = k.strftime("%Y-%m-%d") #  %H:%M:%S
                             else:
                                 res[i] = k
                             del l[counter][0]
@@ -112,21 +179,32 @@ def product(request):
 
                 fields = []
                 c.execute("SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'product'")
-                for i in c.fetchall()[1:]:
+                fi = {}
+                for i in c.fetchall():
                     i = list(i)
                     if i[1] == "character" or i[1] == "date":
                         i[1] = "text"
                     elif i[1] == "integer":
                         i[1] = "number"
-                    fi = {
+                    if i[0] == "id":
+                        fi = {
                         "name": i[0],
                         "type": i[1],
-                        "width": 100,
+                        "width": 30,
                         "validate": "required"
-                    }
+                        }
+                        b = json.dumps(fi)
+                        fields.append(json.loads(b))
+                        continue
+                    fi.update({
+                        "name": i[0],
+                        "type": i[1],
+                        "width": 80,
+                        "validate": "required"
+                    })
                     b = json.dumps(fi)
                     fields.append(json.loads(b))
-                print(fields.append({"type": "control"}))
+                fields.append({"type": "control"})
                 args['fields'] = json.dumps(fields)
             except Exception as e:
                 print(e)
@@ -161,3 +239,8 @@ def add_column(request):
             c = connections[form.cleaned_data['user']].cursor()
             c.execute("ALTER TABLE product ADD COLUMN %s %s" % (name_column, type_column))
     return render_to_response('pages/add_column.html', args)
+
+
+from django.http import JsonResponse
+from django.views.generic.edit import CreateView
+
