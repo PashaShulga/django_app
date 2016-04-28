@@ -17,6 +17,10 @@ def home(request):
     args = {}
     args['sitename'] = 'You site'
     if auth.get_user(request).username:
+        if Client.objects.filter(user=auth.get_user(request).username).exists():
+            client = Client.objects.filter(user=auth.get_user(request).username)
+            print(client[0].company_logo)
+            args['brand'] = client[0].company_logo
         return render_to_response('pages/index.html', args)
     else:
         return redirect('/auth/login/')
@@ -101,7 +105,6 @@ def product_insert(request):
             values = [i[0] for i in obj.values()]
             s1 = "insert into product {}".format(tuple(keys)).replace("'", '"')
             s2 = " values {}".format(tuple(values))
-            print(s1+s2)
             c.execute(s1+s2)
         except Exception as e:
             print(e)
@@ -128,7 +131,6 @@ def product(request):
     args = {}
     args.update(csrf(request))
     title_list = []
-    # upform = UploadFileForm
     args['form'] = UploadFileForm()
     if auth.get_user(request).username:
         user_db = UserBD.objects.filter(username=auth.get_user(request).username)
@@ -238,8 +240,3 @@ def add_column(request):
             c = connections[form.cleaned_data['user']].cursor()
             c.execute("ALTER TABLE product ADD COLUMN %s %s" % (name_column, type_column))
     return render_to_response('pages/add_column.html', args)
-
-
-from django.http import JsonResponse
-from django.views.generic.edit import CreateView
-

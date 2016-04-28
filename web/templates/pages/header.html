@@ -1,9 +1,15 @@
 {% block header %}
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/">{{ sitename }}</a>
-        </div>
+    {% block sitename %}
+        <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">
+        <img alt="Brand" src="{{ brand }}">
+      </a>
+    </div>
+  </div>
+    {% endblock %}
         <!-- /.navbar-header -->
         <ul class="nav navbar-top-links navbar-right">
             <!-- /.dropdown -->
