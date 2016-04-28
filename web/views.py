@@ -19,7 +19,6 @@ def home(request):
     if auth.get_user(request).username:
         client = Client.objects.filter(user__username=auth.get_user(request).username)
         if client.exists():
-            print(client[0].company_logo)
             args['brand'] = client[0].company_logo
         return render_to_response('pages/index.html', args)
     else:
@@ -39,6 +38,7 @@ def profile(request):
             client = Client.objects.filter(id=client_id[0].id)[0]
             args['company_logo'] = client.company_logo
             args['company'] = client.company_name
+            args['brand'] = client.company_logo
         else:
             args['company_logo'] = '/static/images/no-logo.png'
         return render_to_response('pages/profile.html', args)
@@ -52,7 +52,9 @@ def profile_modify(request):
         username = auth.get_user(request).username
         client_id = Client.objects.filter(user__username=username)
         if client_id.exists():
-            args['company_logo'] = Client.objects.filter(id=client_id[0].id)[0].company_logo
+            client = Client.objects.filter(id=client_id[0].id)[0]
+            args['company_logo'] = client.company_logo
+            args['brand'] = client.company_logo
         else:
             args['company_logo'] = '/static/images/no-logo.png'
         if request.POST:
@@ -136,6 +138,9 @@ def product(request):
         user_db = UserBD.objects.filter(username=auth.get_user(request).username)
         c = connections[auth.get_user(request).username].cursor()
         if user_db.exists():
+            client = Client.objects.filter(user__username=auth.get_user(request).username)
+            if client.exists():
+                args['brand'] = client[0].company_logo
             try:
                 c.execute("select column_name from information_schema.columns WHERE table_name = 'product'")
                 result = c.fetchall()
@@ -219,6 +224,9 @@ def upload_file(request):
     args = {}
     args.update(csrf(request))
     args['form'] = UploadFileForm()
+    client = Client.objects.filter(user__username=auth.get_user(request).username)
+    if client.exists():
+        args['brand'] = client[0].company_logo
     if request.POST:
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -232,6 +240,9 @@ def add_column(request):
     args.update(csrf(request))
     args['user'] = ''
     if auth.get_user(request).is_staff:
+        client = Client.objects.filter(user__username=auth.get_user(request).username)
+        if client.exists():
+            args['brand'] = client[0].company_logo
         args['user'] = 'is_staff'
         args['form'] = AdditionalForm()
         form = AdditionalForm(request.POST)
