@@ -65,8 +65,6 @@ def profile_modify(request):
 
 @csrf_exempt
 def product_update(request):
-    args = {}
-    # args.update(csrf(request))
     if request.is_ajax():
         c = connections[auth.get_user(request).username].cursor()
         if request.method == "PUT":
@@ -77,6 +75,7 @@ def product_update(request):
             keys = obj.keys()
             values = [i[0] for i in obj.values()]
             rem = []
+            res = None
             for u in keys:
                 for y in values:
                     res = "{}='{}'".format(u, y)
@@ -84,29 +83,25 @@ def product_update(request):
                     break
                 rem.append(res)
             q = str(tuple(rem)).replace("(", '').replace(")", '').replace('"', '')
-            quer = "update product set {} WHERE id= {}".format(q, id[0])
-            print(quer)
-            c.execute(quer)
+            query = "update product set {} WHERE id = {}".format(q, id[0])
+            c.execute(query)
     return HttpResponse("Ok")
 
 
 @csrf_exempt
 def product_insert(request):
-    args = {}
-    # args.update(csrf(request))
     if request.is_ajax():
         c = connections[auth.get_user(request).username].cursor()
         try:
             obj = request.POST
             obj = dict(obj)
             obj.pop('csrfmiddlewaretoken')
+            obj.pop('id')
             keys = obj.keys()
             values = [i[0] for i in obj.values()]
-            # for i in obj.values():
-            #     values.append(i[0])
-
             s1 = "insert into product {}".format(tuple(keys)).replace("'", '"')
             s2 = " values {}".format(tuple(values))
+            print(s1+s2)
             c.execute(s1+s2)
         except Exception as e:
             print(e)
@@ -117,10 +112,14 @@ def product_insert(request):
 
 @csrf_exempt
 def product_delete(request):
-    args = {}
-    # args.update(csrf(request))
     if request.is_ajax():
-        print(request)
+        c = connections[auth.get_user(request).username].cursor()
+        if request.method == 'DELETE':
+            try:
+                obj = QueryDict(request.body)
+                c.execute("delete from product WHERE id = %s" % (obj['id']))
+            except Exception as e:
+                print(e)
     return HttpResponse("ok")
 
 

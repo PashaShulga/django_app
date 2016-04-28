@@ -67,7 +67,8 @@
                         type: "POST",
                         url: "/product/insert",
                         data: item,
-                        dataType: "json"
+                        dataType: "json",
+                        success: window.location.href = "/product/"
                     });
                 },
 
@@ -88,7 +89,8 @@
                         type: "DELETE",
                         url: "/product/delete",
                         data: item,
-                        dataType: "json"
+                        dataType: "json",
+                        success: window.location.href = "/product/"
                     });
                 }
 
