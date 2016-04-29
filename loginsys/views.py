@@ -23,6 +23,7 @@ def registration(request):
     args = {}
     args.update(csrf(request))
     args['form'] = UserCreationForm()
+    print(auth.get_user(request).has_perm('auth.add'))
     if request.POST:
         new_user_form = UserCreationForm(request.POST)
         if new_user_form.is_valid():

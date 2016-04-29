@@ -1,4 +1,18 @@
 from django.db import models
+from django.contrib.auth.models import User, UserManager
+
+
+class CustomUser(User):
+    # timezone = models.CharField(max_length=50)
+
+    objects = UserManager()
+
+    class Meta:
+        permissions = (
+            ("admin", "Administrator"),
+            ("user_short", "User Short"),
+            ("user_admin", "User Administrator")
+        )
 
 
 class Client(models.Model):
