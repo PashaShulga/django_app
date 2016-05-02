@@ -17,7 +17,7 @@ def home(request):
     args = {}
     args['sitename'] = 'You site'
     user = auth.get_user(request)
-    if user.username:
+    if user:
         client = Client.objects.filter(user__username=user.username)
         get_custom_user = CustomUser.objects.filter(id=user.id)
         company = Company.objects.filter(id=get_custom_user[0].company_type)
@@ -25,7 +25,7 @@ def home(request):
             args['brand'] = client[0].company_logo
         if company.exists():
             args['company_type'] = str(company[0].title)
-        args['user_permission'] = next(iter(request.user.get_all_permissions()))
+        args['user_permission'] = request.user.get_all_permissions()
         return render_to_response('pages/index.html', args)
     else:
         return redirect('/auth/login/')
@@ -33,13 +33,18 @@ def home(request):
 
 def profile(request):
     args = {}
-    args['sitename'] = 'You site'
-    if auth.get_user(request):
-        args['username'] = auth.get_user(request).username
-        args['email'] = auth.get_user(request).email
-        args['first_name'] = auth.get_user(request).first_name
-        args['last_name'] = auth.get_user(request).last_name
-        client_id = Client.objects.filter(user__username=args['username'])
+    request_object = auth.get_user(request)
+    if request_object:
+        get_custom_user = CustomUser.objects.filter(id=request_object.id)
+        company = Company.objects.filter(id=get_custom_user[0].company_type)
+        if company.exists():
+            args['company_type'] = str(company[0].title)
+        args['user_permission'] = request.user.get_all_permissions()
+        args['username'] = request_object.username
+        args['email'] = request_object.email
+        args['first_name'] = request_object.first_name
+        args['last_name'] = request_object.last_name
+        client_id = Client.objects.filter(user__username=request_object.username)
         if client_id.exists():
             client = Client.objects.filter(id=client_id[0].id)[0]
             args['company_logo'] = client.company_logo
@@ -54,9 +59,15 @@ def profile_modify(request):
     args = {}
     args.update(csrf(request))
     args['form'] = ModifyProfile()
-    if auth.get_user(request):
-        username = auth.get_user(request).username
-        client_id = Client.objects.filter(user__username=username)
+    request_object = auth.get_user(request)
+    if request_object:
+        get_custom_user = CustomUser.objects.filter(id=request_object.id)
+        company = Company.objects.filter(id=get_custom_user[0].company_type)
+        if company.exists():
+            args['company_type'] = str(company[0].title)
+        args['user_permission'] = request.user.get_all_permissions()
+        args['username'] = request_object.username
+        client_id = Client.objects.filter(user__username=request_object.username)
         if client_id.exists():
             client = Client.objects.filter(id=client_id[0].id)[0]
             args['company_logo'] = client.company_logo
@@ -69,8 +80,8 @@ def profile_modify(request):
                 first_name = modify_user.cleaned_data['first_name']
                 last_name = modify_user.cleaned_data['last_name']
                 company = modify_user.cleaned_data['company']
-                Client.objects.filter(user__username=username).update(company_name=company)
-                User.objects.filter(username=username).update(first_name=first_name, last_name=last_name)
+                Client.objects.filter(user__username=request_object.username).update(company_name=company)
+                User.objects.filter(username=request_object.username).update(first_name=first_name, last_name=last_name)
                 return redirect('/profile/')
         return render_to_response('pages/profile_modify.html', args)
 
@@ -140,11 +151,17 @@ def product(request):
     args.update(csrf(request))
     title_list = []
     args['form'] = UploadFileForm()
-    if auth.get_user(request).username:
-        user_db = UserBD.objects.filter(username=auth.get_user(request).username)
-        c = connections[auth.get_user(request).username].cursor()
+    request_object = auth.get_user(request)
+    if request_object:
+        get_custom_user = CustomUser.objects.filter(id=request_object.id)
+        company = Company.objects.filter(id=get_custom_user[0].company_type)
+        if company.exists():
+            args['company_type'] = str(company[0].title)
+        args['user_permission'] = request.user.get_all_permissions()
+        user_db = UserBD.objects.filter(username=request_object.username)
+        c = connections[request_object.username].cursor()
         if user_db.exists():
-            client = Client.objects.filter(user__username=auth.get_user(request).username)
+            client = Client.objects.filter(user__username=request_object.username)
             if client.exists():
                 args['brand'] = client[0].company_logo
             try:
@@ -162,8 +179,8 @@ def product(request):
 
                         XLSParse(request.FILES['file'], request).parse()
                     list_ = []
-                    for iter in range(0, len(title_list)):
-                        list_.append(request.POST['column'+str(iter)])
+                    for ite in range(0, len(title_list)):
+                        list_.append(request.POST['column'+str(ite)])
                     s = 'insert into product {}'.format(tuple(title_list)).replace("'", '"')
                     s2 = ' VALUES {}'.format(tuple(list_))
                     c.execute(s+s2)
@@ -257,3 +274,15 @@ def add_column(request):
             c = connections[form.cleaned_data['user']].cursor()
             c.execute("ALTER TABLE product ADD COLUMN %s %s" % (name_column, type_column))
     return render_to_response('pages/add_column.html', args)
+
+
+def edit_company(request):
+    args = {}
+    request_object = auth.get_user(request)
+    if request_object:
+        get_custom_user = CustomUser.objects.filter(id=request_object.id)
+        company = Company.objects.filter(id=get_custom_user[0].company_type)
+        if company.exists():
+            args['company_type'] = str(company[0].title)
+        args['user_permission'] = request.user.get_all_permissions()
+    return render_to_response('pages/edit_company.html', args)
