@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^product/delete$', product_delete),
     url(r'^product/insert$', product_insert),
     url(r'^edit_company/$', edit_company),
+    url(r'^list_company/$', list_company),
     url(r'^', home),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

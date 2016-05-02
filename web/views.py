@@ -13,19 +13,25 @@ import json
 from django.http import QueryDict
 
 
+def get_perm(request):
+    args = {}
+    request_object = auth.get_user(request)
+    get_custom_user = CustomUser.objects.filter(id=request_object.id)
+    company = Company.objects.filter(id=get_custom_user[0].company_type)
+    if company.exists():
+        args['company_type'] = str(company[0].title)
+    args['user_permission'] = request.user.get_all_permissions()
+    return args
+
+
 def home(request):
     args = {}
-    args['sitename'] = 'You site'
     user = auth.get_user(request)
     if user:
         client = Client.objects.filter(user__username=user.username)
-        get_custom_user = CustomUser.objects.filter(id=user.id)
-        company = Company.objects.filter(id=get_custom_user[0].company_type)
         if client.exists():
             args['brand'] = client[0].company_logo
-        if company.exists():
-            args['company_type'] = str(company[0].title)
-        args['user_permission'] = request.user.get_all_permissions()
+        args.update(get_perm(request))
         return render_to_response('pages/index.html', args)
     else:
         return redirect('/auth/login/')
@@ -35,11 +41,7 @@ def profile(request):
     args = {}
     request_object = auth.get_user(request)
     if request_object:
-        get_custom_user = CustomUser.objects.filter(id=request_object.id)
-        company = Company.objects.filter(id=get_custom_user[0].company_type)
-        if company.exists():
-            args['company_type'] = str(company[0].title)
-        args['user_permission'] = request.user.get_all_permissions()
+        args.update(get_perm(request))
         args['username'] = request_object.username
         args['email'] = request_object.email
         args['first_name'] = request_object.first_name
@@ -61,11 +63,7 @@ def profile_modify(request):
     args['form'] = ModifyProfile()
     request_object = auth.get_user(request)
     if request_object:
-        get_custom_user = CustomUser.objects.filter(id=request_object.id)
-        company = Company.objects.filter(id=get_custom_user[0].company_type)
-        if company.exists():
-            args['company_type'] = str(company[0].title)
-        args['user_permission'] = request.user.get_all_permissions()
+        args.update(get_perm(request))
         args['username'] = request_object.username
         client_id = Client.objects.filter(user__username=request_object.username)
         if client_id.exists():
@@ -153,11 +151,7 @@ def product(request):
     args['form'] = UploadFileForm()
     request_object = auth.get_user(request)
     if request_object:
-        get_custom_user = CustomUser.objects.filter(id=request_object.id)
-        company = Company.objects.filter(id=get_custom_user[0].company_type)
-        if company.exists():
-            args['company_type'] = str(company[0].title)
-        args['user_permission'] = request.user.get_all_permissions()
+        args.update(get_perm(request))
         user_db = UserBD.objects.filter(username=request_object.username)
         c = connections[request_object.username].cursor()
         if user_db.exists():
@@ -219,7 +213,7 @@ def product(request):
                         fi = {
                         "name": i[0],
                         "type": i[1],
-                        "width": 30,
+                        "width": 22,
                         "validate": "required"
                         }
                         b = json.dumps(fi)
@@ -263,6 +257,7 @@ def add_column(request):
     args.update(csrf(request))
     args['user'] = ''
     if auth.get_user(request).is_staff:
+        args.update(get_perm(request))
         client = Client.objects.filter(user__username=auth.get_user(request).username)
         if client.exists():
             args['brand'] = client[0].company_logo
@@ -280,9 +275,15 @@ def edit_company(request):
     args = {}
     request_object = auth.get_user(request)
     if request_object:
-        get_custom_user = CustomUser.objects.filter(id=request_object.id)
-        company = Company.objects.filter(id=get_custom_user[0].company_type)
-        if company.exists():
-            args['company_type'] = str(company[0].title)
-        args['user_permission'] = request.user.get_all_permissions()
+        args.update(get_perm(request))
     return render_to_response('pages/edit_company.html', args)
+
+
+def list_company(request):
+    args = {}
+    request_object = auth.get_user(request)
+    if request_object:
+        args.update(get_perm(request))
+        company = Client.objects.all()
+        args['company'] = company
+    return render_to_response('pages/list_company.html', args)
