@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, render_to_response
+from django.shortcuts import redirect, render_to_response
 from django.contrib import auth
 from .form import UserCreationForm, PasswordResetRequestForm, SetPasswordForm, AuthenticationForm, ChangePassForm
 from django.core.context_processors import csrf
@@ -17,19 +17,25 @@ from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
 from web.create_user_db import create_db
 from django.utils.translation import ugettext_lazy as _
+from web.models import CustomUser
 
 
 def registration(request):
     args = {}
     args.update(csrf(request))
     args['form'] = UserCreationForm()
-    print(auth.get_user(request).has_perm('auth.add'))
     if request.POST:
         new_user_form = UserCreationForm(request.POST)
-        if new_user_form.is_valid():
-            new_user_form.save()
-            username = new_user_form.cleaned_data['username']
-            password = new_user_form.cleaned_data['password2']
+        username = request.POST['username']
+        password = request.POST['password2']
+        email = request.POST['email1']
+        c_type = int(request.POST['company_type'])
+        c_title = request.POST['company_title']
+        if username is not None and password is not None and email is not None\
+                and c_title is not None and c_type is not None:
+            new_user = CustomUser.objects.create_user(username=username, password=password, email=email,
+                                                      company_type=c_type, company_title=c_title)
+            new_user.save()
             new_user = auth.authenticate(username=username, password=password)
             auth.login(request, new_user)
             try:
@@ -56,7 +62,10 @@ class LoginUser(FormView):
             if user_form.is_valid():
                 user = auth.authenticate(username=user_form.cleaned_data['username'],
                                          password=user_form.cleaned_data['password'])
-                auth.login(request, user)
+                if user is not None:
+                    auth.login(request, user)
+                else:
+                    messages.error(request, "Warning! User or password incorrect")
                 return redirect('/')
             else:
                 args['error'] = 'User not found or incorrect password/username'

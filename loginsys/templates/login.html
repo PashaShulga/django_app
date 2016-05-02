@@ -26,6 +26,13 @@
                         <h3 class="panel-title">Please Sign In</h3>
                     </div>
                     <div class="panel-body">
+                    <div class=" bg-warning">
+                         {% for message in messages %}
+                    {% if message %}
+                        <h4>{{ message }}</h4>
+                    {% endif %}
+                {% endfor %}
+                    </div>
                         <form role="form" method="post">
                             {% csrf_token %}
                             <fieldset>

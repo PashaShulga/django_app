@@ -2,11 +2,13 @@ from django import forms
 from django.contrib.auth import password_validation
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from web.models import CustomUser
 from django.db import connections
 from web.models import UserBD
 
 
 class UserCreationForm(forms.ModelForm):
+
     """
     A form that creates a user, with no privileges, from the given username and
     password.
@@ -17,19 +19,33 @@ class UserCreationForm(forms.ModelForm):
 
     username = forms.CharField(label="",
                                max_length=30,
-        strip=False,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'})
+                               strip=False,
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username',
+                                                             'required': True})
     )
     email1 = forms.EmailField(label="",
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'E-mail'}))
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'E-mail', 'required': True}))
+
+    company_title = forms.CharField(label="", max_length=128,
+                                    strip=False,
+                                    widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                  'placeholder': 'Company Title',
+                                                                  'required': True}))
 
     password1 = forms.CharField(label="",
         strip=False,
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True}))
 
     password2 = forms.CharField(label="",
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password againe"}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password againe", 'required': True}),
         strip=False)
+
+    CHOICES = (
+        (1, "L Package"),
+        (2, "XL Package"),
+    )
+
+    company_type = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES)
 
     class Meta:
         model = User
@@ -50,8 +66,11 @@ class UserCreationForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)
+        print(user)
         user.set_password(self.cleaned_data["password1"])
         user.email = self.cleaned_data["email1"]
+        user.company_type = self.cleaned_data["company_type"]
+        user.company_title = self.cleaned_data["company_title"]
         if commit:
             user.save()
         return user

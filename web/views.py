@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect, render_to_response, HttpResponse
+from django.shortcuts import redirect, render_to_response, HttpResponse
 from django.contrib import auth
 from loginsys.form import *
 from django.contrib.auth.models import User
 from django.core.context_processors import csrf
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
-from web.models import Client, UserBD
+from web.models import Client, UserBD, CustomUser, Company
 from .upload_handler import UploadHandler
 from django.db import connections
 from .xls_parse import XLSParse
@@ -16,10 +16,16 @@ from django.http import QueryDict
 def home(request):
     args = {}
     args['sitename'] = 'You site'
-    if auth.get_user(request).username:
-        client = Client.objects.filter(user__username=auth.get_user(request).username)
+    user = auth.get_user(request)
+    if user.username:
+        client = Client.objects.filter(user__username=user.username)
+        get_custom_user = CustomUser.objects.filter(id=user.id)
+        company = Company.objects.filter(id=get_custom_user[0].company_type)
         if client.exists():
             args['brand'] = client[0].company_logo
+        if company.exists():
+            args['company_type'] = str(company[0].title)
+        args['user_permission'] = next(iter(request.user.get_all_permissions()))
         return render_to_response('pages/index.html', args)
     else:
         return redirect('/auth/login/')

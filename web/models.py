@@ -2,19 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User, UserManager
 
 
-class CustomUser(User):
-    # timezone = models.CharField(max_length=50)
-
-    objects = UserManager()
-
-    class Meta:
-        permissions = (
-            ("admin", "Administrator"),
-            ("user_short", "User Short"),
-            ("user_admin", "User Administrator")
-        )
-
-
 class Client(models.Model):
     id = models.AutoField(primary_key=True)
     company_name = models.CharField(max_length=130)
@@ -29,14 +16,31 @@ class Client(models.Model):
         db_table = 'client'
 
 
-class UserBD(models.Model):
+class Company(models.Model):
     id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=40)
-    title = models.CharField(max_length=40)
-    password = models.CharField(max_length=520)
+    title = models.CharField(max_length=128)
 
     class Meta:
-        db_table = "user_db"
+        db_table = "company"
+        permissions = (
+            ("admin", "Administrator"),
+            ("user_short", "User Short"),
+            ("user_admin", "User Administrator")
+        )
+
+
+class CustomUser(User):
+    CHOICES = (
+        (1, "L_Package"),
+        (2, "XL_Package")
+    )
+
+    company_type = models.IntegerField(choices=CHOICES, default=CHOICES[0][0])
+    company_title = models.CharField(max_length=128)
+    objects = UserManager()
+
+    # class Meta:
+    #     db_table = "custom_user"
 
 
 class Product(models.Model):
@@ -45,6 +49,16 @@ class Product(models.Model):
     class Meta:
         managed = False
         db_table = "product"
+
+
+class UserBD(models.Model):
+    id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=40)
+    title = models.CharField(max_length=40)
+    password = models.CharField(max_length=520)
+
+    class Meta:
+        db_table = "user_db"
 
 
 def update_settings():
