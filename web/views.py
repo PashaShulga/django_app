@@ -17,7 +17,7 @@ def get_perm(request):
     args = {}
     request_object = auth.get_user(request)
     get_custom_user = CustomUser.objects.filter(id=request_object.id)
-    print(get_custom_user)
+    print(get_custom_user[0].company_type)
     company = Company.objects.filter(id=get_custom_user[0].company_type)
     if company.exists():
         args['company_type'] = str(company[0].title)
