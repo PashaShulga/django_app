@@ -21,6 +21,7 @@ def get_perm(request):
     company = Company.objects.filter(id=get_custom_user[0].company_type)
     if company.exists():
         args['company_type'] = str(company[0].title)
+    print(request.user.get_all_permissions())
     args['user_permission'] = request.user.get_all_permissions()
     return args
 
