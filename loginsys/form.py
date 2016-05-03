@@ -211,3 +211,12 @@ class AddNewUser(forms.Form):
                     code='password_mismatch',
                     )
         return password2
+
+
+class EditCompany(forms.Form):
+    company_name = forms.CharField(max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Company name"}))
+    address = forms.CharField(max_length=256, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Address"}))
+    postal_code = forms.CharField(max_length=256, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Postal code"}))
+    phone = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Phone"}))
+    website = forms.CharField(max_length=250, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Website"}))
+    company_logo = forms.ImageField()

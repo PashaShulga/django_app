@@ -281,18 +281,19 @@ def add_column(request):
     return render_to_response('pages/add_column.html', args)
 
 
-def edit_company(request):
+def modify_company(request):
     args = {}
+    args.update(csrf(request))
+    args.update(get_perm(request))
+    args['form'] = EditCompany()
     request_object = auth.get_user(request)
     if request_object:
         args.update(get_perm(request))
         custom_user = CustomUser.objects.get(id=request_object.id)
-        print(custom_user.company_title)
         company = Client.objects.filter(company_name=custom_user.company_title)
-        print(company)
         if company.exists():
             args['company'] = company[0]
-    return render_to_response('pages/edit_company.html', args)
+    return render_to_response('pages/edit_company_modify.html', args)
 
 
 def list_company(request):
