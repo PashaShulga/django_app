@@ -34,9 +34,9 @@ class CustomUser(User):
         (1, "L_Package"),
         (2, "XL_Package")
     )
-
     company_type = models.IntegerField(choices=CHOICES, default=CHOICES[0][0])
     company_title = models.CharField(max_length=128)
+    user = models.ForeignKey('UserBD')
     objects = UserManager()
 
     # class Meta:

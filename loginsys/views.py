@@ -18,7 +18,7 @@ from django.contrib.auth.models import User, Permission
 from django.db.models.query_utils import Q
 from web.create_user_db import create_db
 from django.utils.translation import ugettext_lazy as _
-from web.models import CustomUser, Company, Client
+from web.models import CustomUser, Company, Client, UserBD, update_settings
 
 
 def get_perm(request):
@@ -45,26 +45,30 @@ def registration(request):
         c_title = request.POST['company_title']
         if username is not None and password is not None and email is not None\
                 and c_title is not None and c_type is not None:
-            new_user = CustomUser.objects.create_user(username=username, password=password, email=email,
-                                                      company_type=c_type, company_title=c_title)
+            try:
+                create_db("db_%s" % (username,), password, username)
+            except:
+                args['error'] = _("Warning! Database is not create, try again or inform staff")
+
+            u_db = UserBD.objects.filter(username=username)
+            if u_db.exists():
+                new_user = CustomUser.objects.create_user(username=username, password=password, email=email,
+                                                      company_type=c_type, company_title=c_title, user_id=u_db[0].id)
+                new_user.save()
             u = CustomUser.objects.get(username=username)
             permission = None
             if c_type == 1:
                 permission = Permission.objects.get(codename='user_short')
             elif c_type == 2:
                 permission = Permission.objects.get(codename='admin')
-
+            print(permission)
             u.user_permissions.add(permission)
-            new_user.save()
             new_company = Client(company_name=c_title, user_id=CustomUser.objects.filter(username=username)[0].id)
             new_company.save()
             new_user = auth.authenticate(username=username, password=password)
             auth.login(request, new_user)
-            try:
-                create_db("db_%s" % (username,), password, username)
-                return redirect('/')
-            except:
-                args['error'] = _("Warning! Database is not create, try again or inform staff")
+            update_settings()
+            return redirect('/')
         else:
             args['form'] = new_user_form
     return render_to_response("reg.html", args)
@@ -79,12 +83,25 @@ def add_new_user(request):
         args.update(perm)
         if request.POST:
             d = request.POST
-            print(d)
-            c_title = Client.objects.get(user_id=auth.get_user(request).id)
-            new_user = CustomUser.objects.create_user(username=d['username'], password=d['password2'], email=d['email'],
-                                                      company_type= 1 if perm['company_type'] == 'L Company' else 2,
-                                                      company_title=c_title.company_name)
-            new_user.save()
+            user_obj = auth.get_user(request)
+            c_title = Client.objects.get(user_id=user_obj.id)
+            u_db = UserBD.objects.filter(username=user_obj.username)
+            if u_db.exists():
+                new_user = CustomUser.objects.create_user(username=d['username'], password=d['password2'], email=d['email'],
+                                                      company_type = 1 if perm['company_type'] == 'L Company' else 2,
+                                                      company_title=c_title.company_name, user_id=u_db[0].id)
+                new_user.save()
+            print(user_obj.username)
+            u = CustomUser.objects.get(username=d['username'])
+            print(u)
+            permission = None
+            print(perm['company_type'])
+            if perm['company_type'] == 'L Package':
+                permission = Permission.objects.get(codename='user_short')
+            elif perm['company_type'] == 'XL Package':
+                permission = Permission.objects.get(codename='admin')
+            print(permission)
+            u.user_permissions.add(permission)
     return render_to_response('add_user.html', args)
 
 

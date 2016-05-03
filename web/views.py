@@ -16,10 +16,11 @@ def get_perm(request):
     args = {}
     request_object = auth.get_user(request)
     get_custom_user = CustomUser.objects.filter(id=request_object.id)
-    company = Company.objects.filter(id=get_custom_user[0].company_type)
-    if company.exists():
-        args['company_type'] = str(company[0].title)
-    args['user_permission'] = request.user.get_all_permissions()
+    if get_custom_user.exists():
+        company = Company.objects.filter(id=get_custom_user[0].company_type)
+        if company.exists():
+            args['company_type'] = str(company[0].title)
+        args['user_permission'] = request.user.get_all_permissions()
     return args
 
 
@@ -86,7 +87,10 @@ def profile_modify(request):
 @csrf_exempt
 def product_update(request):
     if request.is_ajax():
-        c = connections[auth.get_user(request).username].cursor()
+        request_object = auth.get_user(request)
+        c_u = CustomUser.objects.filter(username=request_object.username)
+        user_db = UserBD.objects.filter(id=c_u[0].user_id)
+        c = connections[user_db[0].username].cursor()
         if request.method == "PUT":
             obj = QueryDict(request.body)
             obj = dict(obj)
@@ -111,7 +115,10 @@ def product_update(request):
 @csrf_exempt
 def product_insert(request):
     if request.is_ajax():
-        c = connections[auth.get_user(request).username].cursor()
+        request_object = auth.get_user(request)
+        c_u = CustomUser.objects.filter(username=request_object.username)
+        user_db = UserBD.objects.filter(id=c_u[0].user_id)
+        c = connections[user_db[0].username].cursor()
         try:
             obj = request.POST
             obj = dict(obj)
@@ -132,7 +139,10 @@ def product_insert(request):
 @csrf_exempt
 def product_delete(request):
     if request.is_ajax():
-        c = connections[auth.get_user(request).username].cursor()
+        request_object = auth.get_user(request)
+        c_u = CustomUser.objects.filter(username=request_object.username)
+        user_db = UserBD.objects.filter(id=c_u[0].user_id)
+        c = connections[user_db[0].username].cursor()
         if request.method == 'DELETE':
             try:
                 obj = QueryDict(request.body)
@@ -151,8 +161,9 @@ def product(request):
     request_object = auth.get_user(request)
     if request_object:
         args.update(get_perm(request))
-        user_db = UserBD.objects.filter(username=request_object.username)
-        c = connections[request_object.username].cursor()
+        c_u = CustomUser.objects.filter(username=request_object.username)
+        user_db = UserBD.objects.filter(id=c_u[0].user_id)
+        c = connections[user_db[0].username].cursor()
         if user_db.exists():
             client = Client.objects.filter(user__username=request_object.username)
             if client.exists():
