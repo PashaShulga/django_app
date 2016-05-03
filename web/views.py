@@ -286,6 +286,10 @@ def edit_company(request):
     request_object = auth.get_user(request)
     if request_object:
         args.update(get_perm(request))
+        custom_user = CustomUser.objects.get(id=request_object.id)
+        company = Client.objects.filter(company_name=custom_user.company_title)
+        if company.exists():
+            args['company'] = company[0]
     return render_to_response('pages/edit_company.html', args)
 
 
