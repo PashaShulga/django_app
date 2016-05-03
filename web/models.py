@@ -5,10 +5,10 @@ from django.contrib.auth.models import User, UserManager
 class Client(models.Model):
     id = models.AutoField(primary_key=True)
     company_name = models.CharField(max_length=130)
-    address = models.CharField(max_length=256)
-    postal_code = models.CharField(max_length=30)
-    phone = models.CharField(max_length=20)
-    website = models.CharField(max_length=520)
+    address = models.CharField(max_length=256, blank=True)
+    postal_code = models.CharField(max_length=30, blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    website = models.CharField(max_length=520, blank=True)
     user = models.ForeignKey('auth.User')
     company_logo = models.ImageField(blank=True, upload_to='/static/images/')
 

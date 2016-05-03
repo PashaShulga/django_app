@@ -32,7 +32,7 @@ class XLSParse(object):
                         else:
                             it[1] = "CHARACTER(255)"
                         c.execute("ALTER TABLE product ADD %s %s" % (it[0], it[1]))
-                except Exception:
+                except:
                     pass
                 try:
                     title_list = []
@@ -40,13 +40,11 @@ class XLSParse(object):
                     for it in c.fetchall()[1:]:
                         title_list.append(it[0])
                     for iter_ in args[1][1:]:
-                        print(iter_)
-                        #TODO: delete this print!!!
                         s = 'insert into product {}'.format(tuple(title_list)).replace("'", '"')
                         s2 = ' VALUES {}'.format(tuple(iter_))
                         c.execute(s+s2)
-                except Exception:
-                    pass
+                except Exception as e:
+                    print(e)
 
     def parse(self):
         wb = load_workbook(filename=self.path+self.file_name)

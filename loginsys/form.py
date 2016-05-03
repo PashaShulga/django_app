@@ -8,7 +8,6 @@ from web.models import UserBD
 
 
 class UserCreationForm(forms.ModelForm):
-
     """
     A form that creates a user, with no privileges, from the given username and
     password.
@@ -168,3 +167,47 @@ class AdditionalForm(forms.Form):
     l = []
     CHOICES = ((it.username, it.username) for it in UserBD.objects.all())
     user = forms.ChoiceField(choices=CHOICES)
+
+
+class AddNewUser(forms.Form):
+    """
+    A form that creates a user, with no privileges, from the given username and
+    password.
+    """
+    error_messages = {
+        'password_mismatch': _("The two password fields didn't match."),
+    }
+
+    username = forms.CharField(label="",
+                               max_length=30,
+                               strip=False,
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username',
+                                                             'required': True})
+    )
+    email = forms.EmailField(label="",
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'E-mail', 'required': True}))
+
+    # company_title = forms.CharField(label="", max_length=128,
+    #                                 strip=False,
+    #                                 widget=forms.TextInput(attrs={'class': 'form-control',
+    #                                                               'placeholder': 'Company Title',
+    #                                                               'required': True}))
+
+    password1 = forms.CharField(label="",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True}))
+
+    password2 = forms.CharField(label="",
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password againe", 'required': True}),
+        strip=False)
+
+    def clean_new_password2(self):
+        password1 = self.password1
+        password2 = self.password2
+        if password1 and password2:
+            if password1 != password2:
+                raise forms.ValidationError(
+                    self.error_messages['password_mismatch'],
+                    code='password_mismatch',
+                    )
+        return password2

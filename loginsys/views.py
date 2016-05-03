@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render_to_response
 from django.contrib import auth
-from .form import UserCreationForm, PasswordResetRequestForm, SetPasswordForm, AuthenticationForm, ChangePassForm
+from .form import UserCreationForm, PasswordResetRequestForm, SetPasswordForm, \
+    AuthenticationForm, ChangePassForm, AddNewUser
 from django.core.context_processors import csrf
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
@@ -13,11 +14,22 @@ from django.core.mail import send_mail
 from untitled2.settings import DEFAULT_FROM_EMAIL
 from django.views.generic import *
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.db.models.query_utils import Q
 from web.create_user_db import create_db
 from django.utils.translation import ugettext_lazy as _
-from web.models import CustomUser
+from web.models import CustomUser, Company, Client
+
+
+def get_perm(request):
+    args = {}
+    request_object = auth.get_user(request)
+    get_custom_user = CustomUser.objects.filter(id=request_object.id)
+    company = Company.objects.filter(id=get_custom_user[0].company_type)
+    if company.exists():
+        args['company_type'] = str(company[0].title)
+    args['user_permission'] = request.user.get_all_permissions()
+    return args
 
 
 def registration(request):
@@ -35,7 +47,17 @@ def registration(request):
                 and c_title is not None and c_type is not None:
             new_user = CustomUser.objects.create_user(username=username, password=password, email=email,
                                                       company_type=c_type, company_title=c_title)
+            u = CustomUser.objects.get(username=username)
+            permission = None
+            if c_type == 1:
+                permission = Permission.objects.get(codename='user_short')
+            elif c_type == 2:
+                permission = Permission.objects.get(codename='admin')
+
+            u.user_permissions.add(permission)
             new_user.save()
+            new_company = Client(company_name=c_title, user_id=CustomUser.objects.filter(username=username)[0].id)
+            new_company.save()
             new_user = auth.authenticate(username=username, password=password)
             auth.login(request, new_user)
             try:
@@ -46,6 +68,24 @@ def registration(request):
         else:
             args['form'] = new_user_form
     return render_to_response("reg.html", args)
+
+
+def add_new_user(request):
+    args = {}
+    args.update(csrf(request))
+    args['form'] = AddNewUser()
+    if auth.get_user(request):
+        perm = get_perm(request)
+        args.update(perm)
+        if request.POST:
+            d = request.POST
+            print(d)
+            c_title = Client.objects.get(user_id=auth.get_user(request).id)
+            new_user = CustomUser.objects.create_user(username=d['username'], password=d['password2'], email=d['email'],
+                                                      company_type= 1 if perm['company_type'] == 'L Company' else 2,
+                                                      company_title=c_title.company_name)
+            new_user.save()
+    return render_to_response('add_user.html', args)
 
 
 class LoginUser(FormView):
@@ -166,9 +206,6 @@ class ResetPasswordRequestView(FormView):
                 return result
         messages.error(request, 'Invalid Input')
         return self.form_invalid(form)
-
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 
 
 class PasswordResetConfirmView(FormView):

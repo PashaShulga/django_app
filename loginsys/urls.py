@@ -4,7 +4,7 @@ from loginsys.views import *
 
 urlpatterns = [
     url(r'^registration/', registration),
-    url(r'^add_user/', registration),
+    url(r'^add_user/', add_new_user),
     url(r'^login/', LoginUser.as_view(), name='login_user'),
     url(r'^logout/', logout),
     url(r'^change_password/', ChangePassword.as_view(), name="change_password"),

@@ -1,7 +1,6 @@
 from django.shortcuts import redirect, render_to_response, HttpResponse
 from django.contrib import auth
 from loginsys.form import *
-from django.contrib.auth.models import User
 from django.core.context_processors import csrf
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from web.models import Client, UserBD, CustomUser, Company
@@ -18,10 +17,8 @@ def get_perm(request):
     request_object = auth.get_user(request)
     get_custom_user = CustomUser.objects.filter(id=request_object.id)
     company = Company.objects.filter(id=get_custom_user[0].company_type)
-    print(company[0].title)
     if company.exists():
         args['company_type'] = str(company[0].title)
-    print(request.user.get_all_permissions())
     args['user_permission'] = request.user.get_all_permissions()
     return args
 
