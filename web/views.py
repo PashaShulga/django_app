@@ -291,10 +291,13 @@ def modify_company(request):
         custom_user = CustomUser.objects.get(id=request_object.id)
         company = Client.objects.filter(id=custom_user.company_id)
         if company.exists():
+            args['brand'] = company[0].company_logo
+        if company.exists():
             args['company'] = company[0]
         if request.POST:
             edit_company = EditCompany(request.POST, request.FILES)
             if edit_company.is_valid():
+                UploadHandler(request.FILES['file'], path='/static/images/')
                 Client.objects.filter(user_id=auth.get_user(request).id).update(
                     company_name=edit_company.cleaned_data['company_name'],
                     address=edit_company.cleaned_data['address'],

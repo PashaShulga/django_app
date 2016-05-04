@@ -3,9 +3,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class UploadHandler(object):
-    def __init__(self, file, path=os.path.join(BASE_DIR+'/static/files/')):
+    def __init__(self, file, path='/static/files/'):
         self._file = file
-        self._path = path
+        self._path = os.path.join(BASE_DIR+path)
 
     def handler(self):
         try:
