@@ -53,18 +53,19 @@ def registration(request):
             u_db = UserBD.objects.filter(username=username)
             if u_db.exists():
                 new_user = CustomUser.objects.create_user(username=username, password=password, email=email,
-                                                      company_type=c_type, company_title=c_title, user_id=u_db[0].id)
+                                                      company_type=c_type, user_id=u_db[0].id)
                 new_user.save()
+                company = Client(company_name=c_title, user_id=new_user.id)
+                company.save()
+                CustomUser.objects.filter(id=new_user.id).update(company_id=company.id)
+
             u = CustomUser.objects.get(username=username)
             permission = None
             if c_type == 1:
                 permission = Permission.objects.get(codename='user_short')
             elif c_type == 2:
                 permission = Permission.objects.get(codename='admin')
-            print(permission)
             u.user_permissions.add(permission)
-            new_company = Client(company_name=c_title, user_id=CustomUser.objects.filter(username=username)[0].id)
-            new_company.save()
             new_user = auth.authenticate(username=username, password=password)
             auth.login(request, new_user)
             update_settings()

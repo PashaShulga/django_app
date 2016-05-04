@@ -284,15 +284,25 @@ def add_column(request):
 def modify_company(request):
     args = {}
     args.update(csrf(request))
-    args.update(get_perm(request))
     args['form'] = EditCompany()
     request_object = auth.get_user(request)
     if request_object:
         args.update(get_perm(request))
         custom_user = CustomUser.objects.get(id=request_object.id)
-        company = Client.objects.filter(company_name=custom_user.company_title)
+        company = Client.objects.filter(id=custom_user.company_id)
         if company.exists():
             args['company'] = company[0]
+        if request.POST:
+            edit_company = EditCompany(request.POST, request.FILES)
+            if edit_company.is_valid():
+                Client.objects.filter(user_id=auth.get_user(request).id).update(
+                    company_name=edit_company.cleaned_data['company_name'],
+                    address=edit_company.cleaned_data['address'],
+                    phone=edit_company.cleaned_data['phone'],
+                    website=edit_company.cleaned_data['website'],
+                    postal_code=edit_company.cleaned_data['postal_code'],
+                    company_logo="/static/images/"+str(edit_company.cleaned_data['company_logo']))
+                return redirect('/edit_company/modify')
     return render_to_response('pages/edit_company_modify.html', args)
 
 
