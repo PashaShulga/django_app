@@ -297,7 +297,7 @@ def modify_company(request):
         if request.POST:
             edit_company = EditCompany(request.POST, request.FILES)
             if edit_company.is_valid():
-                UploadHandler(request.FILES['file'], path='/static/images/')
+                UploadHandler(request.FILES['company_logo'], path='/static/images/').handler()
                 Client.objects.filter(user_id=auth.get_user(request).id).update(
                     company_name=edit_company.cleaned_data['company_name'],
                     address=edit_company.cleaned_data['address'],
