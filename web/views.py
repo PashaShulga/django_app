@@ -325,3 +325,12 @@ def data_analytics(request):
         args.update(get_perm(request))
         custom_user = CustomUser.objects.get(id=request_object.id)
     return render_to_response('pages/data_analytics.html', args)
+
+
+def company_users(request):
+    args = {}
+    request_object = auth.get_user(request)
+    if request_object:
+        args.update(get_perm(request))
+
+    return render_to_response('pages/company_users.html', args)
