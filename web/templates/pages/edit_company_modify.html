@@ -7,53 +7,28 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <a href="/edit_company/modify"></a>
-            <ul class="list-inline">
-                <li>Company Name:</li>
-                <li><h4><strong>{{ company.company_name }}</strong></h4></li>
-            </ul>
-            <ul class="list-inline">
-                <li>Company address:</li>
-                <li><h4><strong>{{ company.address }}</strong></h4></li>
-            </ul>
-            <ul class="list-inline">
-                <li>Company postal code:</li>
-                <li><h4><strong>{{ company.postal_code }}</strong></h4></li>
-            </ul>
-            <ul class="list-inline">
-                <li>Company phone:</li>
-                <li><h4><strong>{{ company.phone }}</strong></h4></li>
-            </ul>
-            <ul class="list-inline">
-                <li>Company website:</li>
-                <li><h4><strong>{{ company.website }}</strong></h4></li>
-            </ul>
-            <ul class="list-inline">
-                <li>Company logo:</li>
-                <li><img src="{{ company.company_logo }}" style="width: 200px"></li>
-            </ul>
-        </div>
         <div class="col-md-4">
-            <form method="post" enctype="multipart/form-data">
+            <form method="post">
                 {% csrf_token %}
                 <div class="form-group">
+                    <label>Company Name</label>
                     {{ form.company_name }}
                 </div>
                 <div class="form-group">
+                    <label>Address</label>
                     {{ form.address }}
                 </div>
                 <div class="form-group">
+                    <label>Postal code</label>
                     {{ form.postal_code }}
                 </div>
                 <div class="form-group">
+                    <label>Phone</label>
                     {{ form.phone }}
                 </div>
                 <div class="form-group">
+                    <label>Website</label>
                     {{ form.website }}
-                </div>
-                <div class="form-group">
-                    {{ form.company_logo }}
                 </div>
                 <div class="form-group">
                     <input class="btn dropdown-toggle btn-info" type="submit" value="Save">

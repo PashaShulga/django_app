@@ -187,23 +187,24 @@ class AddNewUser(forms.Form):
     email = forms.EmailField(label="",
         widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'E-mail', 'required': True}))
 
-    # company_title = forms.CharField(label="", max_length=128,
-    #                                 strip=False,
-    #                                 widget=forms.TextInput(attrs={'class': 'form-control',
-    #                                                               'placeholder': 'Company Title',
-    #                                                               'required': True}))
-
     password1 = forms.CharField(label="",
         strip=False,
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True}))
 
     password2 = forms.CharField(label="",
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password againe", 'required': True}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password again", 'required': True}),
         strip=False)
 
+    CHOICES = (
+        ("M", "Manager"),
+        ("E", "Employee")
+    )
+
+    roles = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=True)
+
     def clean_new_password2(self):
-        password1 = self.password1
-        password2 = self.password2
+        password1 = self.cleaned_data.get('new_password1')
+        password2 = self.cleaned_data.get('new_password2')
         if password1 and password2:
             if password1 != password2:
                 raise forms.ValidationError(
@@ -219,4 +220,3 @@ class EditCompany(forms.Form):
     postal_code = forms.CharField(max_length=256, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Postal code"}))
     phone = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Phone"}))
     website = forms.CharField(max_length=250, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Website"}))
-    company_logo = forms.ImageField(label="Choose logo")

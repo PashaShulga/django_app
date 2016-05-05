@@ -32,6 +32,7 @@ def home(request):
         if client.exists():
             args['brand'] = client[0].company_logo
         args.update(get_perm(request))
+        # print(get_perm(request))
         return render_to_response('pages/index.html', args)
     else:
         return redirect('/auth/login/')
@@ -297,14 +298,12 @@ def modify_company(request):
         if request.POST:
             edit_company = EditCompany(request.POST, request.FILES)
             if edit_company.is_valid():
-                UploadHandler(request.FILES['company_logo'], path='/static/images/').handler()
                 Client.objects.filter(user_id=auth.get_user(request).id).update(
                     company_name=edit_company.cleaned_data['company_name'],
                     address=edit_company.cleaned_data['address'],
                     phone=edit_company.cleaned_data['phone'],
                     website=edit_company.cleaned_data['website'],
-                    postal_code=edit_company.cleaned_data['postal_code'],
-                    company_logo="/static/images/"+str(edit_company.cleaned_data['company_logo']))
+                    postal_code=edit_company.cleaned_data['postal_code'])
                 return redirect('/edit_company/modify')
     return render_to_response('pages/edit_company_modify.html', args)
 

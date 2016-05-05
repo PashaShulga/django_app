@@ -84,21 +84,31 @@ def add_new_user(request):
         args.update(perm)
         if request.POST:
             d = request.POST
+            # au = AddNewUser(request.POST)
             user_obj = auth.get_user(request)
             c_title = Client.objects.get(user_id=user_obj.id)
             u_db = UserBD.objects.filter(username=user_obj.username)
+
             if u_db.exists():
-                new_user = CustomUser.objects.create_user(username=d['username'], password=d['password2'], email=d['email'],
-                                                      company_type = 1 if perm['company_type'] == 'L Company' else 2,
-                                                      company_title=c_title.company_name, user_id=u_db[0].id)
-                new_user.save()
+                if d['password1'] != d['password2']:
+                    args['messages'] = "Password incorrect"
+                    return render_to_response('add_user.html', args)
+
+                # CustomUser.objects.create_user(username=d['username'], password=d['password2'],
+                #                                           email=d['email'],
+                #                                       company_type = 1 if perm['company_type'] == 'L Company' else 2,
+                #                                       company_id=c_title.id, user_id=u_db[0].id)
             u = CustomUser.objects.get(username=d['username'])
             permission = None
-            if perm['company_type'] == 'L Package':
+            if d['roles'] == "E":
                 permission = Permission.objects.get(codename='user_short')
-            elif perm['company_type'] == 'XL Package':
+            if d['roles'] == "M":
                 permission = Permission.objects.get(codename='admin')
-            u.user_permissions.add(permission)
+            # if perm['company_type'] == 'L Package':
+            #     permission = Permission.objects.get(codename='user_short')
+            # elif perm['company_type'] == 'XL Package':
+            #     permission = Permission.objects.get(codename='admin')
+            # u.user_permissions.add(permission)
     return render_to_response('add_user.html', args)
 
 
