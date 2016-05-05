@@ -7,6 +7,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('loginsys.urls')),
+    url(r'^api/', include('api.urls')),
+
     url(r'^profile/modify/$', profile_modify),
     url(r'^profile/$', profile),
     url(r'^product/$', product),
@@ -16,6 +18,7 @@ urlpatterns = [
     url(r'^product/insert$', product_insert),
     url(r'^edit_company/modify$', modify_company),
     url(r'^list_company/$', list_company),
+    url(r'^data_analytics/$', data_analytics),
     url(r'^', home),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

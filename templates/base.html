@@ -42,7 +42,7 @@
 <body>
 {% include "pages/header.html" %}
 <div id="wrapper">
-{% include "pages/menu.html" %}
+    {% include "pages/menu.html" %}
 
     <div id="page-wrapper">
         {% block edit_company %}{% endblock %}
@@ -55,6 +55,8 @@
         {% block change_pass %}{% endblock %}
         {% block list_company %}{% endblock %}
         {% block edit_company_modify %}{% endblock %}
+    {% block data_analytics %}{% endblock %}
+    {% block api %}{% endblock %}
     </div>
     <!-- /#page-wrapper -->
 </div>

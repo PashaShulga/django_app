@@ -219,4 +219,4 @@ class EditCompany(forms.Form):
     postal_code = forms.CharField(max_length=256, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Postal code"}))
     phone = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Phone"}))
     website = forms.CharField(max_length=250, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Website"}))
-    company_logo = forms.ImageField()
+    company_logo = forms.ImageField(label="Choose logo")

@@ -243,7 +243,7 @@ def product(request):
                 print(e)
             finally:
                 c.close()
-            return render_to_response('pages/product.html', args)
+            return render_to_response('pages/data_collect.html', args)
     return redirect('/auth/login/')
 
 
@@ -317,3 +317,12 @@ def list_company(request):
         company = Client.objects.all()
         args['company'] = company
     return render_to_response('pages/list_company.html', args)
+
+
+def data_analytics(request):
+    args = {}
+    request_object = auth.get_user(request)
+    if request_object:
+        args.update(get_perm(request))
+        custom_user = CustomUser.objects.get(id=request_object.id)
+    return render_to_response('pages/data_analytics.html', args)

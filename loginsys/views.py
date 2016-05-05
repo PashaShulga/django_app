@@ -92,16 +92,12 @@ def add_new_user(request):
                                                       company_type = 1 if perm['company_type'] == 'L Company' else 2,
                                                       company_title=c_title.company_name, user_id=u_db[0].id)
                 new_user.save()
-            print(user_obj.username)
             u = CustomUser.objects.get(username=d['username'])
-            print(u)
             permission = None
-            print(perm['company_type'])
             if perm['company_type'] == 'L Package':
                 permission = Permission.objects.get(codename='user_short')
             elif perm['company_type'] == 'XL Package':
                 permission = Permission.objects.get(codename='admin')
-            print(permission)
             u.user_permissions.add(permission)
     return render_to_response('add_user.html', args)
 
