@@ -332,5 +332,10 @@ def company_users(request):
     request_object = auth.get_user(request)
     if request_object:
         args.update(get_perm(request))
-
+        company = Client.objects.get(user_id=auth.get_user(request).id)
+        args['company_name'] = company.company_name
+        c_u = CustomUser.objects.filter(company_id=company.id)
+        print(c_u)
+        if c_u.exists():
+            args['users'] = c_u
     return render_to_response('pages/company_users.html', args)
