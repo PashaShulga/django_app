@@ -16,7 +16,6 @@
             {% for user in users %}
                 <div class="bs-callout bs-callout-info">
                     <div class="col-sm-9">
-                    {{ user.codename }}
                         <h5>{{ user.first_name }} {{ user.last_name }}</h5>
                         {% if user.codename == 'admin' %}
                             <p>{{ user.email }} - Manager</p>
