@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^list_company/$', list_company),
     url(r'^data_analytics/$', data_analytics),
     url(r'^company/users/$', company_users),
+    url(r'^company/delete/$', company_delete_user),
     url(r'^', home),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

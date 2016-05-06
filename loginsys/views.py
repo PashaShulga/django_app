@@ -64,7 +64,7 @@ def registration(request):
             if c_type == 1:
                 permission = Permission.objects.get(codename='user_short')
             elif c_type == 2:
-                permission = Permission.objects.get(codename='admin')
+                permission = Permission.objects.get(codename='user_admin')
             u.user_permissions.add(permission)
             new_user = auth.authenticate(username=username, password=password)
             auth.login(request, new_user)
@@ -94,10 +94,10 @@ def add_new_user(request):
                     args['messages'] = "Password incorrect"
                     return render_to_response('add_user.html', args)
 
-                # CustomUser.objects.create_user(username=d['username'], password=d['password2'],
-                #                                           email=d['email'],
-                #                                       company_type = 1 if perm['company_type'] == 'L Company' else 2,
-                #                                       company_id=c_title.id, user_id=u_db[0].id)
+                CustomUser.objects.create_user(username=d['username'], password=d['password2'],
+                                                          email=d['email'],
+                                                      company_type = 1 if perm['company_type'] == 'L Company' else 2,
+                                                      company_id=c_title.id, user_id=u_db[0].id)
             u = CustomUser.objects.get(username=d['username'])
             permission = None
             if d['roles'] == "E":
@@ -108,7 +108,7 @@ def add_new_user(request):
             #     permission = Permission.objects.get(codename='user_short')
             # elif perm['company_type'] == 'XL Package':
             #     permission = Permission.objects.get(codename='admin')
-            # u.user_permissions.add(permission)
+            u.user_permissions.add(permission)
     return render_to_response('add_user.html', args)
 
 

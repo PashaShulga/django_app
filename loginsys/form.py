@@ -220,3 +220,11 @@ class EditCompany(forms.Form):
     postal_code = forms.CharField(max_length=256, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Postal code"}))
     phone = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Phone"}))
     website = forms.CharField(max_length=250, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Website"}))
+
+
+class EditUser(forms.Form):
+    username = forms.CharField(max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Username", "required": True}))
+    first_name = forms.CharField(max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "First Name", "required": True}))
+    last_name = forms.CharField(max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Last Name", "required": True}))
+    email = forms.CharField(max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Email", "required": True}))
+    set_user_id = forms.CharField(widget=forms.HiddenInput(attrs={'id': 'set_user_id'}))

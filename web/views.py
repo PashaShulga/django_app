@@ -10,6 +10,7 @@ from .xls_parse import XLSParse
 import datetime
 import json
 from django.http import QueryDict
+from django.contrib.auth.models import Permission
 
 
 def get_perm(request):
@@ -330,12 +331,50 @@ def data_analytics(request):
 def company_users(request):
     args = {}
     request_object = auth.get_user(request)
+    args.update(csrf(request))
+    args['form'] = EditUser()
     if request_object:
         args.update(get_perm(request))
-        company = Client.objects.get(user_id=auth.get_user(request).id)
-        args['company_name'] = company.company_name
-        c_u = CustomUser.objects.filter(company_id=company.id)
-        print(c_u)
-        if c_u.exists():
-            args['users'] = c_u
+        company = Client.objects.filter(user_id=auth.get_user(request).id)
+        if company.exists():
+            args['company_name'] = company[0].company_name
+            c_u = CustomUser.objects.filter(company_id=company[0].id)
+            custom_user = [u.id for u in c_u]
+        # if c_u.exists():
+        #     pass
+            if len(custom_user) > 1:
+                args['users'] = Client.objects.raw("""SELECT auth_user.id, auth_user.username, auth_user.email,
+                              auth_user.first_name, auth_user.last_name, auth_permission.codename FROM auth_user
+                          LEFT JOIN auth_user_user_permissions ON auth_user.id = auth_user_user_permissions.user_id
+                          LEFT JOIN auth_permission ON auth_user_user_permissions.permission_id = auth_permission.id
+                        WHERE auth_user.id in {}""".format(tuple(custom_user)))
+            elif len(custom_user) == 1:
+                args['users'] = Client.objects.raw("""SELECT auth_user.id, auth_user.username, auth_user.email,
+                          auth_user.first_name, auth_user.last_name, auth_permission.codename FROM auth_user
+                      LEFT JOIN auth_user_user_permissions ON auth_user.id = auth_user_user_permissions.user_id
+                      LEFT JOIN auth_permission ON auth_user_user_permissions.permission_id = auth_permission.id
+                    WHERE auth_user.id = {}""".format(custom_user[0]))
+            else:
+                args['users'] = False
+
+        if request.POST:
+            edit_user = EditUser(request.POST)
+            if edit_user.is_valid():
+                CustomUser.objects.filter(id=int(edit_user.cleaned_data['set_user_id'])).update(
+                    username=edit_user.cleaned_data['username'], email=edit_user.cleaned_data['email'],
+                    first_name=edit_user.cleaned_data['first_name'], last_name=edit_user.cleaned_data['last_name']
+                )
+
     return render_to_response('pages/company_users.html', args)
+
+
+@csrf_exempt
+def company_delete_user(request):
+    if request.is_ajax():
+        if request.method == 'DELETE':
+            try:
+                print(QueryDict(request.body)['id'])
+                CustomUser.objects.filter(id=QueryDict(request.body)['id']).delete()
+            except Exception as e:
+                print(e)
+    return HttpResponse("ok")
