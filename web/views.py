@@ -154,6 +154,25 @@ def product_delete(request):
     return HttpResponse("ok")
 
 
+def delete_all(request):
+    args = {}
+    args.update(csrf(request))
+    # if request.is_ajax():
+    print(request)
+    request_object = auth.get_user(request)
+    c_u = CustomUser.objects.filter(username=request_object.username)
+    user_db = UserBD.objects.filter(id=c_u[0].user_id)
+    c = connections[user_db[0].username].cursor()
+    print("1223")
+    if request.method == 'POST':
+        try:
+            c.execute("delete from product")
+        except Exception as e:
+            print(e)
+        return redirect('/product/')
+    return redirect('/')
+
+
 @ensure_csrf_cookie
 def product(request):
     args = {}

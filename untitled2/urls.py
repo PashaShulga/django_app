@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^add_column/$', add_column),
     url(r'^product/update$', product_update),
     url(r'^product/delete$', product_delete),
+    url(r'^product/delete_all/$', delete_all),
     url(r'^product/insert$', product_insert),
     url(r'^edit_company/modify$', modify_company),
     url(r'^list_company/$', list_company),

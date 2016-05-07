@@ -26,13 +26,33 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="well-sm">
+            <div class="col-lg-10">
                 {% include "pages/xls_uploader.html" %}
             </div>
+            <div class="col-lg-2">
+                <form method="post" action="/product/delete_all/">
+                    {% csrf_token %}
+                <button class="btn btn-sm btn-danger" id="delete" name="delete" >Delete all</button>
+                    </form>
+            </div>
+            <hr>
             <div id="jsGrid" class="jsGrid"></div>
         </div>
     </div>
+{#    <script>#}
+{#    function deleteItem() {#}
+{#            return $.ajax({#}
+{#                type: "DELETE",#}
+{#                url: "/product/delete_all/",#}
+{#                data: {csrfmiddlewaretoken: '{{ csrf_token }}'},#}
+{#                dataType: "json",#}
+{#                success: window.location.href = "/product/"#}
+{#            });#}
+{#        }#}
+{#    </script>#}
+
     <script>
+
         {% autoescape off %}
             var clients = {{ items }};
         {% endautoescape %}
