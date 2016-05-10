@@ -57,7 +57,6 @@
             var clients = {{ items }};
         {% endautoescape %}
 
-
         $("#jsGrid").jsGrid({
             width: "100%",
 
@@ -68,6 +67,7 @@
             paging: true,
             pageSize: 15,
             pageButtonCount: 5,
+
             controller: {
 
                 {#            loadData: function (filter) {#}

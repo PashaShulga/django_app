@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^data_analytics/$', data_analytics),
     url(r'^company/users/$', company_users),
     url(r'^company/delete/$', company_delete_user),
+    url(r'^company/add/$', add_new_company),
     url(r'^', home),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

@@ -7,40 +7,44 @@
                 <li>
                     <a href="/"><i class="fa fa-home fa-fw"></i> Home</a>
                 </li>
-                {% if 'auth.add_user' in user_permission %}
 
+
+
+                {% if 'auth.add_user' in user_permission %}
+                    <li>
+                        <a href="/company/add/"><i class="fa fa-pencil fa-fw"></i> Add New Company</a>
+                    </li>
+                    <li>
+                        <a href="/list_company/"><i class="fa fa-pencil fa-fw"></i> List Companies</a>
+                    </li>
+                    <li>
+                        <a href="/auth/add_user/"><i class="fa fa-edit fa-fw"></i> Add User</a>
+                    </li>
+                    <li>
+                        <a href="/auth/change_password/"><i class="fa fa-lock fa-fw"></i> Change Password</a>
+                    </li>
+{#                    <li>#}
+{#                        <a href="/add_column/"><i class="fa fa-bank fa-fw"></i> Edit Data Tables</a>#}
+{#                    </li>#}
+
+
+
+                {% elif 'web.user_short' in user_permission and company_type == 'XL Package' %}
+                    <li>
+                        <a href="/product/"><i class="fa fa-table fa-fw"></i> Data Collect</a>
+                    </li>
+                    <li>
+                        <a href="/auth/change_password/"><i class="fa fa-lock fa-fw"></i> Change Password</a>
+                    </li>
+
+                {% elif 'web.user_admin' in user_permission and company_type == 'XL Package' %}
                     <li>
                         <a href="/data_analytics/"><i class="fa fa-bar-chart-o fa-fw"></i> Data Analytics</a>
                     </li>
                     <li>
                         <a href="/product/"><i class="fa fa-table fa-fw"></i> Data Collect</a>
                     </li>
-                    <li>
-                        <a href="/api/info/"><i class="fa fa-table fa-fw"></i> Data Connect</a>
-                    </li>
-                    <li>
-                        <a href="/add_company/"><i class="fa fa-pencil fa-fw"></i> Add New Company</a>
-                    </li>
-                    <li>
-                        <a href="/list_company/"><i class="fa fa-pencil fa-fw"></i> List Company</a>
-                    </li>
-{#                    <li>#}
-{#                        <a href="/auth/add_user/"><i class="fa fa-edit fa-fw"></i> Add User</a>#}
-{#                    </li>#}
-{#                    <li>#}
-{#                        <a href="/auth/change_password/"><i class="fa fa-lock fa-fw"></i> Change Password</a>#}
-{#                    </li>#}
-                    <li>
-                        <a href="/add_column/"><i class="fa fa-bank fa-fw"></i> Edit Data Tables</a>
-                    </li>
-                {% elif 'web.admin' in user_permission and company_type == 'XL Package' %}
-                    <li>
-                        <a href="/data_analytics/"><i class="fa fa-bar-chart-o fa-fw"></i> Data Analytics</a>
-                    </li>
-                    <li>
-                        <a href="/product/"><i class="fa fa-table fa-fw"></i> Data Collect</a>
-                    </li>
-                    <li>
+                     <li>
                         <a href="/api/info/"><i class="fa fa-info fa-fw"></i> Data Connect</a>
                     </li>
                     <li>
@@ -56,24 +60,29 @@
                         <a href="/auth/change_password/"><i class="fa fa-lock fa-fw"></i> Change Password</a>
                     </li>
 
-                {% elif 'web.user_admin' in user_permission and company_type == 'XL Package' %}
+
+
+
+
+
+                {% elif 'web.user_short' in user_permission and company_type == 'L Package' %}
+
                     <li>
-                        <a href="/product/"><i class="fa fa-table fa-fw"></i> Data Collect</a>
+                        <a href="/data_analytics/"><i class="fa fa-bar-chart-o fa-fw"></i> Data Analytics</a>
                     </li>
-                    <li>
-                        <a href="/edit_company/modify"><i class="fa fa-pencil fa-fw"></i> Change Company Details</a>
-                    </li>
-                    <li>
-                        <a href="/auth/add_user/"><i class="fa fa-edit fa-fw"></i> Add User</a>
-                    </li>
-                    <li>
-                        <a href="/company/users/"><i class="fa fa-list fa-fw"></i> Users</a>
-                    </li>
+{#                    <li>#}
+{#                        <a href="/edit_company/modify"><i class="fa fa-pencil fa-fw"></i> Change Company Details</a>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                        <a href="/auth/add_user/"><i class="fa fa-edit fa-fw"></i> Add User</a>#}
+{#                    </li>#}
                     <li>
                         <a href="/auth/change_password/"><i class="fa fa-lock fa-fw"></i> Change Password</a>
                     </li>
 
-                {% elif 'web.user_short' in user_permission and company_type == 'L Package' or 'XL Package' %}
+
+                {% elif 'web.user_admin' in user_permission and company_type == 'L Package' %}
+
 
                     <li>
                         <a href="/data_analytics/"><i class="fa fa-bar-chart-o fa-fw"></i> Data Analytics</a>
@@ -83,6 +92,9 @@
                     </li>
                     <li>
                         <a href="/auth/add_user/"><i class="fa fa-edit fa-fw"></i> Add User</a>
+                    </li>
+                    <li>
+                        <a href="/company/users/"><i class="fa fa-list fa-fw"></i> Users</a>
                     </li>
                     <li>
                         <a href="/auth/change_password/"><i class="fa fa-lock fa-fw"></i> Change Password</a>

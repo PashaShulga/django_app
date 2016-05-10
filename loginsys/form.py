@@ -215,7 +215,7 @@ class AddNewUser(forms.Form):
 
 
 class EditCompany(forms.Form):
-    company_name = forms.CharField(max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Company name"}))
+    company_name = forms.CharField(required=True, max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Company name"}))
     address = forms.CharField(max_length=256, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Address"}))
     postal_code = forms.CharField(max_length=256, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Postal code"}))
     phone = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Phone"}))
@@ -228,3 +228,40 @@ class EditUser(forms.Form):
     last_name = forms.CharField(max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Last Name", "required": True}))
     email = forms.CharField(max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Email", "required": True}))
     set_user_id = forms.CharField(widget=forms.HiddenInput(attrs={'id': 'set_user_id'}))
+
+
+class AddCompany(EditCompany):
+    email = forms.CharField(required=True, max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Email"}))
+    address = forms.CharField(required=True, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': "Address", "rows": "2"}))
+    contact_name = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Contact"}))
+
+    CHOICES_PACKAGE = (
+        (1, "Package L (only charts)"),
+        (2, "Package XL (with collect and charts)")
+    )
+
+    CHOICES_UPDATE = (
+        ("d", "Day"),
+        ("w", "Week"),
+        ("m", "Month"),
+        ("q", "Quarter"),
+        ("h_y", "Half Year"),
+        ("y", "Year")
+    )
+
+    package = forms.ChoiceField(required=True, widget=forms.Select(attrs={'class': 'form-control'}), choices=CHOICES_PACKAGE)
+    update = forms.ChoiceField(required=True, widget=forms.Select(attrs={'class': 'form-control'}), choices=CHOICES_UPDATE)
+
+    # CHOICE = ((u.id, u.username) for u in UserBD.objects.all())
+    # who_is_admin = forms.ChoiceField(required=True, widget=forms.Select(attrs={'class': 'form-control'}), choices=CHOICE)
+
+    username = forms.CharField(required=True, max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Username"}))
+
+    password1 = forms.CharField(label="", required=True,
+        strip=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True}))
+
+    password2 = forms.CharField(label="", required=True,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password againe", 'required': True}),
+        strip=False)
+

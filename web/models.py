@@ -11,6 +11,8 @@ class Client(models.Model):
     website = models.CharField(max_length=520, blank=True)
     user = models.ForeignKey('auth.User')
     company_logo = models.ImageField(blank=True, upload_to='/static/images/')
+    contact_name = models.CharField(max_length=50, blank=True)
+    email = models.EmailField(max_length=128, blank=True)
 
     class Meta:
         db_table = 'client'

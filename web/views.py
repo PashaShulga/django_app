@@ -158,12 +158,10 @@ def delete_all(request):
     args = {}
     args.update(csrf(request))
     # if request.is_ajax():
-    print(request)
     request_object = auth.get_user(request)
     c_u = CustomUser.objects.filter(username=request_object.username)
     user_db = UserBD.objects.filter(id=c_u[0].user_id)
     c = connections[user_db[0].username].cursor()
-    print("1223")
     if request.method == 'POST':
         try:
             c.execute("delete from product")
@@ -254,11 +252,13 @@ def product(request):
                         "name": i[0],
                         "type": i[1],
                         "width": 80,
-                        "validate": "required"
+                        "validate": "required",
+                        "selecting": True
                     })
                     b = json.dumps(fi)
                     fields.append(json.loads(b))
                 fields.append({"type": "control"})
+                fields.append({"type": "checkbox", "title": "delete", "width": 35, "multiselect": True})
                 args['fields'] = json.dumps(fields)
             except Exception as e:
                 print(e)
@@ -396,4 +396,37 @@ def company_delete_user(request):
                 CustomUser.objects.filter(id=QueryDict(request.body)['id']).delete()
             except Exception as e:
                 print(e)
-    return HttpResponse("ok")
+    return HttpResponse(status=200)
+
+
+def add_new_company(request):
+    from web.create_user_db import create_db
+    args = {}
+    args.update(get_perm(request))
+    request_object = auth.get_user(request)
+    args.update(csrf(request))
+    args['form'] = AddCompany()
+    # args['pp_form'] = PackagePermissions
+    # args['us_form'] = UserSettings
+    if request_object:
+        if request.POST:
+            new_company = AddCompany(request.POST)
+            try:
+                create_db("db_%s" % (new_company.data['username'],), new_company.data['password2'], new_company.data['username'])
+            except:
+                args['error'] = ("Warning! Database is not create, try again or inform staff")
+            u_db = UserBD.objects.filter(username=new_company.data['username'])
+            new_user = CustomUser.objects.create_user(username=new_company.data['username'],
+                                                      email=new_company.data['email'],
+                                                      password=new_company.data['password2'],
+                                                      company_type= 1 if new_company.data['package'] == "L" else 2,
+                                                      user_id=int(u_db[0].id)
+                                                      )
+            new_user.save()
+            new_client = Client(user_id=new_user.id,
+                phone=new_company.data['phone'], company_name=new_company.data['company_name'],
+                   contact_name=new_company.data['contact_name'],
+                   email=new_company.data['email'], address=new_company.data['address'])
+            new_client.save()
+            CustomUser.objects.filter(id=new_user.id).update(company_id=new_client.id)
+    return render_to_response('pages/add_company.html', args)

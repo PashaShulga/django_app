@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block add_company %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header" style="font-size: 20px"> Add Company</h1>
+        </div>
+    </div>
+
+    <div class="row">
+{#        <ul class="nav nav-tabs">#}
+{#            <li class="active"><a data-toggle="tab" href="#home">General</a></li>#}
+{#            <li><a data-toggle="tab" href="#menu1">Package/permissions settings</a></li>#}
+{#            <li><a data-toggle="tab" href="#menu2">Users settings</a></li>#}
+{#        </ul>#}
+
+{#        <div class="tab-content">#}
+{#            <div id="home" class="tab-pane fade in active">#}
+                <br>
+                <div class="col-md-4">
+                    <form role="form" method="post">
+                        {% csrf_token %}
+                        <fieldset>
+                            <div class="form-group">
+                                <label>Company Name</label>
+                                {{ form.company_name }}
+                                </div>
+                            <div class="form-group">
+                                <label>Contact Name</label>
+                                {{ form.contact_name }}
+                                </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                {{ form.address }}
+                            </div>
+                            <div class="form-group">
+                                <label>Telephone number</label>
+                                {{ form.phone }}
+                            </div>
+                            <div class="form-group">
+                                <label>Package</label>
+                                {{ form.package }}
+                                </div>
+                            <div class="form-group">
+                                <label>Permissions update</label>
+                                {{ form.update }}
+                                </div>
+{#                            <div class="form-group">#}
+{#                                <label>Who manager </label>#}
+{#                                {{ form.who_is_admin }}#}
+{#                            </div>#}
+                            <div class="form-group">
+                                <label>Choose Username</label>
+                                {{ form.username }}
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                {{ form.password1 }}
+                            </div>
+                            <div class="form-group">
+                                <label>Password Again</label>
+                                {{ form.password2 }}
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-lg btn-info btn-block" type="submit" value="Save">
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+{% endblock %}
