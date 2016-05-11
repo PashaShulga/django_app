@@ -29,9 +29,15 @@ def home(request):
     args = {}
     user = auth.get_user(request)
     if user:
-        client = Client.objects.filter(user__username=user.username)
+        client = Client.objects.all()
         if client.exists():
-            args['brand'] = client[0].company_logo
+            args['companies'] = len(client)
+        packages = Company.objects.all()
+        if packages.exists():
+            args['packages'] = len(packages)
+        args['realise'] = "2016.05.11"
+        args['updates'] = "WTF?"
+
         args.update(get_perm(request))
         # print(get_perm(request))
         return render_to_response('pages/index.html', args)
