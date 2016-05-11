@@ -171,12 +171,101 @@ def delete_all(request):
     return redirect('/')
 
 
+def custom_product(request, id):
+    args = {}
+    title_list = []
+    request_object = auth.get_user(request)
+    if request_object:
+        args.update(get_perm(request))
+        c_u = CustomUser.objects.get(company_id=id)
+        user_db = UserBD.objects.filter(id=c_u.user_id)
+        c = connections[user_db[0].username].cursor()
+        if user_db.exists():
+            try:
+                c.execute("select column_name from information_schema.columns WHERE table_name = 'product'")
+                result = c.fetchall()
+                for it in result:
+                    title_list.append(it[0])
+                args['titles'] = title_list
+                args['id'] = result[0]
+                args['inputs'] = range(0, len(title_list))
+                if request.POST:
+                    upform = UploadFileForm(request.POST, request.FILES)
+                    if upform.is_valid():
+                        UploadHandler(request.FILES['file']).handler()
+
+                        XLSParse(request.FILES['file'], request).parse()
+                    list_ = []
+                    for ite in range(0, len(title_list)):
+                        list_.append(request.POST['column'+str(ite)])
+                    s = 'insert into product {}'.format(tuple(title_list)).replace("'", '"')
+                    s2 = ' VALUES {}'.format(tuple(list_))
+                    c.execute(s+s2)
+                c.execute("select * from product")
+                l = []
+                data = c.fetchall()
+                for conversion in data:
+                    l.append(list(conversion))
+                counter = 0
+                res = {}
+                ls = []
+                while counter < len(data):
+                    for i in title_list:
+                        for k in l[counter]:
+                            if type(k) == datetime.date:
+                                res[i] = k.strftime("%Y-%m-%d") #  %H:%M:%S
+                            else:
+                                res[i] = k
+                            del l[counter][0]
+                            break
+                    counter += 1
+                    b = json.dumps(res.copy())
+                    ls.append(json.loads(b))
+                args['items'] = json.dumps(ls)
+
+                fields = []
+                c.execute("SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'product'")
+                fi = {}
+                for i in c.fetchall():
+                    i = list(i)
+                    if i[1] == "character" or i[1] == "date":
+                        i[1] = "text"
+                    elif i[1] == "integer":
+                        i[1] = "number"
+                    if i[0] == "id":
+                        fi = {
+                        "name": i[0],
+                        "type": i[1],
+                        "width": 22,
+                        "validate": "required"
+                        }
+                        b = json.dumps(fi)
+                        fields.append(json.loads(b))
+                        continue
+                    fi.update({
+                        "name": i[0],
+                        "type": i[1],
+                        "width": 80,
+                        "validate": "required",
+                        # "selecting": True
+                    })
+                    b = json.dumps(fi)
+                    fields.append(json.loads(b))
+                # fields.append({"type": "control"})
+                args['fields'] = json.dumps(fields)
+            except Exception as e:
+                print(e)
+            finally:
+                c.close()
+            return args
+
+
 @ensure_csrf_cookie
 def product(request):
     args = {}
     args.update(csrf(request))
-    title_list = []
     args['form'] = UploadFileForm()
+    title_list = []
     request_object = auth.get_user(request)
     if request_object:
         args.update(get_perm(request))
@@ -184,9 +273,6 @@ def product(request):
         user_db = UserBD.objects.filter(id=c_u[0].user_id)
         c = connections[user_db[0].username].cursor()
         if user_db.exists():
-            client = Client.objects.filter(user__username=request_object.username)
-            if client.exists():
-                args['brand'] = client[0].company_logo
             try:
                 c.execute("select column_name from information_schema.columns WHERE table_name = 'product'")
                 result = c.fetchall()
@@ -258,13 +344,12 @@ def product(request):
                     b = json.dumps(fi)
                     fields.append(json.loads(b))
                 fields.append({"type": "control"})
-                fields.append({"type": "checkbox", "title": "delete", "width": 35, "multiselect": True})
                 args['fields'] = json.dumps(fields)
             except Exception as e:
                 print(e)
             finally:
                 c.close()
-            return render_to_response('pages/data_collect.html', args)
+        return render_to_response('pages/data_collect.html', args)
     return redirect('/auth/login/')
 
 
@@ -424,9 +509,54 @@ def add_new_company(request):
                                                       )
             new_user.save()
             new_client = Client(user_id=new_user.id,
-                phone=new_company.data['phone'], company_name=new_company.data['company_name'],
+                   phone=new_company.data['phone'], company_name=new_company.data['company_name'],
                    contact_name=new_company.data['contact_name'],
                    email=new_company.data['email'], address=new_company.data['address'])
             new_client.save()
             CustomUser.objects.filter(id=new_user.id).update(company_id=new_client.id)
     return render_to_response('pages/add_company.html', args)
+
+
+def list_company_change(request, id):
+    args = {}
+    args.update(csrf(request))
+    args.update(get_perm(request))
+    if "auth.add_user" in get_perm(request)['user_permission']:
+        client = Client.objects.get(id=id)
+        args['company'] = client
+        args['form'] = ChangeCompany(initial=
+                                     {"company_name": client.company_name,
+                                      "contact_name": client.contact_name.strip() if client.contact_name is not None else client.contact_name,
+                                      "email": client.email.strip() if client.email is not None else client.email,
+                                      "address": client.address,
+                                      "phone": client.phone}
+                                     )
+        args['pp_form'] = ChangeCompanyPackage()
+        args['user'] = 'is_staff'
+        args['table_form'] = AdditionalForm()
+        if request.POST:
+            cc_package = ChangeCompanyPackage(request.POST)
+            if cc_package.is_valid():
+                CustomUser.objects.filter(company_id=id).update(
+                    company_type=cc_package.data['package'])
+
+            form = AdditionalForm(request.POST)
+            if form.is_valid():
+                name_column, type_column = form.cleaned_data['name_column'], form.cleaned_data['type_column']
+                c = connections[form.cleaned_data['user']].cursor()
+                c.execute("ALTER TABLE product ADD COLUMN %s %s" % (name_column, type_column))
+
+            change_conpany = ChangeCompany(request.POST)
+            if change_conpany.is_valid():
+                Client.objects.filter(id=id).update(email=change_conpany.data['email'],
+                                                    address=change_conpany.data['address'],
+                                                    company_name=change_conpany.data['company_name'],
+                                                    contact_name=change_conpany.data['contact_name'],
+                                                    phone=change_conpany.data['phone'])
+                redirect('/list_company/change/%s/', id)
+        try:
+            args.update(custom_product(request, id))
+        except:
+            pass
+
+    return render_to_response('pages/list_company_change.html', args)

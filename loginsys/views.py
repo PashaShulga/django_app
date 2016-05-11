@@ -1,7 +1,6 @@
 from django.shortcuts import redirect, render_to_response
 from django.contrib import auth
-from .form import UserCreationForm, PasswordResetRequestForm, SetPasswordForm, \
-    AuthenticationForm, ChangePassForm, AddNewUser
+from .form import *
 from django.core.context_processors import csrf
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
@@ -110,6 +109,41 @@ def add_new_user(request):
             #     permission = Permission.objects.get(codename='admin')
             u.user_permissions.add(permission)
     return render_to_response('add_user.html', args)
+
+
+def add_admin_user(request):
+    args = {}
+    args.update(csrf(request))
+    args['form'] = AddAdminUser()
+    if auth.get_user(request):
+        perm = get_perm(request)
+        args.update(perm)
+        if request.POST:
+            d = request.POST
+            # au = AddNewUser(request.POST)
+            user_obj = auth.get_user(request)
+            c_title = Client.objects.get(user_id=user_obj.id)
+            # u_db = UserBD.objects.filter(username=user_obj.username)
+
+            # if u_db.exists():
+            if d['password1'] != d['password2']:
+                args['messages'] = "Password incorrect"
+                return render_to_response('add_admin_user.html', args)
+            CustomUser.objects.create_user(username=d['username'], password=d['password2'], is_superuser=True,
+                                           is_staff=True)
+
+            # u = CustomUser.objects.get(username=d['username'])
+            # permission = None
+            # if d['roles'] == "E":
+            #     permission = Permission.objects.get(codename='user_short')
+            # if d['roles'] == "M":
+            #     permission = Permission.objects.get(codename='admin')
+            # if perm['company_type'] == 'L Package':
+            #     permission = Permission.objects.get(codename='user_short')
+            # elif perm['company_type'] == 'XL Package':
+            #     permission = Permission.objects.get(codename='admin')
+            # u.user_permissions.add(permission)
+    return render_to_response('add_admin_user.html', args)
 
 
 class LoginUser(FormView):
@@ -294,3 +328,29 @@ class ChangePassword(FormView):
             else:
                 messages.error(request, "Warning! Password change has not been unsuccessful.")
                 return self.form_invalid(form)
+
+
+class AdminChangePassword(FormView):
+    template_name = "change_password.html"
+    success_url = '/'
+    form_class = ChangeAdminPassword
+
+    def post(self, request, *args, **kwargs):
+        UserModel = get_user_model()
+        form = self.form_class(request.POST)
+        try:
+            print(form.data['username'])
+            user = UserModel._default_manager.get(pk=form.data['username'])
+        except:
+            user = None
+        if user:
+            if form.is_valid():
+                user.set_password(form.clean_new_password2())
+                user.save()
+                messages.success(request, "Password has been changed.")
+                return self.form_valid(form)
+            else:
+                messages.error(request, "Warning! Password change has not been unsuccessful.")
+                return self.form_invalid(form)
+        else:
+            return self.form_invalid(form)

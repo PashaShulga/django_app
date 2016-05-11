@@ -18,11 +18,13 @@ urlpatterns = [
     url(r'^product/delete_all/$', delete_all),
     url(r'^product/insert$', product_insert),
     url(r'^edit_company/modify$', modify_company),
+    url(r'^list_company/change/([0-9]+)/$', list_company_change),
     url(r'^list_company/$', list_company),
     url(r'^data_analytics/$', data_analytics),
     url(r'^company/users/$', company_users),
     url(r'^company/delete/$', company_delete_user),
     url(r'^company/add/$', add_new_company),
+
     url(r'^', home),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

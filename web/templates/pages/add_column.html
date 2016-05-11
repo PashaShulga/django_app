@@ -1,12 +1,12 @@
-{% extends "base.html" %}
+{#{% extends "base.html" %}#}
 {% block upload_file %}
     <div class="panel-body">
     <div class="row1">
         {% if user == 'is_staff' %}
             <form method="post">
                 {% csrf_token %}
-                {{ form }}
-                <input type="submit" value="Add">
+                {{ table_form }}
+                <input type="submit" class="btn btn-sm btn-info" value="Add">
             </form>
         {% endif %}
         <div class="panel-body">

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block list_company_change %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header" style="font-size: 20px">Company name: <i style="color: red">{{ company.company_name }}</i></h1>
+        </div>
+    </div>
+
+    <div class="row">
+    <div class="col-lg-12">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">General</a></li>
+            <li><a data-toggle="tab" href="#menu1">Package</a></li>
+            <li><a data-toggle="tab" href="#menu2">Change tables</a></li>
+            <li><a data-toggle="tab" href="#menu3">Data collect</a></li>
+            <li><a data-toggle="tab" href="#menu4">Data analytics</a></li>
+            <li><a data-toggle="tab" href="#menu5">Data connect</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <H2>General</H2>
+                <p>Change general info</p>
+                <div class="col-md-4">
+                    <form role="form" method="post">
+                        {% csrf_token %}
+                        <fieldset>
+                            <div class="form-group">
+                                <label>Company Name</label>
+                                {{ form.company_name }}
+                                </div>
+                            <div class="form-group">
+                                <label>Contact Name</label>
+                                {{ form.contact_name }}
+                                </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                {{ form.address }}
+                            </div>
+                            <div class="form-group">
+                                <label>Telephone number</label>
+                                {{ form.phone }}
+                            </div>
+                        <div class="form-group">
+                                <input class="btn btn-lg btn-info btn-block" type="submit" value="Save">
+                            </div>
+                            </fieldset>
+                        </form>
+                    </div>
+            </div>
+            <div id="menu1" class="tab-pane fade">
+                <H2>Package</H2>
+                <p>Change Package and Permissions</p>
+                <div class="col-md-4">
+                    <form role="form" method="post">
+                        {% csrf_token %}
+                        <fieldset>
+                            <div class="form-group">
+                                <label>Package</label>
+                                {{ pp_form.package }}
+                                </div>
+                            <div class="form-group">
+                                <label>Permissions update</label>
+                                {{ pp_form.update }}
+                                </div>
+                        <div class="form-group">
+                                <input class="btn btn-lg btn-info btn-block" type="submit" value="Save">
+                            </div>
+                            </fieldset>
+                        </form>
+                    </div>
+
+            </div>
+            <div id="menu2" class="tab-pane fade">
+                <H2>Change tables</H2>
+                <p>Change tables for client</p>
+                {% include "pages/add_column.html" %}
+            </div>
+             <div id="menu3" class="tab-pane fade">
+                 <H2>Data Collect</H2>
+                 <p>Show tables and data</p>
+                 {% include "pages/data_collect_admin.html" %}
+            </div>
+             <div id="menu4" class="tab-pane fade">
+                 <H2>Data Analytics</H2>
+                 <p>Show Charts</p>
+            </div>
+             <div id="menu5" class="tab-pane fade">
+                 <H2>Data Connect</H2>
+                 <p>Show api info</p>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}

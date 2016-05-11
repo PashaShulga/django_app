@@ -132,6 +132,29 @@ class ChangePassForm(forms.Form):
         return password2
 
 
+class ChangeAdminPassword(forms.Form):
+    error_messages = {
+        'password_mismatch': ("Warning! The two password fields didn't match."),
+        }
+    CHOICES = ((it.id, it.username) for it in CustomUser.objects.all())
+    username = forms.ChoiceField(choices=CHOICES)
+
+    new_password1 = forms.CharField(label=("New password"),
+                                    widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'New Password'}))
+    new_password2 = forms.CharField(label=("New password confirmation"),
+                                    widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'New Password againe'}))
+    def clean_new_password2(self):
+        password1 = self.cleaned_data.get('new_password1')
+        password2 = self.cleaned_data.get('new_password2')
+        if password1 and password2:
+            if password1 != password2:
+                raise forms.ValidationError(
+                    self.error_messages['password_mismatch'],
+                    code='password_mismatch',
+                    )
+        return password2
+
+
 class AuthenticationForm(forms.Form):
     username = forms.CharField(label="", max_length=30, strip=False,
                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}))
@@ -164,9 +187,8 @@ class UploadFileForm(forms.Form):
 class AdditionalForm(forms.Form):
     name_column = forms.CharField(label='Column name', max_length=30)
     type_column = forms.CharField(label='Column type', max_length=30)
-    l = []
-    CHOICES = ((it.username, it.username) for it in UserBD.objects.all())
-    user = forms.ChoiceField(choices=CHOICES)
+    # CHOICES = ((it.username, it.username) for it in UserBD.objects.all())
+    # user = forms.ChoiceField(choices=CHOICES)
 
 
 class AddNewUser(forms.Form):
@@ -213,6 +235,26 @@ class AddNewUser(forms.Form):
                     )
         return password2
 
+
+class AddAdminUser(forms.Form):
+    error_messages = {
+        'password_mismatch': _("The two password fields didn't match."),
+    }
+
+    username = forms.CharField(label="",
+                               max_length=30,
+                               strip=False,
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username',
+                                                             'required': True})
+    )
+
+    password1 = forms.CharField(label="",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True}))
+
+    password2 = forms.CharField(label="",
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password again", 'required': True}),
+        strip=False)
 
 class EditCompany(forms.Form):
     company_name = forms.CharField(required=True, max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Company name"}))
@@ -265,3 +307,29 @@ class AddCompany(EditCompany):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password againe", 'required': True}),
         strip=False)
 
+
+class ChangeCompany(forms.Form):
+    phone = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Phone"}))
+    company_name = forms.CharField(required=True, max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Company name"}))
+    email = forms.CharField(required=True, max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Email"}))
+    address = forms.CharField(required=True, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': "Address", "rows": "2"}))
+    contact_name = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Contact"}))
+
+
+class ChangeCompanyPackage(forms.Form):
+    CHOICES_PACKAGE = (
+        (1, "Package L (only charts)"),
+        (2, "Package XL (with collect and charts)")
+    )
+
+    CHOICES_UPDATE = (
+        ("d", "Day"),
+        ("w", "Week"),
+        ("m", "Month"),
+        ("q", "Quarter"),
+        ("h_y", "Half Year"),
+        ("y", "Year")
+    )
+
+    package = forms.ChoiceField(required=True, widget=forms.Select(attrs={'class': 'form-control'}), choices=CHOICES_PACKAGE)
+    update = forms.ChoiceField(required=True, widget=forms.Select(attrs={'class': 'form-control'}), choices=CHOICES_UPDATE)
