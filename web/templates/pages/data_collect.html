@@ -30,10 +30,7 @@
                 {% include "pages/xls_uploader.html" %}
             </div>
             <div class="col-lg-2">
-                <form method="post" action="/product/delete_all/">
-                    {% csrf_token %}
-                <button class="btn btn-sm btn-danger" id="delete" name="delete" >Delete all</button>
-                    </form>
+                <button class="btn btn-sm btn-danger" id="delete" name="delete" onclick="deleteItem(event);">Delete all</button>
             </div>
             <hr>
             <div id="jsGrid" class="jsGrid"></div>
@@ -41,32 +38,35 @@
     </div>
     <script>
 
+    function deleteItem(item){
+        return $.ajax({
+            type: "DELETE",
+            url: "/product/delete_all/",
+            data: {},
+            dataType: "json",
+            success: window.location.href = "/product/"
+            });
+    }
+
         {% autoescape off %}
             var clients = {{ items }};
         {% endautoescape %}
-
         $("#jsGrid").jsGrid({
             width: "100%",
 
-
             inserting: true,
-            editing: true,
             sorting: true,
+            editing: true,
             paging: true,
+            autoload: true,
+            confirmDeleting: false,
             pageSize: 15,
             pageButtonCount: 5,
 
             controller: {
-
-                {#            loadData: function (filter) {#}
-                {#                filter.csrfmiddlewaretoken = '{{ csrf_token }}';#}
-                {#                return $.ajax({#}
-                {#                    type: "GET",#}
-                {#                    url: "/product/",#}
-                {#                    data: filter,#}
-                {#                    dataType: "json"#}
-                {#                });#}
-                {#            },#}
+                loadData: function() {
+                    return clients;
+                },
 
                 insertItem: function (item) {
                     item.csrfmiddlewaretoken = '{{ csrf_token }}';
@@ -102,11 +102,61 @@
                 }
 
             },
-            data: clients,
-            {% autoescape off %}
-                fields: {{ fields }}
-            {% endautoescape %}
-        });
-    </script>
 
+            {% autoescape off %}
+                fields: [{
+                    headerTemplate: function () {
+                        return $("<button>").attr("type", "button").text("Delete")
+                                .on("click", function () {
+                                    deleteSelectedItems();
+                                });
+                    },
+                    itemTemplate: function (_, item) {
+                        return $("<input>").attr("type", "checkbox")
+                                .on("change", function () {
+                                    $(this).is(":checked") ? selectItem(item) : unselectItem(item);
+                                });
+                    },
+                    align: "center",
+                    width: 40,
+                    sorting: false,
+                    editing: false
+                }
+                ].concat({{ fields }})
+            {% endautoescape %}
+
+        });
+        var selectedItems = [];
+
+        var selectItem = function (item) {
+            selectedItems.push(item);
+        };
+
+        var unselectItem = function (item) {
+            selectedItems = $.grep(selectedItems, function (i) {
+                return i !== item;
+            });
+        };
+
+        var deleteSelectedItems = function () {
+            if (!selectedItems.length || !confirm("Are you sure?")) {
+                return;
+            }
+
+            $.each(selectedItems, function (_, item) {
+                deleteItem: {
+                    item.csrfmiddlewaretoken = '{{ csrf_token }}';
+                    return $.ajax({
+                        type: "DELETE",
+                        url: "/product/delete",
+                        data: item,
+                        dataType: "json",
+                        success: window.location.href = "/product/"
+                    });
+                }
+            });
+
+            selectedItems = [];
+        };
+    </script>
 {% endblock %}

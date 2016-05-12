@@ -160,21 +160,19 @@ def product_delete(request):
     return HttpResponse("ok")
 
 
+@csrf_exempt
 def delete_all(request):
-    args = {}
-    args.update(csrf(request))
-    # if request.is_ajax():
-    request_object = auth.get_user(request)
-    c_u = CustomUser.objects.filter(username=request_object.username)
-    user_db = UserBD.objects.filter(id=c_u[0].user_id)
-    c = connections[user_db[0].username].cursor()
-    if request.method == 'POST':
-        try:
-            c.execute("delete from product")
-        except Exception as e:
-            print(e)
-        return redirect('/product/')
-    return redirect('/')
+    if request.is_ajax():
+        request_object = auth.get_user(request)
+        c_u = CustomUser.objects.filter(username=request_object.username)
+        user_db = UserBD.objects.filter(id=c_u[0].user_id)
+        c = connections[user_db[0].username].cursor()
+        if request.method == 'DELETE':
+            try:
+                c.execute("delete from product")
+            except Exception as e:
+                print(e)
+        return HttpResponse(status=200)
 
 
 def custom_product(request, id):
@@ -291,8 +289,8 @@ def product(request):
                     upform = UploadFileForm(request.POST, request.FILES)
                     if upform.is_valid():
                         UploadHandler(request.FILES['file']).handler()
-
                         XLSParse(request.FILES['file'], request).parse()
+                        return redirect('/product/')
                     list_ = []
                     for ite in range(0, len(title_list)):
                         list_.append(request.POST['column'+str(ite)])
@@ -369,8 +367,11 @@ def upload_file(request):
     if request.POST:
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            UploadHandler(request.FILES['file']).handler()
-
+            try:
+                UploadHandler(request.FILES['file']).handler()
+                return redirect('/')
+            except:
+                return redirect('/')
     return render_to_response('pages/xls_uploader.html', args)
 
 

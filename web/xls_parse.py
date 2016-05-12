@@ -33,7 +33,8 @@ class XLSParse(object):
                             it[1] = "CHARACTER(255)"
                         c.execute("ALTER TABLE product ADD %s %s" % (it[0], it[1]))
                 except:
-                    pass
+                    import traceback
+                    print(traceback.format_exc())
                 try:
                     title_list = []
                     c.execute("select column_name from information_schema.columns WHERE table_name = 'product'")
