@@ -181,7 +181,13 @@ class ModifyProfile(forms.Form):
 
 
 class UploadFileForm(forms.Form):
-    file = forms.FileField(label='Choose the file')
+    CHOICES = (
+        ("xls", "xls"),
+        ("csv", "csv")
+    )
+    # selector_table = forms.ChoiceField(choices=CHOICES_TABLE, required=True)
+    file_type = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=True)
+    file = forms.FileField(label='Choose the file', widget=forms.FileInput(attrs={"name": "file"}))
 
 
 class AdditionalForm(forms.Form):
@@ -257,7 +263,7 @@ class AddAdminUser(forms.Form):
         strip=False)
 
 class EditCompany(forms.Form):
-    company_name = forms.CharField(required=True, max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Company name"}))
+    company_name = forms.CharField(required=True, max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Company name", "readonly":True}))
     address = forms.CharField(max_length=256, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Address"}))
     postal_code = forms.CharField(max_length=256, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Postal code"}))
     phone = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Phone"}))
@@ -270,6 +276,11 @@ class EditUser(forms.Form):
     last_name = forms.CharField(max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Last Name", "required": True}))
     email = forms.CharField(max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Email", "required": True}))
     set_user_id = forms.CharField(widget=forms.HiddenInput(attrs={'id': 'set_user_id'}))
+    CHOICES = (
+        ("M", "Manager"),
+        ("E", "Employee")
+    )
+    roles = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=True)
 
 
 class AddCompany(EditCompany):

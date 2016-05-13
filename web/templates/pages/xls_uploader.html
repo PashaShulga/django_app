@@ -1,28 +1,51 @@
 {% block content %}
-    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Upload file</button>
-    <!-- Modal -->
-    <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Select file in the computer</h4>
-                </div>
-                <div class="modal-body">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ form }}
-                        <br>
-                        <input type="submit" value="Upload">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-default " data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
+    <form method="post" enctype="multipart/form-data" onsubmit="return Validate(this);">
+        {% csrf_token %}
+        <div class="col-sm-2">
+            <label>Choices file type</label>
         </div>
-    </div>
+        <div class="col-sm-10">
+            <div class="radio-inline">
+                {{ form.file_type }}
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <label>Choices file on the computer</label>
+        </div>
+        <div class="col-sm-9">
+            <div class="form-group">
+                {{ form.file }}
+            </div>
+        </div>
+        <input type="submit" class="btn btn-sm btn-info" value="Upload">
+    </form>
+
+    <script>
+        var _validFileExtensions = [".csv", ".xls", ".xlsx"];
+        function Validate(oForm) {
+            var arrInputs = oForm.getElementsByTagName("input");
+            for (var i = 0; i < arrInputs.length; i++) {
+                var oInput = arrInputs[i];
+                if (oInput.type == "file") {
+                    var sFileName = oInput.value;
+                    if (sFileName.length > 0) {
+                        var blnValid = false;
+                        for (var j = 0; j < _validFileExtensions.length; j++) {
+                            var sCurExtension = _validFileExtensions[j];
+                            if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                                blnValid = true;
+                                break;
+                            }
+                        }
+
+                        if (!blnValid) {
+                            alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+    </script>
 {% endblock %}

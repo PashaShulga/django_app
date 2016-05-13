@@ -12,37 +12,40 @@
     <div class="row">
         <div class="col-lg-11">
             {#            <H3>All users in <i>{{ company_name }}</i></H3>#}
-        {% if users %}
-            {% for user in users %}
-                <div class="bs-callout bs-callout-info">
-                    <div class="col-sm-9">
-                        <h5>{{ user.first_name }} {{ user.last_name }}</h5>
-                        {% if user.codename == 'admin' %}
-                            <p>{{ user.email }} - Manager</p>
-                        {% elif user.codename == 'user_short' %}
-                            <p>{{ user.email }} - Employee</p>
-                        {% elif user.codename == 'user_admin' %}
-                            <p>{{ user.email }} - Owner</p>
-                        {% else %}
-                            <p>{{ user.email }} - Admin</p>
-                        {% endif %}
+            {% if users %}
+                {% for user in users %}
+                    <div class="bs-callout bs-callout-info">
+                        <div class="col-sm-9">
+                            <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                            {% if user.codename == 'admin' %}
+                                <p>{{ user.email }} - Manager</p>
+                            {% elif user.codename == 'user_short' %}
+                                <p>{{ user.email }} - Employee</p>
+                            {% elif user.codename == 'user_admin' %}
+                                <p>{{ user.email }} - Owner</p>
+                            {% else %}
+                                <p>{{ user.email }} - Admin</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-3">
+                            <ul class="list-inline">
+                                <li>
+                                    <button class="btn btn-sm btn-default" name="change" onclick="knowId(event);"
+                                            id="{{ user.id }}" data-toggle="modal"
+                                            data-target="#myModal">
+                                        Change
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="btn btn-sm btn-danger" name="delete" onclick="deleteItem(event);"
+                                            id="{{ user.id }}">Delete
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="col-sm-3">
-                        <ul class="list-inline">
-                            <li>
-                                <button class="btn btn-sm btn-default" name="change" onclick="knowId(event);" id="{{ user.id }}" data-toggle="modal"
-                                        data-target="#myModal">
-                                    Change
-                                </button>
-                            </li>
-                            <li>
-                                <button class="btn btn-sm btn-danger" name="delete" onclick="deleteItem(event);" id="{{ user.id }}">Delete</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            {% endfor %}
-        {% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
     <!-- Modal -->
@@ -73,9 +76,9 @@
                                 <label>First name</label>
                                 {{ form.last_name }}
                             </div>
-                            {#                    <div class="radio-inline">#}
-                            {#                        {{ form.roles }}#}
-                            {#                    </div>#}
+                            <div class="radio-inline">
+                                {{ form.roles }}
+                            </div>
                             <div class="form-group">
                                 <input class="btn btn-lg btn-info btn-block" type="submit" value="Save">
                             </div>
@@ -91,22 +94,40 @@
 
     <script>
         function knowId(e) {
-    var target;
-    if (e.target) {target=e.target} else {target=e.srcElement}
-           var u_i = document.getElementById('set_user_id');
+            var target;
+            if (e.target) {
+                target = e.target
+            } else {
+                target = e.srcElement
+            }
+            var u_i = document.getElementById('set_user_id');
             u_i.value = target.id;
+
+            $.ajax({
+                    type: "POST",
+                    url: "/company/users/",
+                    data: {id: target.id, csrfmiddlewaretoken: '{{ csrf_token }}' },
+                    dataType: "json"
+                    //success: window.location.href = "/company/users/"
+                });
         }
 
-    function deleteItem(e){
-        var target;
-    if (e.target) {target=e.target} else {target=e.srcElement}
-        return $.ajax({
-                        type: "DELETE",
-                        url: "/company/delete/",
-                        data: {id: target.id},
-                        dataType: "json",
-                        success: window.location.href = "/company/users/"
-                    });
-    }
+        function deleteItem(e) {
+            var target;
+            if (e.target) {
+                target = e.target
+            } else {
+                target = e.srcElement
+            }
+            if (confirm("Are you sure?")) {
+                return $.ajax({
+                    type: "DELETE",
+                    url: "/company/delete/",
+                    data: {id: target.id},
+                    dataType: "json",
+                    success: window.location.href = "/company/users/"
+                });
+            }
+        }
     </script>
 {% endblock %}

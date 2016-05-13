@@ -7,6 +7,7 @@ from web.models import Client, UserBD, CustomUser, Company
 from .upload_handler import UploadHandler
 from django.db import connections
 from .xls_parse import XLSParse
+from .csv_parse import CSVParse
 import datetime
 import json
 from django.http import QueryDict
@@ -278,6 +279,11 @@ def product(request):
         c = connections[user_db[0].username].cursor()
         if user_db.exists():
             try:
+                c.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
+                table_names = []
+                for table_name in c.fetchall():
+                    table_names.append(table_name[0])
+                args['tables'] = table_names
                 c.execute("select column_name from information_schema.columns WHERE table_name = 'product'")
                 result = c.fetchall()
                 for it in result:
@@ -289,7 +295,12 @@ def product(request):
                     upform = UploadFileForm(request.POST, request.FILES)
                     if upform.is_valid():
                         UploadHandler(request.FILES['file']).handler()
-                        XLSParse(request.FILES['file'], request).parse()
+                        print(upform.cleaned_data['file_type'])
+                        if upform.cleaned_data['file_type'] == 'xls':
+                            XLSParse(request.FILES['file'], request).parse()
+                        elif upform.cleaned_data['file_type'] == 'csv':
+                            CSVParse(request.FILES['file'], request).parse()
+
                         return redirect('/product/')
                     list_ = []
                     for ite in range(0, len(title_list)):
@@ -397,7 +408,9 @@ def add_column(request):
 def modify_company(request):
     args = {}
     args.update(csrf(request))
-    args['form'] = EditCompany()
+    c = Client.objects.get(user_id=auth.get_user(request).id)
+    args['form'] = EditCompany(initial={"company_name": c.company_name, "address": c.address, "postal_code": c.postal_code,
+                                        "phone": c.phone, "website": c.website})
     request_object = auth.get_user(request)
     if request_object:
         args.update(get_perm(request))
@@ -443,7 +456,11 @@ def company_users(request):
     args = {}
     request_object = auth.get_user(request)
     args.update(csrf(request))
-    args['form'] = EditUser()
+    args['form'] = EditUser
+    # if request.is_ajax():
+    #     initial_user = CustomUser.objects.get(id=request.POST['id'])
+    #     args['form'] = EditUser(initial={"username": initial_user.username, "email": initial_user.email,
+    #                                      "first_name": initial_user.first_name, "last_name": initial_user.last_name})
     if request_object:
         args.update(get_perm(request))
         company = Client.objects.filter(user_id=auth.get_user(request).id)
@@ -475,7 +492,13 @@ def company_users(request):
                     username=edit_user.cleaned_data['username'], email=edit_user.cleaned_data['email'],
                     first_name=edit_user.cleaned_data['first_name'], last_name=edit_user.cleaned_data['last_name']
                 )
-
+                c_user = CustomUser.objects.filter(id=int(edit_user.cleaned_data['set_user_id']))
+                if edit_user.cleaned_data['roles'] == "E":
+                    p = Permission.objects.get(codename='user_short')
+                    c_user[0].user_permissions = [p.id]
+                elif edit_user.cleaned_data['roles'] == "M":
+                    p = Permission.objects.get(codename='admin')
+                    c_user[0].user_permissions = [p.id]
     return render_to_response('pages/company_users.html', args)
 
 
@@ -484,7 +507,6 @@ def company_delete_user(request):
     if request.is_ajax():
         if request.method == 'DELETE':
             try:
-                print(QueryDict(request.body)['id'])
                 CustomUser.objects.filter(id=QueryDict(request.body)['id']).delete()
             except Exception as e:
                 print(e)

@@ -14,5 +14,5 @@ class UploadHandler(object):
                 for chunk in self._file.chunks():
                     destination.write(chunk)
                     print('Uploading...')
-            except Warning as e:
+            except Exception as e:
                 print(e)
