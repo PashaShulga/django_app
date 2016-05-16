@@ -1,6 +1,18 @@
 {% block content %}
+    <div class="system-message">
+        <h3>Add data</h3>
+    <p>Enter table name! If the table doesn't exist the system will make new table!</p>
+    </div>
     <form method="post" enctype="multipart/form-data" onsubmit="return Validate(this);">
         {% csrf_token %}
+        <div class="col-sm-2">
+            <label>Enter table name</label>
+        </div>
+        <div class="col-sm-10">
+            <div class="form-group">
+                {{ form.table_name }}
+            </div>
+        </div>
         <div class="col-sm-2">
             <label>Choices file type</label>
         </div>

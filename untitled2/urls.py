@@ -11,12 +11,14 @@ urlpatterns = [
 
     url(r'^profile/modify/$', profile_modify),
     url(r'^profile/$', profile),
-    url(r'^product/$', product),
     url(r'^add_column/$', add_column),
-    url(r'^product/update$', product_update),
-    url(r'^product/delete$', product_delete),
-    url(r'^product/delete_all/$', delete_all),
-    url(r'^product/insert$', product_insert),
+
+    url(r'^product/(?P<page_slug>[\w-]+)/$', product),
+    url(r'^product/(?P<page_slug>[\w-]+)/update/$', product_update),
+    url(r'^product/(?P<page_slug>[\w-]+)/delete/$', product_delete),
+    url(r'^product/(?P<page_slug>[\w-]+)/insert/$', product_insert),
+    url(r'^product/(?P<page_slug>[\w-]+)/delete_all/$', delete_all),
+
     url(r'^edit_company/modify$', modify_company),
     url(r'^list_company/change/([0-9]+)/$', list_company_change),
     url(r'^list_company/$', list_company),
@@ -25,7 +27,7 @@ urlpatterns = [
     url(r'^company/delete/$', company_delete_user),
     url(r'^company/add/$', add_new_company),
 
-    url(r'^', home),
+    # url(r'^', home),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

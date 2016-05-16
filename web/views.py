@@ -1,3 +1,4 @@
+from django.template import RequestContext
 from django.shortcuts import redirect, render_to_response, HttpResponse
 from django.contrib import auth
 from loginsys.form import *
@@ -7,7 +8,6 @@ from web.models import Client, UserBD, CustomUser, Company
 from .upload_handler import UploadHandler
 from django.db import connections
 from .xls_parse import XLSParse
-from .csv_parse import CSVParse
 import datetime
 import json
 from django.http import QueryDict
@@ -94,7 +94,7 @@ def profile_modify(request):
 
 
 @csrf_exempt
-def product_update(request):
+def product_update(request, page_slug):
     if request.is_ajax():
         request_object = auth.get_user(request)
         c_u = CustomUser.objects.filter(username=request_object.username)
@@ -116,13 +116,13 @@ def product_update(request):
                     break
                 rem.append(res)
             q = str(tuple(rem)).replace("(", '').replace(")", '').replace('"', '')
-            query = "update product set {} WHERE id = {}".format(q, id[0])
+            query = "update {} set {} WHERE id = {}".format(page_slug, q, id[0])
             c.execute(query)
     return HttpResponse("Ok")
 
 
 @csrf_exempt
-def product_insert(request):
+def product_insert(request, page_slug):
     if request.is_ajax():
         request_object = auth.get_user(request)
         c_u = CustomUser.objects.filter(username=request_object.username)
@@ -135,7 +135,7 @@ def product_insert(request):
             obj.pop('id')
             keys = obj.keys()
             values = [i[0] for i in obj.values()]
-            s1 = "insert into product {}".format(tuple(keys)).replace("'", '"')
+            s1 = "insert into {} {}".format(page_slug, tuple(keys)).replace("'", '"')
             s2 = " values {}".format(tuple(values))
             c.execute(s1+s2)
         except Exception as e:
@@ -146,7 +146,7 @@ def product_insert(request):
 
 
 @csrf_exempt
-def product_delete(request):
+def product_delete(request, page_slug):
     if request.is_ajax():
         request_object = auth.get_user(request)
         c_u = CustomUser.objects.filter(username=request_object.username)
@@ -155,14 +155,14 @@ def product_delete(request):
         if request.method == 'DELETE':
             try:
                 obj = QueryDict(request.body)
-                c.execute("delete from product WHERE id = %s" % (obj['id']))
+                c.execute("delete from %s WHERE id = %s" % (page_slug, obj['id']))
             except Exception as e:
                 print(e)
     return HttpResponse("ok")
 
 
 @csrf_exempt
-def delete_all(request):
+def delete_all(request, page_slug):
     if request.is_ajax():
         request_object = auth.get_user(request)
         c_u = CustomUser.objects.filter(username=request_object.username)
@@ -170,7 +170,7 @@ def delete_all(request):
         c = connections[user_db[0].username].cursor()
         if request.method == 'DELETE':
             try:
-                c.execute("delete from product")
+                c.execute("delete from %s" % (page_slug,))
             except Exception as e:
                 print(e)
         return HttpResponse(status=200)
@@ -265,8 +265,9 @@ def custom_product(request, id):
             return args
 
 
+
 @ensure_csrf_cookie
-def product(request):
+def product(request, page_slug):
     args = {}
     args.update(csrf(request))
     args['form'] = UploadFileForm()
@@ -284,31 +285,33 @@ def product(request):
                 for table_name in c.fetchall():
                     table_names.append(table_name[0])
                 args['tables'] = table_names
-                c.execute("select column_name from information_schema.columns WHERE table_name = 'product'")
+                if request.POST:
+                    upform = UploadFileForm(request.POST, request.FILES)
+                    if upform.is_valid():
+                        UploadHandler(request.FILES['file']).handler()
+                        if upform.cleaned_data['file_type'] == 'xls':
+                            XLSParse(request.FILES['file'], request, str(upform.cleaned_data['table_name']).lower()).xls_parse()
+                        elif upform.cleaned_data['file_type'] == 'csv':
+                            XLSParse(request.FILES['file'], request, str(upform.cleaned_data['table_name']).lower()).csv_parse()
+                        return redirect('/product/%s' % (page_slug,))
+
+                    if upform.cleaned_data['table_name'] in table_names:
+                        list_ = []
+                        for ite in range(0, len(title_list)):
+                            list_.append(request.POST['column'+str(ite)])
+                        s = 'insert into {} {}'.format(upform.cleaned_data['table_name'], tuple(title_list)).replace("'", '"')
+                        s2 = ' VALUES {}'.format(tuple(list_))
+                        c.execute(s+s2)
+
+                c.execute("select column_name from information_schema.columns WHERE table_name = '%s'" % (page_slug,))
                 result = c.fetchall()
                 for it in result:
                     title_list.append(it[0])
                 args['titles'] = title_list
                 args['id'] = result[0]
                 args['inputs'] = range(0, len(title_list))
-                if request.POST:
-                    upform = UploadFileForm(request.POST, request.FILES)
-                    if upform.is_valid():
-                        UploadHandler(request.FILES['file']).handler()
-                        print(upform.cleaned_data['file_type'])
-                        if upform.cleaned_data['file_type'] == 'xls':
-                            XLSParse(request.FILES['file'], request).parse()
-                        elif upform.cleaned_data['file_type'] == 'csv':
-                            CSVParse(request.FILES['file'], request).parse()
 
-                        return redirect('/product/')
-                    list_ = []
-                    for ite in range(0, len(title_list)):
-                        list_.append(request.POST['column'+str(ite)])
-                    s = 'insert into product {}'.format(tuple(title_list)).replace("'", '"')
-                    s2 = ' VALUES {}'.format(tuple(list_))
-                    c.execute(s+s2)
-                c.execute("select * from product")
+                c.execute("select * from %s" % (page_slug,))
                 l = []
                 data = c.fetchall()
                 for conversion in data:
@@ -331,7 +334,7 @@ def product(request):
                 args['items'] = json.dumps(ls)
 
                 fields = []
-                c.execute("SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'product'")
+                c.execute("SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" % (page_slug,))
                 fi = {}
                 for i in c.fetchall():
                     i = list(i)
@@ -343,7 +346,7 @@ def product(request):
                         fi = {
                         "name": i[0],
                         "type": i[1],
-                        "width": 22,
+                        "width": 50,
                         "validate": "required"
                         }
                         b = json.dumps(fi)
@@ -352,19 +355,19 @@ def product(request):
                     fi.update({
                         "name": i[0],
                         "type": i[1],
-                        "width": 80,
+                        "width": 'auto',
                         "validate": "required",
                         "selecting": True
                     })
                     b = json.dumps(fi)
                     fields.append(json.loads(b))
-                fields.append({"type": "control"})
+                fields.append({"type": "control", "width": 70,})
                 args['fields'] = json.dumps(fields)
             except Exception as e:
                 print(e)
             finally:
                 c.close()
-        return render_to_response('pages/data_collect.html', args)
+        return render_to_response('pages/data_collect.html', args, context_instance=RequestContext(request))
     return redirect('/auth/login/')
 
 

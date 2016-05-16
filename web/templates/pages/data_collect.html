@@ -23,34 +23,37 @@
         </div>
         <!-- /.col-lg-12 -->
     </div>
+    <div class="container" style="margin-top: 40px; width: 100%">
+        <ul class="nav nav-tabs">
+            <li><a href="/product/general/">General</a></li>
+            {% for table in tables %}
+                <li><a href="/product/{{ table }}">{{ table }}</a></li>
+            {% endfor %}
+        </ul>
+        <br>
 
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#general">General</a></li>
-        {% for table in tables %}
-            <li><a data-toggle="tab" href="#{{ table }}">{{ table }}</a></li>
-        {% endfor %}
-    </ul>
-
-    <div class="tab-content">
-        <div id="general" class="tab-pane fade in active">
-            <div class="container" style="margin-top: 40px">
-                <div class="col-lg-10">
-                    {% include "pages/xls_uploader.html" %}
-                </div>
-            </div>
-        </div>
-        {% for table in tables %}
-            <div id="{{ table }}" class="tab-pane fade" >
-                <div class="container" style="margin-top: 40px">
-                    <div class="col-lg-2">
-                        <button class="btn btn-sm btn-danger" id="delete" name="delete" onclick="deleteItem();">Delete all
-                        </button>
-                    </div>
-                    <div id="jsGrid" class="jsGrid"></div>
-                </div>
-            </div>
-        {% endfor %}
     </div>
+
+    {% if request.path == '/product/general/' %}
+        <div class="col-lg-10">
+            {% include "pages/xls_uploader.html" %}
+        </div>
+    {% endif %}
+    {% for table in tables %}
+        {% if request.path != '/product/general/' %}
+            <div class="container" style="margin-top: 20px; width: 100%">
+
+                <div id="jsGrid" class="jsGrid"></div>
+            </div>
+        {% endif %}
+{#        <div class="col-lg-2">#}
+{#                    <button class="btn btn-sm btn-danger" id="delete" name="delete" onclick="deleteItem();">#}
+{#                        Delete all#}
+{#                    </button>#}
+{#                </div>#}
+    {% endfor %}
+
+    {#    </div>#}
 
 
     {#    <div class="row">#}
@@ -71,10 +74,10 @@
             if (confirm("Are you sure?")) {
                 return $.ajax({
                     type: "DELETE",
-                    url: "/product/delete_all/",
+                    url: "{{ request.path }}delete_all/",
                     data: {},
                     dataType: "json",
-                    success: window.location.href = "/product/"
+                    success: window.location.href = "{{ request.path }}"
                 });
             }
         }
@@ -103,10 +106,10 @@
                     item.csrfmiddlewaretoken = '{{ csrf_token }}';
                     return $.ajax({
                         type: "POST",
-                        url: "/product/insert",
+                        url: "{{ request.path }}insert/",
                         data: item,
                         dataType: "json",
-                        success: window.location.href = "/product/"
+                        success: window.location.href = "{{ request.path }}"
                     });
                 },
 
@@ -114,10 +117,10 @@
                     item.csrfmiddlewaretoken = '{{ csrf_token }}';
                     return $.ajax({
                         type: "PUT",
-                        url: "/product/update",
+                        url: "{{ request.path }}update/",
                         data: item,
                         dataType: "json",
-                        success: window.location.href = "/product/"
+                        success: window.location.href = "{{ request.path }}"
                     });
                 },
 
@@ -125,10 +128,10 @@
                     item.csrfmiddlewaretoken = '{{ csrf_token }}';
                     return $.ajax({
                         type: "DELETE",
-                        url: "/product/delete",
+                        url: "{{ request.path }}delete/",
                         data: item,
                         dataType: "json",
-                        success: window.location.href = "/product/"
+                        success: window.location.href = "{{ request.path }}"
                     });
                 }
 
@@ -144,14 +147,16 @@
                     },
                     itemTemplate: function (_, item) {
                         return $("<input>").attr("type", "checkbox")
+                                .on("click", function () {
+                                    return false;
+                                })
                                 .on("change", function () {
                                     $(this).is(":checked") ? selectItem(item) : unselectItem(item);
                                 });
                     },
                     align: "center",
-                    width: 40,
-                    sorting: false,
-                    editing: false
+                    width: 75,
+                    sorting: false
                 }
                 ].concat({{ fields }})
             {% endautoescape %}
@@ -182,7 +187,7 @@
                         url: "/product/delete",
                         data: item,
                         dataType: "json",
-                        success: window.location.href = "/product/"
+                        success: window.location.href = "{{ request.path }}"
                     });
                 }
             });

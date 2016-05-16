@@ -185,7 +185,7 @@ class UploadFileForm(forms.Form):
         ("xls", "xls"),
         ("csv", "csv")
     )
-    # selector_table = forms.ChoiceField(choices=CHOICES_TABLE, required=True)
+    table_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Table name'}))
     file_type = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=True)
     file = forms.FileField(label='Choose the file', widget=forms.FileInput(attrs={"name": "file"}))
 
