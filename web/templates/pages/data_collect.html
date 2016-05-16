@@ -39,35 +39,26 @@
             {% include "pages/xls_uploader.html" %}
         </div>
     {% endif %}
-    {% for table in tables %}
-        {% if request.path != '/product/general/' %}
+
+
+    {% if request.path != '/product/general/' %}
+        <div class="col-lg-2">
+            <button class="btn btn-sm btn-danger" id="delete" name="delete" onclick="deleteItem();">
+                Delete all
+            </button>
+        </div>
+        <br>
+        {% for table in tables %}
+
             <div class="container" style="margin-top: 20px; width: 100%">
 
                 <div id="jsGrid" class="jsGrid"></div>
             </div>
-        {% endif %}
-{#        <div class="col-lg-2">#}
-{#                    <button class="btn btn-sm btn-danger" id="delete" name="delete" onclick="deleteItem();">#}
-{#                        Delete all#}
-{#                    </button>#}
-{#                </div>#}
-    {% endfor %}
-
-    {#    </div>#}
 
 
-    {#    <div class="row">#}
-    {#        <div class="col-lg-12">#}
-    {#            <div class="col-lg-10">#}
-    {#                {% include "pages/xls_uploader.html" %}#}
-    {#            </div>#}
-    {#            <div class="col-lg-2">#}
-    {#                <button class="btn btn-sm btn-danger" id="delete" name="delete" onclick="deleteItem();">Delete all</button>#}
-    {#            </div>#}
-    {#            <hr>#}
-    {#            <div id="jsGrid" class="jsGrid"></div>#}
-    {#        </div>#}
-    {#    </div>#}
+        {% endfor %}
+
+    {% endif %}
 
     <script>
         function deleteItem() {
