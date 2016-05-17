@@ -51,10 +51,10 @@
                     item.csrfmiddlewaretoken = '{{ csrf_token }}';
                     return $.ajax({
                         type: "POST",
-                        url: "/product/insert",
+                        url: "{{ request.path }}insert/",
                         data: item,
                         dataType: "json",
-                        success: window.location.href = "/product/"
+                        success: window.location.href = "{{ request.path }}"
                     });
                 },
 
@@ -62,10 +62,10 @@
                     item.csrfmiddlewaretoken = '{{ csrf_token }}';
                     return $.ajax({
                         type: "PUT",
-                        url: "/product/update",
+                        url: "{{ request.path }}update/",
                         data: item,
                         dataType: "json",
-                        success: window.location.href = "/product/"
+                        success: window.location.href = "{{ request.path }}"
                     });
                 },
 
@@ -73,10 +73,10 @@
                     item.csrfmiddlewaretoken = '{{ csrf_token }}';
                     return $.ajax({
                         type: "DELETE",
-                        url: "/product/delete",
+                        url: "{{ request.path }}delete/",
                         data: item,
                         dataType: "json",
-                        success: window.location.href = "/product/"
+                        success: window.location.href = "{{ request.path }}"
                     });
                 }
 
