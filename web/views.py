@@ -390,22 +390,22 @@ def product(request, page_slug):
     return redirect('/auth/login/')
 
 
-def upload_file(request):
-    args = {}
-    args.update(csrf(request))
-    args['form'] = UploadFileForm()
-    client = Client.objects.filter(user__username=auth.get_user(request).username)
-    if client.exists():
-        args['brand'] = client[0].company_logo
-    if request.POST:
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            try:
-                UploadHandler(request.FILES['file']).handler()
-                return redirect('/')
-            except:
-                return redirect('/')
-    return render_to_response('pages/xls_uploader.html', args)
+# def upload_file(request):
+#     args = {}
+#     args.update(csrf(request))
+#     args['form'] = UploadFileForm()
+#     client = Client.objects.filter(user__username=auth.get_user(request).username)
+#     if client.exists():
+#         args['brand'] = client[0].company_logo
+#     if request.POST:
+#         form = UploadFileForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             try:
+#                 UploadHandler(request.FILES['file']).handler()
+#                 return redirect('/')
+#             except:
+#                 return redirect('/')
+#     return render_to_response('pages/xls_uploader.html', args)
 
 
 def add_column(request):

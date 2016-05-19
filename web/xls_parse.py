@@ -16,7 +16,7 @@ class XLSParse(object):
         self.request = request
         self.table = table
 
-    def table_header(self, c, args):
+    def table_header(self, cursor, args):
         try:
             for it in args[0]:
                 if it[1] == datetime.datetime:
@@ -29,13 +29,12 @@ class XLSParse(object):
                     it[1] = "FLOAT"
                 else:
                     it[1] = "CHARACTER(255)"
-                c.execute("ALTER TABLE %s ADD %s %s" % (self.table, it[0], it[1]))
+                cursor.execute("ALTER TABLE %s ADD %s %s" % (self.table, it[0].replace(" ", "_"), it[1]))
         except Exception as e:
             print(e)
 
     def queryset(self, *args, **kwargs):
         if auth.get_user(self.request):
-            print(self.table)
             user_db = UserBD.objects.filter(username=auth.get_user(self.request).username)
             if user_db.exists():
                 c = connections[auth.get_user(self.request).username].cursor()
@@ -50,7 +49,8 @@ class XLSParse(object):
                         for iter_ in args[1][1:]:
                             s = 'insert into {} {}'.format(self.table, tuple(title_list)).replace("'", '"')
                             s2 = ' VALUES {}'.format(tuple(iter_))
-                            print(s+s2)
+                            if None in iter_:
+                                iter_[iter_.index(None)] = ''
                             c.execute(s+s2)
                     else:
                         c.execute('CREATE TABLE %s(id SERIAL NOT NULL PRIMARY KEY)' % (self.table,))
@@ -63,8 +63,9 @@ class XLSParse(object):
                             title_list2.append(it[0])
                         for iter_ in args[1][1:]:
                             s = 'insert into {} {}'.format(self.table, tuple(title_list2)).replace("'", '"')
+                            if None in iter_:
+                                iter_[iter_.index(None)] = ''
                             s2 = ' VALUES {}'.format(tuple(iter_))
-                            print(s+s2)
                             c.execute(s+s2)
                 except Exception as e:
                     print(e)
@@ -93,11 +94,10 @@ class XLSParse(object):
 
         k = 0
         d = []
-        while k < len(columns_name):
-            for data in sheet_ranges:
-                d.append([i.value.strftime('%Y-%m-%d %H:%M:%S') if type(i.value) == datetime.datetime else i.value for i in data])
-            k += 1
-        print(d)
+        # while k < len(columns_name):
+        for data in sheet_ranges:
+            d.append([i.value.strftime('%Y-%m-%d %H:%M:%S') if type(i.value) == datetime.datetime else i.value for i in data])
+            # k += 1
         self.queryset(columns_name, d)
 
     def csv_parse(self):
