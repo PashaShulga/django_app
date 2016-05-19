@@ -90,14 +90,8 @@
                     </ul>
                         <H2>Data Collect</H2>
                         <p>Show tables and data</p>
-                        {% for table in tables %}
-                            <p>{{ table }}</p>
-{#                            <div class="tab-content">#}
-{#                                <div id="{{ table }}" class="tab-pane fade in active">#}
-                                    {% include "pages/data_collect_admin.html" %}
-{#                                </div>#}
-{#                            </div>#}
-                        {% endfor %}
+
+                        {% include "pages/data_collect_admin.html" %}
 
                 </div>
                 <div id="menu4" class="tab-pane fade">

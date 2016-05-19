@@ -178,7 +178,7 @@ def delete_all(request, page_slug):
 
 def custom_product(request, id):
     args = {}
-    title_list = []
+
     request_object = auth.get_user(request)
     if request_object:
         args.update(get_perm(request))
@@ -194,90 +194,94 @@ def custom_product(request, id):
                     table_names.append(table_name[0])
                 args['tables'] = table_names
                 # if request.POST:
-                    # upform = UploadFileForm(request.POST, request.FILES)
-                    # if upform.is_valid():
-                    #     UploadHandler(request.FILES['file']).handler()
-                    #     if upform.cleaned_data['file_type'] == 'xls':
-                    #         XLSParse(request.FILES['file'], request, str(upform.cleaned_data['table_name']).lower()).xls_parse()
-                    #     elif upform.cleaned_data['file_type'] == 'csv':
-                    #         XLSParse(request.FILES['file'], request, str(upform.cleaned_data['table_name']).lower()).csv_parse()
-                    #     return redirect('/product/%s' % (page_slug,))
-                    #
-                    # if upform.cleaned_data['table_name'] in table_names:
-                    #     list_ = []
-                    #     for ite in range(0, len(title_list)):
-                    #         list_.append(request.POST['column'+str(ite)])
-                    #     s = 'insert into {} {}'.format(upform.cleaned_data['table_name'], tuple(title_list)).replace("'", '"')
-                    #     s2 = ' VALUES {}'.format(tuple(list_))
-                    #     c.execute(s+s2)
+                # upform = UploadFileForm(request.POST, request.FILES)
+                # if upform.is_valid():
+                #     UploadHandler(request.FILES['file']).handler()
+                #     if upform.cleaned_data['file_type'] == 'xls':
+                #         XLSParse(request.FILES['file'], request, str(upform.cleaned_data['table_name']).lower()).xls_parse()
+                #     elif upform.cleaned_data['file_type'] == 'csv':
+                #         XLSParse(request.FILES['file'], request, str(upform.cleaned_data['table_name']).lower()).csv_parse()
+                #     return redirect('/product/%s' % (page_slug,))
+                #
+                # if upform.cleaned_data['table_name'] in table_names:
+                #     list_ = []
+                #     for ite in range(0, len(title_list)):
+                #         list_.append(request.POST['column'+str(ite)])
+                #     s = 'insert into {} {}'.format(upform.cleaned_data['table_name'], tuple(title_list)).replace("'", '"')
+                #     s2 = ' VALUES {}'.format(tuple(list_))
+                #     c.execute(s+s2)
+                title_list = []
                 for table in table_names:
 
+                    t_l = []
                     c.execute("select column_name from information_schema.columns WHERE table_name = '%s'" % (table,))
                     result = c.fetchall()
-                    for it in result:
-                        title_list.append(it[0])
-                    args['titles'] = title_list
-                    args['id'] = result[0]
-                    args['inputs'] = range(0, len(title_list))
+                    k = 0
 
+                    while k < len(result):
+                        for it in result:
+                            t_l.append(it[0])
+                        title_list.append(t_l)
+                        k += 1
+                        break
+                args['titles'] = title_list
+                # args['id'] = result[0]
+                # args['inputs'] = range(0, len(title_list))
+                mail_list = []
+                for table in table_names:
+                    ls = []
                     l = []
                     c.execute("select * from %s" % (table,))
                     data = c.fetchall()
                     for conversion in data:
                         l.append(list(conversion))
-                    counter = 0
                     res = {}
-                    ls = []
-                    while counter < len(data):
-                        for i in title_list:
-                            for k in l[counter]:
-                                if type(k) == datetime.date:
-                                    res[i] = k.strftime("%Y-%m-%d") # %H:%M:%S
-                                else:
-                                    res[i] = k
-                                del l[counter][0]
-                                break
-                        counter += 1
-                        b = json.dumps(res.copy())
-                        ls.append(json.loads(b))
-                    args['items'] = json.dumps(ls)
+                    for i in title_list:
+                        for k in l:
+                            for q in i:
+                                for o in k:
+                                    if type(o) == datetime.date:
+                                        res.update({q: o.strftime("%Y-%m-%d")}) # %H:%M:%S
+                                    else:
+                                        res.update({q: o})
+                                    del k[0]
+                                    break
+                            ls.append(res.copy())
+                        del title_list[0]
+                        del l[0]
+                        mail_list.append(ls)
+                b = json.dumps(mail_list)
 
-                    fields = []
-                    c.execute("SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" % (table,))
+                args['items'] = b
+                fields_main = []
+                for table in table_names:
                     fi = {}
+                    c.execute("SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" % (table,))
+                    fields = []
                     for i in c.fetchall():
                         i = list(i)
                         if i[1] == "character" or i[1] == "date":
                             i[1] = "text"
                         elif i[1] == "integer":
                             i[1] = "number"
-                        if i[0] == "id":
-                            fi = {
-                            "name": i[0],
-                            "type": i[1],
-                            "width": 50,
-                            "validate": "required"
-                            }
-                            b = json.dumps(fi)
-                            fields.append(json.loads(b))
-                            continue
                         fi.update({
                             "name": i[0],
                             "type": i[1],
                             "width": 'auto',
                             "validate": "required",
-                            "selecting": True
+                            "selecting": 'true'
                         })
-                        b = json.dumps(fi)
-                        fields.append(json.loads(b))
+                        fields.append(fi.copy())
                     fields.append({"type": "control", "width": 70,})
-                    args['fields'] = json.dumps(fields)
+                    fields_main.append(fields)
+
+                args['flds'] = fields_main #json.dumps(fields_main)
             except Exception as e:
                 print(e)
             finally:
                 c.close()
-            print(args['items'])
-            print(args['fields'])
+            # print(args['items'])
+            # print(args['fields'])
             return args
 
 
