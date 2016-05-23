@@ -135,11 +135,12 @@ def product_insert(request, page_slug):
             obj = dict(obj)
             obj.pop('csrfmiddlewaretoken')
             obj.pop('id')
+            obj.pop('')
             keys = obj.keys()
             values = [i[0] for i in obj.values()]
             s1 = "insert into {} {}".format(page_slug, tuple(keys)).replace("'", '"')
             s2 = " values {}".format(tuple(values))
-            c.execute(s1+s2)
+            c.execute(s1 + s2)
         except Exception as e:
             print(e)
         finally:
@@ -243,7 +244,7 @@ def custom_product(request, id):
                             for q in i:
                                 for o in k:
                                     if type(o) == datetime.date:
-                                        res.update({q: o.strftime("%Y-%m-%d")}) # %H:%M:%S
+                                        res.update({q: o.strftime("%Y-%m-%d")})  # %H:%M:%S
                                     else:
                                         res.update({q: o})
                                     del k[0]
@@ -258,7 +259,9 @@ def custom_product(request, id):
                 fields_main = []
                 for table in table_names:
                     fi = {}
-                    c.execute("SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" % (table,))
+                    c.execute(
+                        "SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" % (
+                        table,))
                     fields = []
                     for i in c.fetchall():
                         i = list(i)
@@ -277,7 +280,7 @@ def custom_product(request, id):
                     fields.append({"type": "control", "width": 70,})
                     fields_main.append(fields)
 
-                args['flds'] = fields_main #json.dumps(fields_main)
+                args['flds'] = fields_main  # json.dumps(fields_main)
             except Exception as e:
                 print(e)
             finally:
@@ -311,18 +314,21 @@ def product(request, page_slug):
                     if upform.is_valid():
                         UploadHandler(request.FILES['file']).handler()
                         if upform.cleaned_data['file_type'] == 'xls':
-                            XLSParse(request.FILES['file'], request, str(upform.cleaned_data['table_name']).lower()).xls_parse()
+                            XLSParse(request.FILES['file'], request,
+                                     str(upform.cleaned_data['table_name']).lower()).xls_parse()
                         elif upform.cleaned_data['file_type'] == 'csv':
-                            XLSParse(request.FILES['file'], request, str(upform.cleaned_data['table_name']).lower()).csv_parse()
+                            XLSParse(request.FILES['file'], request,
+                                     str(upform.cleaned_data['table_name']).lower()).csv_parse()
                         return redirect('/product/%s' % (page_slug,))
 
                     if upform.cleaned_data['table_name'] in table_names:
                         list_ = []
                         for ite in range(0, len(title_list)):
-                            list_.append(request.POST['column'+str(ite)])
-                        s = 'insert into {} {}'.format(upform.cleaned_data['table_name'], tuple(title_list)).replace("'", '"')
+                            list_.append(request.POST['column' + str(ite)])
+                        s = 'insert into {} {}'.format(upform.cleaned_data['table_name'], tuple(title_list)).replace(
+                            "'", '"')
                         s2 = ' VALUES {}'.format(tuple(list_))
-                        c.execute(s+s2)
+                        c.execute(s + s2)
 
                 c.execute("select column_name from information_schema.columns WHERE table_name = '%s'" % (page_slug,))
                 result = c.fetchall()
@@ -344,7 +350,7 @@ def product(request, page_slug):
                     for i in title_list:
                         for k in l[counter]:
                             if type(k) == datetime.date:
-                                res[i] = k.strftime("%Y-%m-%d") #  %H:%M:%S
+                                res[i] = k.strftime("%Y-%m-%d")  # %H:%M:%S
                             else:
                                 res[i] = k
                             del l[counter][0]
@@ -355,7 +361,8 @@ def product(request, page_slug):
                 args['items'] = json.dumps(ls)
 
                 fields = []
-                c.execute("SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" % (page_slug,))
+                c.execute("SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" % (
+                page_slug,))
                 fi = {}
                 for i in c.fetchall():
                     i = list(i)
@@ -365,10 +372,10 @@ def product(request, page_slug):
                         i[1] = "number"
                     if i[0] == "id":
                         fi = {
-                        "name": i[0],
-                        "type": i[1],
-                        "width": 50,
-                        "validate": "required"
+                            "name": i[0],
+                            "type": i[1],
+                            "width": 50,
+                            "validate": "required"
                         }
                         b = json.dumps(fi)
                         fields.append(json.loads(b))
@@ -433,8 +440,9 @@ def modify_company(request):
     args = {}
     args.update(csrf(request))
     c = Client.objects.get(user_id=auth.get_user(request).id)
-    args['form'] = EditCompany(initial={"company_name": c.company_name, "address": c.address, "postal_code": c.postal_code,
-                                        "phone": c.phone, "website": c.website})
+    args['form'] = EditCompany(
+        initial={"company_name": c.company_name, "address": c.address, "postal_code": c.postal_code,
+                 "phone": c.phone, "website": c.website})
     request_object = auth.get_user(request)
     if request_object:
         args.update(get_perm(request))
@@ -475,20 +483,30 @@ def data_analytics(request):
         custom_user = CustomUser.objects.get(id=request_object.id)
         userdb = UserBD.objects.get(username=custom_user.username)
         c = connections[userdb.username].cursor()
-        ar = ["sys", "jaar"]
+        ar = ["dia", "maand"]
         query = ("select %s from %s" % (tuple(ar), "blood")).replace("'", '').replace("(", " ").replace(")", " ")
         c.execute(query)
         result_query = c.fetchall()
 
         pole_names = ['2015', '2016']
-        length = len(pole_names)-1
+        length = len(pole_names) - 1
         result = []
-        for k, group in groupby(result_query, lambda x: x[length:]):
-             t = [y[0] for y in group]
-             t.insert(0, str(k[0]))
-             result.append(t)
-        print(result)
-
+        if len(ar) == 2:
+            for k, group in groupby(result_query, lambda x: x[1]):
+                t = [y[0] for y in group]
+                t.insert(0, str(k))
+                result.append(t)
+            print(result)
+            axis = {}
+            axis.update({
+                "y": {
+                    "label": {
+                        "text": ar[0],
+                        "position": "outer-middle"
+                    }
+                }
+            })
+            args['axis'] = axis
         j_data = json.dumps(result)
         chart = Charts().plotting(json_data=j_data)
         args['j_data'] = chart
@@ -511,8 +529,8 @@ def company_users(request):
             args['company_name'] = company[0].company_name
             c_u = CustomUser.objects.filter(company_id=company[0].id)
             custom_user = [u.id for u in c_u]
-        # if c_u.exists():
-        #     pass
+            # if c_u.exists():
+            #     pass
             if len(custom_user) > 1:
                 args['users'] = Client.objects.raw("""SELECT auth_user.id, auth_user.username, auth_user.email,
                               auth_user.first_name, auth_user.last_name, auth_permission.codename FROM auth_user
@@ -569,21 +587,22 @@ def add_new_company(request):
         if request.POST:
             new_company = AddCompany(request.POST)
             try:
-                create_db("db_%s" % (new_company.data['username'],), new_company.data['password2'], new_company.data['username'])
+                create_db("db_%s" % (new_company.data['username'],), new_company.data['password2'],
+                          new_company.data['username'])
             except:
                 args['error'] = ("Warning! Database is not create, try again or inform staff")
             u_db = UserBD.objects.filter(username=new_company.data['username'])
             new_user = CustomUser.objects.create_user(username=new_company.data['username'],
                                                       email=new_company.data['email'],
                                                       password=new_company.data['password2'],
-                                                      company_type= 1 if new_company.data['package'] == "L" else 2,
+                                                      company_type=1 if new_company.data['package'] == "L" else 2,
                                                       user_id=int(u_db[0].id)
                                                       )
             new_user.save()
             new_client = Client(user_id=new_user.id,
-                   phone=new_company.data['phone'], company_name=new_company.data['company_name'],
-                   contact_name=new_company.data['contact_name'],
-                   email=new_company.data['email'], address=new_company.data['address'])
+                                phone=new_company.data['phone'], company_name=new_company.data['company_name'],
+                                contact_name=new_company.data['contact_name'],
+                                email=new_company.data['email'], address=new_company.data['address'])
             new_client.save()
             CustomUser.objects.filter(id=new_user.id).update(company_id=new_client.id)
     return render_to_response('pages/add_company.html', args)
@@ -614,7 +633,8 @@ def list_company_change(request, id):
 
             form = AdditionalForm(request.POST)
             if form.is_valid():
-                name_column, type_column, table_name = form.cleaned_data['name_column'], form.cleaned_data['type_column'], form.cleaned_data['table_name']
+                name_column, type_column, table_name = form.cleaned_data['name_column'], form.cleaned_data[
+                    'type_column'], form.cleaned_data['table_name']
                 c = connections[form.cleaned_data['user']].cursor()
                 c.execute("ALTER TABLE %s ADD COLUMN %s %s" % (table_name, name_column, type_column))
 

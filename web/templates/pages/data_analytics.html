@@ -30,14 +30,10 @@ var chart = c3.generate({
     //    data2: 'bar' // ADD
     //  }
     //},
+{% autoescape off %}
+    axis: {{ axis }},
+    {% endautoescape %}
 
-    axis: {
-      y: {
-        label: {
-          text: 'Y Label',
-          position: 'outer-middle'
-        }
-      },
 {#      y2: {#}
 {#        show: true,#}
 {#        label: {#}
@@ -45,7 +41,7 @@ var chart = c3.generate({
 {#          position: 'outer-middle'#}
 {#        }#}
 {#      }#}
-    }
+{#    }#}
 });
 </script>
 
