@@ -1,3 +1,4 @@
+from .charts_heandler import *
 from django.template import RequestContext
 from django.shortcuts import redirect, render_to_response, HttpResponse
 from django.contrib import auth
@@ -12,6 +13,7 @@ import datetime
 import json
 from django.http import QueryDict
 from django.contrib.auth.models import Permission
+from itertools import groupby
 
 
 def get_perm(request):
@@ -408,23 +410,23 @@ def product(request, page_slug):
 #     return render_to_response('pages/xls_uploader.html', args)
 
 
-def add_column(request):
-    args = {}
-    args.update(csrf(request))
-    args['user'] = ''
-    if auth.get_user(request).is_staff:
-        args.update(get_perm(request))
-        client = Client.objects.filter(user__username=auth.get_user(request).username)
-        if client.exists():
-            args['brand'] = client[0].company_logo
-        args['user'] = 'is_staff'
-        args['form'] = AdditionalForm()
-        form = AdditionalForm(request.POST)
-        if request.POST and form.is_valid():
-            name_column, type_column = form.cleaned_data['name_column'], form.cleaned_data['type_column']
-            c = connections[form.cleaned_data['user']].cursor()
-            c.execute("ALTER TABLE product ADD COLUMN %s %s" % (name_column, type_column))
-    return render_to_response('pages/add_column.html', args)
+# def add_column(request):
+#     args = {}
+#     args.update(csrf(request))
+#     args['user'] = ''
+#     if auth.get_user(request).is_staff:
+#         args.update(get_perm(request))
+#         client = Client.objects.filter(user__username=auth.get_user(request).username)
+#         if client.exists():
+#             args['brand'] = client[0].company_logo
+#         args['user'] = 'is_staff'
+#         args['form'] = AdditionalForm()
+#         form = AdditionalForm(request.POST)
+#         if request.POST and form.is_valid():
+#             name_column, type_column = form.cleaned_data['name_column'], form.cleaned_data['type_column']
+#             c = connections[form.cleaned_data['user']].cursor()
+#             c.execute("ALTER TABLE product ADD COLUMN %s %s" % (name_column, type_column))
+#     return render_to_response('pages/add_column.html', args)
 
 
 def modify_company(request):
@@ -471,6 +473,25 @@ def data_analytics(request):
     if request_object:
         args.update(get_perm(request))
         custom_user = CustomUser.objects.get(id=request_object.id)
+        userdb = UserBD.objects.get(username=custom_user.username)
+        c = connections[userdb.username].cursor()
+        ar = ["sys", "jaar"]
+        query = ("select %s from %s" % (tuple(ar), "blood")).replace("'", '').replace("(", " ").replace(")", " ")
+        c.execute(query)
+        result_query = c.fetchall()
+
+        pole_names = ['2015', '2016']
+        length = len(pole_names)-1
+        result = []
+        for k, group in groupby(result_query, lambda x: x[length:]):
+             t = [y[0] for y in group]
+             t.insert(0, str(k[0]))
+             result.append(t)
+        print(result)
+
+        j_data = json.dumps(result)
+        chart = Charts().plotting(json_data=j_data)
+        args['j_data'] = chart
     return render_to_response('pages/data_analytics.html', args)
 
 

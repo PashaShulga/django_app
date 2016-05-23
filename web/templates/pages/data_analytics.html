@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block data_analytics %}
+    <script src="/static/js/c3.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header" style="font-size: 20px">Data Analytics</h1>
@@ -7,9 +9,44 @@
     </div>
 
     <div class="row">
-
+<div id="chart"></div>
 
     </div>
+<script>
+var chart = c3.generate({
+    bindto: '#chart',
+{% autoescape off %}
+    data: {{ j_data }},
+    {% endautoescape %}
+    //{
+    //  columns: [
+    //    ['data1', 30, 200, 100, 400, 150, 250],
+    //    ['data2', 50, 20, 10, 40, 15, 25]
+    //  ],
+    //  axes: {
+    //    data2: 'y2'
+    //  },
+    //  types: {
+    //    data2: 'bar' // ADD
+    //  }
+    //},
 
+    axis: {
+      y: {
+        label: {
+          text: 'Y Label',
+          position: 'outer-middle'
+        }
+      },
+{#      y2: {#}
+{#        show: true,#}
+{#        label: {#}
+{#          text: 'Y2 Label',#}
+{#          position: 'outer-middle'#}
+{#        }#}
+{#      }#}
+    }
+});
+</script>
 
 {% endblock %}
