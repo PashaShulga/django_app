@@ -5,7 +5,7 @@ from django.contrib import auth
 from loginsys.form import *
 from django.core.context_processors import csrf
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
-from web.models import Client, UserBD, CustomUser, Company
+from web.models import Client, UserBD, CustomUser, Company, Charts
 from .upload_handler import UploadHandler
 from django.db import connections
 from .xls_parse import XLSParse
@@ -475,44 +475,6 @@ def list_company(request):
     return render_to_response('pages/list_company.html', args)
 
 
-def data_analytics(request):
-    args = {}
-    request_object = auth.get_user(request)
-    if request_object:
-        args.update(get_perm(request))
-        custom_user = CustomUser.objects.get(id=request_object.id)
-        userdb = UserBD.objects.get(username=custom_user.username)
-        c = connections[userdb.username].cursor()
-        ar = ["dia", "maand"]
-        query = ("select %s from %s" % (tuple(ar), "blood")).replace("'", '').replace("(", " ").replace(")", " ")
-        c.execute(query)
-        result_query = c.fetchall()
-
-        pole_names = ['2015', '2016']
-        length = len(pole_names) - 1
-        result = []
-        if len(ar) == 2:
-            for k, group in groupby(result_query, lambda x: x[1]):
-                t = [y[0] for y in group]
-                t.insert(0, str(k))
-                result.append(t)
-            print(result)
-            axis = {}
-            axis.update({
-                "y": {
-                    "label": {
-                        "text": ar[0],
-                        "position": "outer-middle"
-                    }
-                }
-            })
-            args['axis'] = axis
-        j_data = json.dumps(result)
-        chart = Charts().plotting(json_data=j_data)
-        args['j_data'] = chart
-    return render_to_response('pages/data_analytics.html', args)
-
-
 def company_users(request):
     args = {}
     request_object = auth.get_user(request)
@@ -608,6 +570,81 @@ def add_new_company(request):
     return render_to_response('pages/add_company.html', args)
 
 
+def charts_save(query_dict, cursor):
+    query_dict = dict(query_dict)
+    query_dict.pop('csrfmiddlewaretoken')
+    query_list = []
+    cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
+    tables_name = cursor.fetchall()
+    tables_name = [tab_name[0] for tab_name in tables_name]
+    for i in query_dict.keys():
+        if i in tables_name:
+            query_list.append(i)
+    print(query_dict)
+
+
+@csrf_exempt
+def get_table_columns_ajax(request):
+    if request.is_ajax():
+        if request.POST:
+            company_id = request.POST['company_id'].split("/")[3]
+            custom_user = CustomUser.objects.get(company_id=company_id)
+            c = connections[custom_user.username].cursor()
+            try:
+                c.execute("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" % (request.POST['table'],))
+                querty_result = [x[0] for x in c.fetchall()][1:]
+                querty_result = json.dumps({"data": querty_result})
+                return HttpResponse(status=200, content=querty_result)
+            except Exception as e:
+                print(e)
+            finally:
+                c.close()
+        # elif request.method == "PUT":
+        #     q_d = dict(QueryDict(request.body))
+        #     q_d.pop('csrfmiddlewaretoken')
+        #     q_d = json.dumps(q_d)
+        #     print(q_d)
+        #     return HttpResponse(status=200, content=q_d)
+
+    return HttpResponse(status=200)
+
+
+def data_analytics(request):
+    args = {}
+    request_object = auth.get_user(request)
+    if request_object:
+        args.update(get_perm(request))
+        custom_user = CustomUser.objects.get(id=request_object.id)
+        userdb = UserBD.objects.get(username=custom_user.username)
+        c = connections[userdb.username].cursor()
+        ar = ["bpm", "dia", "maand"]
+        query = ("select %s from %s" % (tuple(ar), "blood")).replace("'", '').replace("(", " ").replace(")", " ")
+        c.execute(query)
+        result_query = c.fetchall()
+
+        length = len(ar) - 1
+        result = []
+        if len(ar) == 3:
+            for k, group in groupby(result_query, lambda x: x[length]):
+                t = [y[1] for y in group]
+                t.insert(0, str(k))
+                result.append(t)
+            axis = {}
+            axis.update({
+                "y": {
+                    "label": {
+                        "text": ar[0],
+                        "position": "outer-middle"
+                    }
+                }
+            })
+            args['axis'] = axis
+        j_data = json.dumps(result)
+        chart = Charts().plotting(json_data=j_data)
+        args['j_data'] = chart
+    return render_to_response('pages/data_analytics.html', args)
+
+
 def list_company_change(request, id):
     args = {}
     args.update(csrf(request))
@@ -625,7 +662,10 @@ def list_company_change(request, id):
         args['pp_form'] = ChangeCompanyPackage()
         args['user'] = 'is_staff'
         args['table_form'] = AdditionalForm()
+        custom_user = CustomUser.objects.get(company_id=id)
+        c = connections[custom_user.username].cursor()
         if request.POST:
+            charts_save(request.POST, c)
             cc_package = ChangeCompanyPackage(request.POST)
             if cc_package.is_valid():
                 CustomUser.objects.filter(company_id=id).update(
@@ -635,7 +675,7 @@ def list_company_change(request, id):
             if form.is_valid():
                 name_column, type_column, table_name = form.cleaned_data['name_column'], form.cleaned_data[
                     'type_column'], form.cleaned_data['table_name']
-                c = connections[form.cleaned_data['user']].cursor()
+
                 c.execute("ALTER TABLE %s ADD COLUMN %s %s" % (table_name, name_column, type_column))
 
             change_company = ChangeCompany(request.POST)
@@ -646,6 +686,11 @@ def list_company_change(request, id):
                                                     contact_name=change_company.data['contact_name'],
                                                     phone=change_company.data['phone'])
                 redirect('/list_company/change/%s/', id)
+        c.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
+        tables_name = c.fetchall()
+        tables_name = [tab_name[0] for tab_name in tables_name]
+        args['charts'] = ['line', 'scatter plot', 'bar', 'pie', 'combination']
+        args['checkboxes'] = tables_name
         # try:
         # table_name = list().append(client.user_id)
         args.update(custom_product(request, id))

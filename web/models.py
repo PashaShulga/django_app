@@ -63,6 +63,18 @@ class UserBD(models.Model):
         db_table = "user_db"
 
 
+class Charts(models.Model):
+    id = models.AutoField(primary_key=True)
+    table_name = models.CharField(max_length=100)
+    columns_name = models.CharField(max_length=512)
+    chart_type = models.CharField(max_length=50)
+    y_name = models.CharField(max_length=50)
+    user = models.ForeignKey("CustomUser")
+
+    class Meta:
+        db_table = "charts"
+
+
 def update_settings():
     from django.conf import settings
     DATABASES = settings.DATABASES
