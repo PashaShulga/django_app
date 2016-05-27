@@ -666,10 +666,7 @@ def list_company_change(request, id):
         args['user'] = 'is_staff'
         args['table_form'] = AdditionalForm()
         custom_user = CustomUser.objects.filter(company_id=id)
-        if custom_user.exists():
-            c = connections[custom_user[0].username].cursor()
-        else:
-            return HttpResponse(status=404)
+        c = connections[custom_user[0].username].cursor()
         if request.POST:
             charts_save(request.POST, c, id)
             cc_package = ChangeCompanyPackage(request.POST)
