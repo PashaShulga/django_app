@@ -3,9 +3,6 @@
     <script src="/static/js/c3.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <div class="row">
-        {#        <div class="col-lg-12">#}
-        {#            <h1 class="page-header" style="font-size: 20px">Data Analytics</h1>#}
-        {#        </div>#}
     </div>
 
     <div class="row">
@@ -18,16 +15,16 @@
                         {% for checkbox in checkboxes %}
                             <div class="checkbox-inline">
                                 <label>
-                                    <input type="checkbox" name="{{ checkbox }}" value="{{ checkbox }}"> {{ checkbox }}
+                                    <input type="checkbox" name="table" value="{{ checkbox }}"> {{ checkbox }}
                                 </label>
                             </div>
                         {% endfor %}
                     </div>
                     <H4>Chart type</H4>
                     <div class="form-group">
-                        <select>
+                        <select id="chart_type" name="chart_type">
                             {% for chart in charts %}
-                                <option>{{ chart }}</option>
+                                <option value="{{ chart }}">{{ chart }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -60,10 +57,9 @@
                         success: function (response) {
                             var data = JSON.parse(response)['data'];
                             for (var i = 0; i < data.length; i++) {
-                                $(wrapper).append("<label id='" + data[i] + "'>" + data[i] + "</label><input type='checkbox' id='"+tbl+"' value='" + data[i] + "'>");
+                                $(wrapper).append("<label id='" + data[i] + "'>" + data[i] + "</label>&nbsp;<input type='checkbox' name='"+tbl+"' id='"+tbl+"' value='" + data[i] + "'>&nbsp;");
                             }
                         }
-
                     });
                 } else {
                     $.ajax({

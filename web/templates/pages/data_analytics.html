@@ -9,19 +9,29 @@
     </div>
 
     <div class="row">
-<div id="chart"></div>
+    {% for foo in main %}
+        <div id="chart_{{ foo }}"></div>
+    {% endfor %}
 
     </div>
 <script>
-var chart = c3.generate({
-    bindto: '#chart',
+var ite = {{ main }};
 {% autoescape off %}
-    data: {{ j_data }},
-    {% endautoescape %}
-{% autoescape off %}
-    axis: {{ axis }},
-    {% endautoescape %}
-});
+var j_data = {{ j_data }};
+    var axis = {{ axis }};
+{% endautoescape %}
+{% for iter in main %}
+
+for (var j=0; j < j_data.length; j++) {
+    var chart = c3.generate({
+        bindto: '#chart_' + {{ iter}},
+            data: j_data[j],
+            axis: axis[j]
+    });
+
+}
+{% endfor %}
+
 </script>
 
 {% endblock %}

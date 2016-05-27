@@ -68,8 +68,8 @@ class Charts(models.Model):
     table_name = models.CharField(max_length=100)
     columns_name = models.CharField(max_length=512)
     chart_type = models.CharField(max_length=50)
-    y_name = models.CharField(max_length=50)
-    user = models.ForeignKey("CustomUser")
+    y_name = models.CharField(max_length=50, blank=True)
+    company = models.ForeignKey("Client")
 
     class Meta:
         db_table = "charts"

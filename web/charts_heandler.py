@@ -2,9 +2,9 @@ from django.db import connections
 import json
 
 
-class Charts(object):
+class ChartsHandler(object):
 
-    def plotting(self, json_data=None):
+    def plotting(self, json_data=None, type="line"):
         data = {}
         if json_data is None:
             return False
@@ -12,7 +12,7 @@ class Charts(object):
             res = []
             data.update({
                     "columns": [list(it) for it in json.loads(json_data)],
-                "type": "line"
+                "type": type
             })
             # print(data)
         return data

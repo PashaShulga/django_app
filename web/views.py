@@ -14,7 +14,7 @@ import json
 from django.http import QueryDict
 from django.contrib.auth.models import Permission
 from itertools import groupby
-
+import ast
 
 def get_perm(request):
     args = {}
@@ -570,17 +570,21 @@ def add_new_company(request):
     return render_to_response('pages/add_company.html', args)
 
 
-def charts_save(query_dict, cursor):
+def charts_save(query_dict, cursor, company_id):
     query_dict = dict(query_dict)
     query_dict.pop('csrfmiddlewaretoken')
     query_list = []
     cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
     tables_name = cursor.fetchall()
     tables_name = [tab_name[0] for tab_name in tables_name]
-    for i in query_dict.keys():
-        if i in tables_name:
-            query_list.append(i)
     print(query_dict)
+    for table in query_dict['table']:
+        if table in tables_name:
+            query_list.append(table)
+            charts = Charts(table_name=table, columns_name=query_dict[table], chart_type=query_dict['chart_type'],
+                   y_name="", company_id=company_id)
+            charts.save()
+
 
 
 @csrf_exempt
@@ -591,21 +595,15 @@ def get_table_columns_ajax(request):
             custom_user = CustomUser.objects.get(company_id=company_id)
             c = connections[custom_user.username].cursor()
             try:
-                c.execute("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" % (request.POST['table'],))
-                querty_result = [x[0] for x in c.fetchall()][1:]
-                querty_result = json.dumps({"data": querty_result})
-                return HttpResponse(status=200, content=querty_result)
+                c.execute("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" %
+                          (request.POST['table'],))
+                query_result = [x[0] for x in c.fetchall()][1:]
+                query_result = json.dumps({"data": query_result})
+                return HttpResponse(status=200, content=query_result)
             except Exception as e:
                 print(e)
             finally:
                 c.close()
-        # elif request.method == "PUT":
-        #     q_d = dict(QueryDict(request.body))
-        #     q_d.pop('csrfmiddlewaretoken')
-        #     q_d = json.dumps(q_d)
-        #     print(q_d)
-        #     return HttpResponse(status=200, content=q_d)
-
     return HttpResponse(status=200)
 
 
@@ -617,18 +615,23 @@ def data_analytics(request):
         custom_user = CustomUser.objects.get(id=request_object.id)
         userdb = UserBD.objects.get(username=custom_user.username)
         c = connections[userdb.username].cursor()
-        ar = ["bpm", "dia", "maand"]
-        query = ("select %s from %s" % (tuple(ar), "blood")).replace("'", '').replace("(", " ").replace(")", " ")
-        c.execute(query)
-        result_query = c.fetchall()
-
-        length = len(ar) - 1
+        chart = Charts.objects.filter(company_id=custom_user.company_id)
         result = []
-        if len(ar) == 3:
-            for k, group in groupby(result_query, lambda x: x[length]):
+        main_ = []
+        for chart_object in list(chart):
+            ar = chart_object.columns_name
+            ar = ast.literal_eval(ar)
+            print(chart_object.table_name)
+            query = ("select %s from %s" % (tuple(ar), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
+            c.execute(query)
+            result_query = c.fetchall()
+
+            length = len(ar) - 1
+            for k, group in groupby(result_query, lambda x: x[0]):
                 t = [y[1] for y in group]
                 t.insert(0, str(k))
                 result.append(t)
+
             axis = {}
             axis.update({
                 "y": {
@@ -639,9 +642,11 @@ def data_analytics(request):
                 }
             })
             args['axis'] = axis
-        j_data = json.dumps(result)
-        chart = Charts().plotting(json_data=j_data)
-        args['j_data'] = chart
+            j_data = json.dumps(result)
+            chart = ChartsHandler().plotting(json_data=j_data, type=ast.literal_eval(chart_object.chart_type)[0])
+            main_.append(chart)
+        args['main'] = [i for i in range(len(main_))]
+        args['j_data'] = main_
     return render_to_response('pages/data_analytics.html', args)
 
 
@@ -665,7 +670,7 @@ def list_company_change(request, id):
         custom_user = CustomUser.objects.get(company_id=id)
         c = connections[custom_user.username].cursor()
         if request.POST:
-            charts_save(request.POST, c)
+            charts_save(request.POST, c, id)
             cc_package = ChangeCompanyPackage(request.POST)
             if cc_package.is_valid():
                 CustomUser.objects.filter(company_id=id).update(
