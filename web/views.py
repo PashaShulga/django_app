@@ -621,7 +621,6 @@ def data_analytics(request):
         for chart_object in list(chart):
             ar = chart_object.columns_name
             ar = ast.literal_eval(ar)
-            print(chart_object.table_name)
             query = ("select %s from %s" % (tuple(ar), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
             c.execute(query)
             result_query = c.fetchall()
@@ -631,7 +630,6 @@ def data_analytics(request):
                 t = [y[1] for y in group]
                 t.insert(0, str(k))
                 result.append(t)
-
             axis = {}
             axis.update({
                 "y": {
@@ -667,8 +665,11 @@ def list_company_change(request, id):
         args['pp_form'] = ChangeCompanyPackage()
         args['user'] = 'is_staff'
         args['table_form'] = AdditionalForm()
-        custom_user = CustomUser.objects.get(company_id=id)
-        c = connections[custom_user.username].cursor()
+        custom_user = CustomUser.objects.filter(company_id=id)
+        if custom_user.exists():
+            c = connections[custom_user[0].username].cursor()
+        else:
+            return HttpResponse(status=404)
         if request.POST:
             charts_save(request.POST, c, id)
             cc_package = ChangeCompanyPackage(request.POST)
