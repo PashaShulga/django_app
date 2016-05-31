@@ -3,16 +3,21 @@ import json
 
 
 class ChartsHandler(object):
-
-    def plotting(self, json_data=None, type="line"):
+    def plotting(self, json_data=None, type_chart=["line"]):
         data = {}
+        res = []
+
         if json_data is None:
             return False
         else:
-            res = []
-            data.update({
-                    "columns": [list(it) for it in json.loads(json_data)],
-                "type": type
-            })
-            # print(data)
-        return data
+            json_data = json.loads(json_data)
+            for i in json_data:
+                for t in type_chart:
+                    data = {
+                        "columns": i,
+                        "type": t
+                    }
+                    res.append([data])
+                    del type_chart[0]
+                    break
+        return res

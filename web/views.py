@@ -616,34 +616,40 @@ def data_analytics(request):
         userdb = UserBD.objects.get(username=custom_user.username)
         c = connections[userdb.username].cursor()
         chart = Charts.objects.filter(company_id=custom_user.company_id)
+        axis = {}
         result = []
         main_ = []
+        result_query = []
+        type_chart = []
         for chart_object in list(chart):
             ar = chart_object.columns_name
             ar = ast.literal_eval(ar)
             query = ("select %s from %s" % (tuple(ar), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
             c.execute(query)
-            result_query = c.fetchall()
+            result_query.append(c.fetchall())
+            type_chart.append(ast.literal_eval(chart_object.chart_type)[0])
 
-            length = len(ar) - 1
-            for k, group in groupby(result_query, lambda x: x[0]):
-                t = [y[1] for y in group]
-                t.insert(0, str(k))
-                result.append(t)
-            axis = {}
-            axis.update({
-                "y": {
-                    "label": {
-                        "text": ar[0],
-                        "position": "outer-middle"
-                    }
+        for res in result_query:
+            result1 = []
+            for k, group in groupby(res, lambda x: x[0]):
+                e = [r[1] for r in group]
+                e.insert(0, str(k))
+                result1.append(e)
+            result.append(result1)
+        j_data = json.dumps(result)
+        chart = ChartsHandler().plotting(json_data=j_data, type_chart=type_chart)
+        main_.append(chart)
+
+        axis.update({
+            "y": {
+                "label": {
+                    "text": ar[0],
+                    "position": "outer-middle"
                 }
-            })
-            args['axis'] = axis
-            j_data = json.dumps(result)
-            chart = ChartsHandler().plotting(json_data=j_data, type=ast.literal_eval(chart_object.chart_type)[0])
-            main_.append(chart)
-        args['main'] = [i for i in range(len(main_))]
+            }
+        })
+        args['axis'] = axis
+        args['main'] = [i for i in range(len(result))]
         args['j_data'] = main_
     return render_to_response('pages/data_analytics.html', args)
 
