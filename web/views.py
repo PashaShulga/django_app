@@ -624,7 +624,11 @@ def data_analytics(request):
         for chart_object in list(chart):
             ar = chart_object.columns_name
             ar = ast.literal_eval(ar)
-            query = ("select %s from %s" % (tuple(ar), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
+            if len(ar) == 1:
+                print(ar[0])
+                query = ("select %s from %s" % (ar[0], chart_object.table_name))
+            else:
+                query = ("select %s from %s" % (tuple(ar), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
             c.execute(query)
             result_query.append(c.fetchall())
             type_chart.append(ast.literal_eval(chart_object.chart_type)[0])
