@@ -320,7 +320,7 @@ def product(request, page_slug):
                         elif upform.cleaned_data['file_type'] == 'csv':
                             XLSParse(request.FILES['file'], request,
                                      str(upform.cleaned_data['table_name']).lower()).csv_parse()
-                        return redirect('/product/%s' % (page_slug,))
+                        return redirect('/product/%s/' % (page_slug,))
 
                     if upform.cleaned_data['table_name'] in table_names:
                         list_ = []
@@ -578,14 +578,12 @@ def charts_save(query_dict, cursor, company_id):
     cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
     tables_name = cursor.fetchall()
     tables_name = [tab_name[0] for tab_name in tables_name]
-    print(query_dict)
     for table in query_dict['table']:
         if table in tables_name:
             query_list.append(table)
             charts = Charts(table_name=table, columns_name=query_dict[table], chart_type=query_dict['chart_type'],
                    y_name="", company_id=company_id)
             charts.save()
-
 
 
 @csrf_exempt
@@ -658,7 +656,7 @@ def data_analytics(request):
             args['main'] = [i for i in range(len(result))]
             args['j_data'] = main_
         else:
-            args['exist'] = True
+            args['exist'] = False
     return render_to_response('pages/data_analytics.html', args)
 
 
