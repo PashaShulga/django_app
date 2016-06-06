@@ -623,40 +623,42 @@ def data_analytics(request):
         main_ = []
         result_query = []
         type_chart = []
-        for chart_object in list(chart):
-            ar = chart_object.columns_name
-            ar = ast.literal_eval(ar)
-            if len(ar) == 1:
-                print(ar[0])
-                query = ("select %s from %s" % (ar[0], chart_object.table_name))
-            else:
-                query = ("select %s from %s" % (tuple(ar), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
-            c.execute(query)
-            result_query.append(c.fetchall())
-            type_chart.append(ast.literal_eval(chart_object.chart_type)[0])
+        if chart.exists():
+            args['exist'] = True
+            for chart_object in list(chart):
+                ar = chart_object.columns_name
+                ar = ast.literal_eval(ar)
+                if len(ar) == 1:
+                    query = ("select %s from %s" % (ar[0], chart_object.table_name))
+                else:
+                    query = ("select %s from %s" % (tuple(ar), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
+                c.execute(query)
+                result_query.append(c.fetchall())
+                type_chart.append(ast.literal_eval(chart_object.chart_type)[0])
 
-        for res in result_query:
-            result1 = []
-            for k, group in groupby(res, lambda x: x[0]):
-                e = [r[1] for r in group]
-                e.insert(0, str(k))
-                result1.append(e)
-            result.append(result1)
-        j_data = json.dumps(result)
-        chart = ChartsHandler().plotting(json_data=j_data, type_chart=type_chart)
-        main_.append(chart)
-
-        axis.update({
-            "y": {
-                "label": {
-                    "text": ar[0],
-                    "position": "outer-middle"
+            for res in result_query:
+                result1 = []
+                for k, group in groupby(res, lambda x: x[0]):
+                    e = [r[1] for r in group]
+                    e.insert(0, str(k))
+                    result1.append(e)
+                result.append(result1)
+            j_data = json.dumps(result)
+            chart = ChartsHandler().plotting(json_data=j_data, type_chart=type_chart)
+            main_.append(chart)
+            axis.update({
+                "y": {
+                    "label": {
+                        "text": ar[0],
+                        "position": "outer-middle"
+                    }
                 }
-            }
-        })
-        args['axis'] = axis
-        args['main'] = [i for i in range(len(result))]
-        args['j_data'] = main_
+            })
+            args['axis'] = axis
+            args['main'] = [i for i in range(len(result))]
+            args['j_data'] = main_
+        else:
+            args['exist'] = True
     return render_to_response('pages/data_analytics.html', args)
 
 
