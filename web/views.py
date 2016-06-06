@@ -16,6 +16,7 @@ from django.contrib.auth.models import Permission
 from itertools import groupby
 import ast
 
+
 def get_perm(request):
     args = {}
     request_object = auth.get_user(request)
@@ -31,7 +32,7 @@ def get_perm(request):
 def home(request):
     args = {}
     user = auth.get_user(request)
-    if user:
+    if str(user) != 'AnonymousUser':
         client = Client.objects.all()
         if client.exists():
             args['companies'] = len(client)
