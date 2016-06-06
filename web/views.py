@@ -611,6 +611,7 @@ def get_table_columns_ajax(request):
 def data_analytics(request):
     args = {}
     request_object = auth.get_user(request)
+    ar = None
     if request_object:
         args.update(get_perm(request))
         custom_user = CustomUser.objects.get(id=request_object.id)
