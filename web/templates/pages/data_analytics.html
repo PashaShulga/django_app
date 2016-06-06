@@ -13,7 +13,10 @@
             {% for foo in main %}
                 <div id="chart_{{ foo }}"></div>
             {% endfor %}
+        {% else %}
+            <p>No charts</p>
         {% endif %}
+
 
     </div>
     <script>
