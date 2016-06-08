@@ -263,6 +263,7 @@ class AddAdminUser(forms.Form):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password again", 'required': True}),
         strip=False)
 
+
 class EditCompany(forms.Form):
     company_name = forms.CharField(required=True, max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Company name", "readonly":True}))
     address = forms.CharField(max_length=256, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Address"}))
@@ -285,6 +286,7 @@ class EditUser(forms.Form):
 
 
 class AddCompany(EditCompany):
+    company_name = forms.CharField(required=True, max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Company name", "readonly":False}))
     email = forms.CharField(required=True, max_length=130, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Email"}))
     address = forms.CharField(required=True, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': "Address", "rows": "2"}))
     contact_name = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Contact"}))
