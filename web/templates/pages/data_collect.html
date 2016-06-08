@@ -138,10 +138,11 @@
                     },
                     itemTemplate: function (_, item) {
                         return $("<input>").attr("type", "checkbox")
-                                .on("click", function () {
+                                .on("change", function () {
                                     return false;
                                 })
-                                .on("change", function () {
+                                .on("click", function () {
+
                                     $(this).is(":checked") ? selectItem(item) : unselectItem(item);
                                 });
                     },
