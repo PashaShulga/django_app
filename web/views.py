@@ -182,7 +182,6 @@ def delete_all(request, page_slug):
 
 def custom_product(request, id):
     args = {}
-
     request_object = auth.get_user(request)
     if request_object:
         args.update(get_perm(request))
@@ -197,23 +196,6 @@ def custom_product(request, id):
                 for table_name in c.fetchall():
                     table_names.append(table_name[0])
                 args['tables'] = table_names
-                # if request.POST:
-                # upform = UploadFileForm(request.POST, request.FILES)
-                # if upform.is_valid():
-                #     UploadHandler(request.FILES['file']).handler()
-                #     if upform.cleaned_data['file_type'] == 'xls':
-                #         XLSParse(request.FILES['file'], request, str(upform.cleaned_data['table_name']).lower()).xls_parse()
-                #     elif upform.cleaned_data['file_type'] == 'csv':
-                #         XLSParse(request.FILES['file'], request, str(upform.cleaned_data['table_name']).lower()).csv_parse()
-                #     return redirect('/product/%s' % (page_slug,))
-                #
-                # if upform.cleaned_data['table_name'] in table_names:
-                #     list_ = []
-                #     for ite in range(0, len(title_list)):
-                #         list_.append(request.POST['column'+str(ite)])
-                #     s = 'insert into {} {}'.format(upform.cleaned_data['table_name'], tuple(title_list)).replace("'", '"')
-                #     s2 = ' VALUES {}'.format(tuple(list_))
-                #     c.execute(s+s2)
                 title_list = []
                 for table in table_names:
 
@@ -237,6 +219,7 @@ def custom_product(request, id):
                     l = []
                     c.execute("select * from %s" % (table,))
                     data = c.fetchall()
+                    # print(data)
                     for conversion in data:
                         l.append(list(conversion))
                     res = {}
@@ -254,15 +237,16 @@ def custom_product(request, id):
                         del title_list[0]
                         del l[0]
                         mail_list.append(ls)
-                b = json.dumps(mail_list)
 
+
+                b = json.dumps(mail_list)
                 args['items'] = b
                 fields_main = []
                 for table in table_names:
                     fi = {}
                     c.execute(
                         "SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" % (
-                        table,))
+                            table,))
                     fields = []
                     for i in c.fetchall():
                         i = list(i)
@@ -281,7 +265,7 @@ def custom_product(request, id):
                     fields.append({"type": "control", "width": 70,})
                     fields_main.append(fields)
 
-                args['flds'] = fields_main  # json.dumps(fields_main)
+                args['flds'] = json.dumps(fields_main)
             except Exception as e:
                 print(e)
             finally:
@@ -578,6 +562,7 @@ def charts_save(query_dict, cursor, company_id):
     cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
     tables_name = cursor.fetchall()
     tables_name = [tab_name[0] for tab_name in tables_name]
+    print(query_dict)
     for table in query_dict['table']:
         if table in tables_name:
             query_list.append(table)
@@ -679,8 +664,12 @@ def list_company_change(request, id):
         args['table_form'] = AdditionalForm()
         custom_user = CustomUser.objects.filter(company_id=id)
         c = connections[custom_user[0].username].cursor()
-        if request.POST:
-            charts_save(request.POST, c, id)
+        print(request.is_ajax())
+        if request.is_ajax():
+            print(request.POST['form_type'])
+            if request.POST['form_type'] == 'analytics':
+                print(132)
+                charts_save(request.POST, c, id)
             cc_package = ChangeCompanyPackage(request.POST)
             if cc_package.is_valid():
                 CustomUser.objects.filter(company_id=id).update(
@@ -688,8 +677,8 @@ def list_company_change(request, id):
 
             form = AdditionalForm(request.POST)
             if form.is_valid():
-                name_column, type_column, table_name = form.cleaned_data['name_column'], form.cleaned_data[
-                    'type_column'], form.cleaned_data['table_name']
+                name_column, type_column, table_name = form.cleaned_data['name_column'], \
+                                                       form.cleaned_data['type_column'], form.cleaned_data['table_name']
 
                 c.execute("ALTER TABLE %s ADD COLUMN %s %s" % (table_name, name_column, type_column))
 

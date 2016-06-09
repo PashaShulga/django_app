@@ -22,69 +22,127 @@
             <H2>Table: <strong style="color: red;">{{ table }}</strong></H2>
             <div id="{{ table }}" class="jsGrid"></div>
         {% endfor %}
+
     </div>
 
     <script>
-
-        {% autoescape off %}
-            var data = {{ items }};
-            var tables = {{ tables }};
-            var fields = {{ flds }};
+{% autoescape off %}
+            var clients = {{ items }};
         {% endautoescape %}
+var c = 0;
+{% for table in tables %}
+        $("#{{ table }}").jsGrid({
 
-        var c = 0;
-            {% for table in tables %}
-                $("#{{ table }}").jsGrid({
-                    width: "100%",
+            width: "100%",
 
-                    sorting: true,
-                    paging: true,
-                    pageSize: 15,
-                    pageButtonCount: 5,
+            inserting: true,
+            sorting: true,
+            editing: true,
+            paging: true,
+            autoload: true,
+            confirmDeleting: false,
+            pageSize: 15,
+            pageButtonCount: 5,
 
-                    controller: {
+            controller: {
+                loadData: function () {
+                    return clients[c];
+                },
 
-                        insertItem: function (item) {
-                            item.csrfmiddlewaretoken = '{{ csrf_token }}';
-                            return $.ajax({
-                                type: "POST",
-                                url: "{{ request.path }}insert/",
-                                data: item,
-                                dataType: "json",
-                                success: window.location.href = "{{ request.path }}"
-                            });
-                        },
+                insertItem: function (item) {
+                    item.csrfmiddlewaretoken = '{{ csrf_token }}';
+                    return $.ajax({
+                        type: "POST",
+                        url: "{{ request.path }}insert/",
+                        data: item,
+                        dataType: "json",
+                        success: window.location.href = "{{ request.path }}"
+                    });
+                },
 
-                        updateItem: function (item) {
-                            item.csrfmiddlewaretoken = '{{ csrf_token }}';
-                            return $.ajax({
-                                type: "PUT",
-                                url: "{{ request.path }}update/",
-                                data: item,
-                                dataType: "json",
-                                success: window.location.href = "{{ request.path }}"
-                            });
-                        },
+                updateItem: function (item) {
+                    item.csrfmiddlewaretoken = '{{ csrf_token }}';
+                    return $.ajax({
+                        type: "PUT",
+                        url: "{{ request.path }}update/",
+                        data: item,
+                        dataType: "json",
+                        success: window.location.href = "{{ request.path }}"
+                    });
+                },
 
-                        deleteItem: function (item) {
-                            item.csrfmiddlewaretoken = '{{ csrf_token }}';
-                            return $.ajax({
-                                type: "DELETE",
-                                url: "{{ request.path }}delete/",
-                                data: item,
-                                dataType: "json",
-                                success: window.location.href = "{{ request.path }}"
-                            });
-                        }
+                deleteItem: function (item) {
+                    item.csrfmiddlewaretoken = '{{ csrf_token }}';
+                    return $.ajax({
+                        type: "DELETE",
+                        url: "{{ request.path }}delete/",
+                        data: item,
+                        dataType: "json",
+                        success: window.location.href = "{{ request.path }}"
+                    });
+                }
+            },
 
+            {% autoescape off %}
+                fields: [{
+                    headerTemplate: function () {
+                        return $("<button>").attr("type", "button").text("Delete")
+                                .on("click", function () {
+                                    deleteSelectedItems();
+                                });
                     },
+                    itemTemplate: function (_, item) {
+                        return $("<input>").attr("type", "checkbox")
+                                .on("change", function () {
+                                    return false;
+                                })
+                                .on("click", function () {
 
-                    data: data[c],
-                        fields: fields[c]
-                });
-                c++;
-        {% endfor %}
+                                    $(this).is(":checked") ? selectItem(item) : unselectItem(item);
+                                });
+                    },
+                    align: "center",
+                    width: 75,
+                    sorting: false
+                }
+                ].concat({{ flds }}[c])
+            {% endautoescape %}
 
+        });
+    c++;
+{% endfor %}
+        var selectedItems = [];
+
+        var selectItem = function (item) {
+            selectedItems.push(item);
+        };
+
+        var unselectItem = function (item) {
+            selectedItems = $.grep(selectedItems, function (i) {
+                return i !== item;
+            });
+        };
+
+        var deleteSelectedItems = function () {
+            if (!selectedItems.length || !confirm("Are you sure?")) {
+                return;
+            }
+
+            $.each(selectedItems, function (_, item) {
+                deleteItem: {
+                    item.csrfmiddlewaretoken = '{{ csrf_token }}';
+                    return $.ajax({
+                        type: "DELETE",
+                        url: "{{ request.path }}delete/",
+                        data: item,
+                        dataType: "json",
+                        success: window.location.href = "{{ request.path }}"
+                    });
+                }
+            });
+
+            selectedItems = [];
+        };
     </script>
 
 {% endblock %}

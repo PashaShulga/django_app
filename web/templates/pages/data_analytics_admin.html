@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="col-lg-4">
-            <form role="form" method="post">
+            <form role="form" method="post" id="analytics" action="javascript:void(null);" onsubmit="call('analytics')">
                 {% csrf_token %}
                 <fieldset>
                     <H4>Choose tables</H4>

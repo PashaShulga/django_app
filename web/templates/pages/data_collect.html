@@ -49,13 +49,9 @@
         </div>
         <br>
         {% for table in tables %}
-
             <div class="container" style="margin-top: 20px; width: 100%">
-
                 <div id="jsGrid" class="jsGrid"></div>
             </div>
-
-
         {% endfor %}
 
     {% endif %}
@@ -125,7 +121,6 @@
                         success: window.location.href = "{{ request.path }}"
                     });
                 }
-
             },
 
             {% autoescape off %}
