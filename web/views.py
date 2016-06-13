@@ -15,6 +15,7 @@ from django.http import QueryDict
 from django.contrib.auth.models import Permission
 from itertools import groupby
 import ast
+import os, os.path
 
 
 def get_perm(request):
@@ -33,17 +34,19 @@ def home(request):
     args = {}
     user = auth.get_user(request)
     if str(user) != 'AnonymousUser':
-        client = Client.objects.all()
-        if client.exists():
-            args['companies'] = len(client)
+        client = CustomUser.objects.all().count()
+        args['count_of_clients'] = client
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        args['count_of_datacollect'] = len([name for name in os.listdir(BASE_DIR+'/static/files')
+                                            if os.path.isfile(os.path.join(BASE_DIR+'/static/files', name))])
+        args['count_of_charts'] = Charts.objects.all().count()
         packages = Company.objects.all()
         if packages.exists():
-            args['packages'] = len(packages)
+            args['count_of_packages'] = len(packages)
         args['realise'] = "2016.05.11"
-        args['updates'] = "WTF?"
-
+        args['version'] = "1.0"
+        args['count_of_connection'] = 0
         args.update(get_perm(request))
-        # print(get_perm(request))
         return render_to_response('pages/index.html', args)
     else:
         return redirect('/auth/login/')

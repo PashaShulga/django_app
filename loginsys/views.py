@@ -18,7 +18,7 @@ from django.db.models.query_utils import Q
 from web.create_user_db import create_db
 from django.utils.translation import ugettext_lazy as _
 from web.models import CustomUser, Company, Client, UserBD, update_settings
-
+from django.template import RequestContext
 
 def get_perm(request):
     args = {}
@@ -120,30 +120,16 @@ def add_admin_user(request):
         args.update(perm)
         if request.POST:
             d = request.POST
-            # au = AddNewUser(request.POST)
             user_obj = auth.get_user(request)
             c_title = Client.objects.get(user_id=user_obj.id)
-            # u_db = UserBD.objects.filter(username=user_obj.username)
 
-            # if u_db.exists():
             if d['password1'] != d['password2']:
                 args['messages'] = "Password incorrect"
                 return render_to_response('add_admin_user.html', args)
             CustomUser.objects.create_user(username=d['username'], password=d['password2'], is_superuser=True,
                                            is_staff=True)
 
-            # u = CustomUser.objects.get(username=d['username'])
-            # permission = None
-            # if d['roles'] == "E":
-            #     permission = Permission.objects.get(codename='user_short')
-            # if d['roles'] == "M":
-            #     permission = Permission.objects.get(codename='admin')
-            # if perm['company_type'] == 'L Package':
-            #     permission = Permission.objects.get(codename='user_short')
-            # elif perm['company_type'] == 'XL Package':
-            #     permission = Permission.objects.get(codename='admin')
-            # u.user_permissions.add(permission)
-    return render_to_response('add_admin_user.html', args)
+    return render_to_response('add_admin_user.html', args, context_instance=RequestContext(request))
 
 
 class LoginUser(FormView):

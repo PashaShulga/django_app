@@ -10,15 +10,215 @@
 
     </div>
     <!-- /.row -->
-
-    <div class="row">
-        <div class="col-lg-12">
-            <p>Companies: {{ companies }}</p>
-            <p>Packages: {{ packages }}</p>
-            <p>Realise: {{ realise }}</p>
-            <p>Updates: {{ updates }}</p>
+    <div class="row_tile">
+        <div class="container dynamicTile">
+            <div class="row ">
+                <div class="col-sm-2 col-xs-4">
+                    <div id="tile1" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-table bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Data Collect files
+                                    </div>
+                                    <div class="icontext">
+                                        {{ count_of_datacollect }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs-4">
+                    <div id="tile2" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-bar-chart-o bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Data Analytics
+                                    </div>
+                                    <div class="icontext">
+                                        {{ count_of_charts }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs-4">
+                    <div id="tile3" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-users bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Users
+                                    </div>
+                                    <div class="icontext">
+                                        {{ count_of_clients }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs-4">
+                    <div id="tile4" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-cab bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Package
+                                    </div>
+                                    <div class="icontext">
+                                        {{ count_of_packages }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs-4">
+                    <div id="tile5" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-language bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        System
+                                    </div>
+                                    <div class="icontext">
+                                        V.{{ version }}
+                                        {{ realise }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs-4">
+                    <div id="tile6" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-database bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Data Connect
+                                    </div>
+                                    <div class="icontext">
+                                        {{ count_of_connection }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- /.col-lg-12 -->
     </div>
+    <style>
+        .dynamicTile {
+            width: 100%;
+        }
+
+        .dynamicTile .col-sm-2.col-xs-4 {
+            padding: 5px;
+        }
+
+        .bigicon {
+            font-size: 67px;
+            color: white;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .icontext {
+            color: white;
+            font-size: 27px;
+        }
+
+        .bigicondark {
+            font-size: 67px;
+            color: black;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .icontextdark {
+            color: black;
+            font-size: 27px;
+        }
+
+        .dynamicTile .col-sm-4.col-xs-8 {
+            padding: 5px;
+        }
+
+        #tile1 {
+            background: #7C91C7;
+        }
+
+        #tile2 {
+            background: #3B579D;
+        }
+
+        #tile3 {
+            background: #153178;
+        }
+
+        #tile4 {
+            background: #EACF46;
+        }
+
+        #tile5 {
+            background: #EACF46;
+        }
+
+        #tile6 {
+            background: #EACF46;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".tile").height($("#tile1").width());
+            $(".carousel").height($("#tile1").width());
+            $(".item").height($("#tile1").width());
+
+            $(window).resize(function () {
+                if (this.resizeTO) clearTimeout(this.resizeTO);
+                this.resizeTO = setTimeout(function () {
+                    $(this).trigger('resizeEnd');
+                }, 10);
+            });
+
+            $(window).bind('resizeEnd', function () {
+                $(".tile").height($("#tile1").width());
+                $(".carousel").height($("#tile1").width());
+                $(".item").height($("#tile1").width());
+            });
+        });
+    </script>
 
 {% endblock %}
