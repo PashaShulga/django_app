@@ -36,7 +36,7 @@ class UserCreationForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True}))
 
     password2 = forms.CharField(label="",
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password againe", 'required': True}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password again", 'required': True}),
         strip=False)
 
     CHOICES = (
@@ -118,7 +118,7 @@ class ChangePassForm(forms.Form):
     new_password1 = forms.CharField(label=("New password"),
                                     widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'New Password'}))
     new_password2 = forms.CharField(label=("New password confirmation"),
-                                    widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'New Password againe'}))
+                                    widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'New Password again'}))
 
     def clean_new_password2(self):
         password1 = self.cleaned_data.get('new_password1')
@@ -142,7 +142,8 @@ class ChangeAdminPassword(forms.Form):
     new_password1 = forms.CharField(label=("New password"),
                                     widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'New Password'}))
     new_password2 = forms.CharField(label=("New password confirmation"),
-                                    widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'New Password againe'}))
+                                    widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'New Password again'}))
+
     def clean_new_password2(self):
         password1 = self.cleaned_data.get('new_password1')
         password2 = self.cleaned_data.get('new_password2')
@@ -318,7 +319,7 @@ class AddCompany(EditCompany):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': True}))
 
     password2 = forms.CharField(label="", required=True,
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password againe", 'required': True}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Password again", 'required': True}),
         strip=False)
 
 

@@ -22,13 +22,14 @@ class XLSParse(object):
                 if it[1] == datetime.datetime:
                     it[1] = "DATE"
                 elif it[1] == str:
-                    it[1] = "CHARACTER(100)"
+                    it[1] = "VARCHAR(100)"
                 elif it[1] == int:
                     it[1] = "INT"
                 elif it[1] == float:
                     it[1] = "FLOAT"
                 else:
                     it[1] = "CHARACTER(255)"
+                print(it[0])
                 cursor.execute("ALTER TABLE %s ADD %s %s" % (self.table, it[0].replace(" ", "_"), it[1]))
         except Exception as e:
             print(e)
@@ -47,7 +48,7 @@ class XLSParse(object):
                         for it in res[1:]:
                             title_list.append(it[0])
                         for iter_ in args[1][1:]:
-                            s = 'insert into {} {}'.format(self.table, tuple(title_list)).replace("'", '"')
+                            s = "insert into {} {}".format(self.table, tuple(title_list)).replace("'", '"')
                             s2 = ' VALUES {}'.format(tuple(iter_))
                             if None in iter_:
                                 iter_[iter_.index(None)] = ''

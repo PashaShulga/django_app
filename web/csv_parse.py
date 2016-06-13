@@ -39,9 +39,6 @@ class CSVParse(object):
                 for data in reader:
                     data_.append([i.strftime('%Y-%m-%d %H:%M:%S') if type(i) == datetime.datetime else i for i in data])
                 k += 1
-            print(data_)
-            print(columns_name)
-
 
 
 CSVParse('s', 123).parse()

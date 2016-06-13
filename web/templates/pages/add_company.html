@@ -7,17 +7,9 @@
     </div>
 
     <div class="row">
-{#        <ul class="nav nav-tabs">#}
-{#            <li class="active"><a data-toggle="tab" href="#home">General</a></li>#}
-{#            <li><a data-toggle="tab" href="#menu1">Package/permissions settings</a></li>#}
-{#            <li><a data-toggle="tab" href="#menu2">Users settings</a></li>#}
-{#        </ul>#}
-
-{#        <div class="tab-content">#}
-{#            <div id="home" class="tab-pane fade in active">#}
                 <br>
                 <div class="col-md-4">
-                    <form role="form" method="post">
+                    <form role="form" method="post" id="company_add" action="javascript:void(null);" onsubmit="call('company_add')">
                         {% csrf_token %}
                         <fieldset>
                             <div class="form-group">
@@ -71,4 +63,21 @@
                     </form>
                 </div>
             </div>
+    <script type="text/javascript" language="javascript">
+        function call(idForm) {
+            var msg = $('#' + idForm).serializeArray();
+            msg.push({name: "form_type", value: idForm});
+            $.ajax({
+                type: 'POST',
+                url: '{{ request.path }}',
+                data: msg,
+                success: function (data) {
+                    success_notify();
+                },
+                error: function (xhr, str) {
+                    danger_notify(xhr.responseCode);
+                }
+            });
+        }
+    </script>
 {% endblock %}

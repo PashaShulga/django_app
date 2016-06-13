@@ -17,7 +17,6 @@
                     <th>Postal code</th>
                     <th>Phone</th>
                     <th>Website</th>
-                    <th>Company logo</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -30,7 +29,6 @@
                     <td>{{ foo.postal_code }}</td>
                     <td>{{ foo.phone }}</td>
                     <td>{{ foo.website }}</td>
-                    <td><img src="{{ foo.company_logo }}" style="width: 70px"></td>
                     <td><a class="btn btn-sm btn-info" href="/list_company/change/{{ foo.id }}/">Change</a></td>
                 </tr>
                 {% endfor %}

@@ -21,6 +21,7 @@ urlpatterns = [
 
     url(r'^edit_company/modify$', modify_company),
     url(r'^list_company/change/(?P<id>([0-9]+))/$', list_company_change),
+    url(r'^list_company/change/(?P<company_id>([0-9]+))/delete/(?P<chart_id>([0-9]+))', chart_delete),
     url(r'^list_company/$', list_company),
     url(r'^list_company/get_table_columns/$', get_table_columns_ajax),
     url(r'^data_analytics/$', data_analytics),

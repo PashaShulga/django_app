@@ -198,7 +198,6 @@ def custom_product(request, id):
                 args['tables'] = table_names
                 title_list = []
                 for table in table_names:
-
                     t_l = []
                     c.execute("select column_name from information_schema.columns WHERE table_name = '%s'" % (table,))
                     result = c.fetchall()
@@ -214,32 +213,33 @@ def custom_product(request, id):
                 # args['id'] = result[0]
                 # args['inputs'] = range(0, len(title_list))
                 mail_list = []
-                for table in table_names:
-                    ls = []
-                    l = []
-                    c.execute("select * from %s" % (table,))
-                    data = c.fetchall()
-                    # print(data)
-                    for conversion in data:
-                        l.append(list(conversion))
-                    res = {}
-                    for i in title_list:
-                        for k in l:
-                            for q in i:
-                                for o in k:
-                                    if type(o) == datetime.date:
-                                        res.update({q: o.strftime("%Y-%m-%d")})  # %H:%M:%S
-                                    else:
-                                        res.update({q: o})
-                                    del k[0]
-                                    break
-                            ls.append(res.copy())
-                        del title_list[0]
-                        del l[0]
-                        mail_list.append(ls)
-
-
+                try:
+                    for table in table_names:
+                        ls = []
+                        l = []
+                        c.execute("select * from %s" % (table,))
+                        data = c.fetchall()
+                        for conversion in data:
+                            l.append(list(conversion))
+                        res = {}
+                        for i in title_list:
+                            for k in l:
+                                for q in i:
+                                    for o in k:
+                                        if type(o) == datetime.date:
+                                            res.update({q: o.strftime("%Y-%m-%d")})  # %H:%M:%S
+                                        else:
+                                            res.update({q: o})
+                                        del k[0]
+                                        break
+                                ls.append(res.copy())
+                            del title_list[0]
+                            del l[0]
+                            mail_list.append(ls)
+                except Exception as e:
+                    print(e)
                 b = json.dumps(mail_list)
+                # print(b)
                 args['items'] = b
                 fields_main = []
                 for table in table_names:
@@ -284,9 +284,9 @@ def product(request, page_slug):
     request_object = auth.get_user(request)
     if request_object:
         args.update(get_perm(request))
-        c_u = CustomUser.objects.filter(username=request_object.username)
-        user_db = UserBD.objects.filter(id=c_u[0].user_id)
-        c = connections[user_db[0].username].cursor()
+        c_u = CustomUser.objects.filter(username=request_object.username).first()
+        user_db = UserBD.objects.filter(id=c_u.user_id)
+        c = connections[user_db.first().username].cursor()
         if user_db.exists():
             try:
                 c.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
@@ -528,10 +528,8 @@ def add_new_company(request):
     request_object = auth.get_user(request)
     args.update(csrf(request))
     args['form'] = AddCompany()
-    # args['pp_form'] = PackagePermissions
-    # args['us_form'] = UserSettings
     if request_object:
-        if request.POST:
+        if request.is_ajax():
             new_company = AddCompany(request.POST)
             try:
                 create_db("db_%s" % (new_company.data['username'],), new_company.data['password2'],
@@ -552,7 +550,7 @@ def add_new_company(request):
                                 email=new_company.data['email'], address=new_company.data['address'])
             new_client.save()
             CustomUser.objects.filter(id=new_user.id).update(company_id=new_client.id)
-    return render_to_response('pages/add_company.html', args)
+    return render_to_response('pages/add_company.html', args, context_instance=RequestContext(request))
 
 
 def charts_save(query_dict, cursor, company_id):
@@ -562,7 +560,6 @@ def charts_save(query_dict, cursor, company_id):
     cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
     tables_name = cursor.fetchall()
     tables_name = [tab_name[0] for tab_name in tables_name]
-    print(query_dict)
     for table in query_dict['table']:
         if table in tables_name:
             query_list.append(table)
@@ -591,15 +588,15 @@ def get_table_columns_ajax(request):
     return HttpResponse(status=200)
 
 
-def data_analytics(request):
+def data_analytics_custom(request):
     args = {}
     request_object = auth.get_user(request)
     ar = None
     if request_object:
         args.update(get_perm(request))
-        custom_user = CustomUser.objects.get(id=request_object.id)
-        userdb = UserBD.objects.get(username=custom_user.username)
-        c = connections[userdb.username].cursor()
+        custom_user = CustomUser.objects.filter(id=request_object.id).first()
+        userdb = UserBD.objects.filter(username=custom_user.username)
+        c = connections[userdb[0].username].cursor()
         chart = Charts.objects.filter(company_id=custom_user.company_id)
         axis = {}
         result = []
@@ -642,6 +639,66 @@ def data_analytics(request):
             args['j_data'] = main_
         else:
             args['exist'] = False
+    return args
+
+
+def data_analytics_admin(request, cursor, id):
+    args = {}
+    request_object = auth.get_user(request)
+    ar = None
+    if request_object:
+        args.update(get_perm(request))
+        c = cursor
+        custom_user = CustomUser.objects.filter(company_id=id).first()
+        chart = Charts.objects.filter(company_id=custom_user.company_id)
+        axis = {}
+        result = []
+        main_ = []
+        result_query = []
+        type_chart = []
+        id_list = []
+        if chart.exists():
+            args['exist'] = True
+            for chart_object in list(chart):
+                id_list.append(chart_object.id)
+                ar = chart_object.columns_name
+                ar = ast.literal_eval(ar)
+                if len(ar) == 1:
+                    query = ("select %s from %s" % (ar[0], chart_object.table_name))
+                else:
+                    query = ("select %s from %s" % (tuple(ar), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
+                c.execute(query)
+                result_query.append(c.fetchall())
+                type_chart.append(ast.literal_eval(chart_object.chart_type)[0])
+
+            for res in result_query:
+                result1 = []
+                for k, group in groupby(res, lambda x: x[0]):
+                    e = [r[1] for r in group]
+                    e.insert(0, str(k))
+                    result1.append(e)
+                result.append(result1)
+            j_data = json.dumps(result)
+            chart = ChartsHandler().plotting(json_data=j_data, type_chart=type_chart)
+            main_.append(chart)
+            axis.update({
+                "y": {
+                    "label": {
+                        "text": ar[0],
+                        "position": "outer-middle"
+                    }
+                }
+            })
+            args['axis'] = axis
+            args['main'] = id_list
+            args['j_data'] = main_
+        else:
+            args['exist'] = False
+    return args
+
+
+def data_analytics(request):
+    args = data_analytics_custom(request)
     return render_to_response('pages/data_analytics.html', args)
 
 
@@ -652,7 +709,7 @@ def list_company_change(request, id):
     if "auth.add_user" in get_perm(request)['user_permission']:
         client = Client.objects.get(id=id)
         args['company'] = client
-        args['form'] = ChangeCompany(initial=
+        args['form_change_company'] = ChangeCompany(initial=
                                      {"company_name": client.company_name,
                                       "contact_name": client.contact_name.strip() if client.contact_name is not None else client.contact_name,
                                       "email": client.email.strip() if client.email is not None else client.email,
@@ -664,11 +721,8 @@ def list_company_change(request, id):
         args['table_form'] = AdditionalForm()
         custom_user = CustomUser.objects.filter(company_id=id)
         c = connections[custom_user[0].username].cursor()
-        print(request.is_ajax())
         if request.is_ajax():
-            print(request.POST['form_type'])
             if request.POST['form_type'] == 'analytics':
-                print(132)
                 charts_save(request.POST, c, id)
             cc_package = ChangeCompanyPackage(request.POST)
             if cc_package.is_valid():
@@ -691,13 +745,22 @@ def list_company_change(request, id):
                                                     phone=change_company.data['phone'])
                 redirect('/list_company/change/%s/', id)
         c.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
-        tables_name = c.fetchall()
-        tables_name = [tab_name[0] for tab_name in tables_name]
+        tables_name = [tab_name[0] for tab_name in c.fetchall()]
         args['charts'] = ['line', 'scatter plot', 'bar', 'pie', 'combination']
         args['checkboxes'] = tables_name
+        args.update(data_analytics_admin(request, c, id))
+        args.update(custom_product(request, id))
         # try:
         # table_name = list().append(client.user_id)
-        args.update(custom_product(request, id))
+        # args.update(custom_product(request, id))
         # except:
         #     pass
+    # print(args['main'])
     return render_to_response('pages/list_company_change.html', args, context_instance=RequestContext(request))
+
+
+@csrf_exempt
+def chart_delete(request, company_id, chart_id):
+    if request.is_ajax():
+        if request.method == "DELETE":
+            Charts.objects.filter(id=chart_id).delete()
