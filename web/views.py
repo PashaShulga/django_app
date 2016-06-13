@@ -34,15 +34,24 @@ def home(request):
     args = {}
     user = auth.get_user(request)
     if str(user) != 'AnonymousUser':
-        client = CustomUser.objects.all().count()
-        args['count_of_clients'] = client
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        args['count_of_datacollect'] = len([name for name in os.listdir(BASE_DIR+'/static/files')
-                                            if os.path.isfile(os.path.join(BASE_DIR+'/static/files', name))])
-        args['count_of_charts'] = Charts.objects.all().count()
-        packages = Company.objects.all()
+        user_db = UserBD.objects.filter(username=request.user.username)
+        c = connections[user_db[0].username].cursor()
+        c.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
+        count_of_datacollect = c.fetchall()
+        if count_of_datacollect != []:
+            args['count_of_datacollect'] = len(count_of_datacollect)
+        else:
+            args['count_of_datacollect'] = 0
+
+        client = CustomUser.objects.filter(id=request.user.id)
+        args['count_of_clients'] = client.count()
+        # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            # len([name for name in os.listdir(BASE_DIR+'/static/files')
+            #                                 if os.path.isfile(os.path.join(BASE_DIR+'/static/files', name))])
+        args['count_of_charts'] = Charts.objects.filter(company__user_id=request.user.id).count()
+        packages = CustomUser.objects.filter(id=request.user.id)
         if packages.exists():
-            args['count_of_packages'] = len(packages)
+            args['count_of_packages'] = Company.objects.get(id=packages[0].company_type).title
         args['realise'] = "2016.05.11"
         args['version'] = "1.0"
         args['count_of_connection'] = 0
