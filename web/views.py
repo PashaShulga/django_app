@@ -449,16 +449,16 @@ def modify_company(request):
             args['brand'] = company[0].company_logo
         if company.exists():
             args['company'] = company[0]
-        if request.POST:
-            edit_company = EditCompany(request.POST, request.FILES)
-            if edit_company.is_valid():
-                Client.objects.filter(user_id=auth.get_user(request).id).update(
-                    company_name=edit_company.cleaned_data['company_name'],
-                    address=edit_company.cleaned_data['address'],
-                    phone=edit_company.cleaned_data['phone'],
-                    website=edit_company.cleaned_data['website'],
-                    postal_code=edit_company.cleaned_data['postal_code'])
-                return redirect('/edit_company/modify')
+        if request.is_ajax():
+            edit_company = EditCompany(request.POST)
+            print(request.POST['address'])
+            Client.objects.filter(user_id=auth.get_user(request).id).update(
+                company_name=request.POST['company_name'],
+                address=request.POST['address'],
+                phone=request.POST['phone'],
+                website=request.POST['website'],
+                postal_code=request.POST['postal_code'])
+            # return redirect('/edit_company/modify')
     return render_to_response('pages/edit_company_modify.html', args)
 
 

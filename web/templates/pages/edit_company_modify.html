@@ -8,7 +8,7 @@
 
     <div class="row">
         <div class="col-md-4">
-            <form method="post">
+            <form method="post" id="change_company" action="javascript:void(null);" onsubmit="call('change_company')">
                 {% csrf_token %}
                 <div class="form-group">
                     <label>Company Name</label>
@@ -36,4 +36,22 @@
             </form>
         </div>
     </div>
+
+    <script type="text/javascript" language="javascript">
+        function call(idForm) {
+            var msg = $('#' + idForm).serializeArray();
+            msg.push({name: "form_type", value: idForm});
+            $.ajax({
+                type: 'POST',
+                url: '{{ request.path }}',
+                data: msg,
+                success: function (data) {
+                    success_notify();
+                },
+                error: function (xhr, str) {
+                    danger_notify(xhr.responseCode);
+                }
+            });
+        }
+    </script>
 {% endblock %}
