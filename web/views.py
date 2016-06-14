@@ -450,8 +450,6 @@ def modify_company(request):
         if company.exists():
             args['company'] = company[0]
         if request.is_ajax():
-            edit_company = EditCompany(request.POST)
-            print(request.POST['address'])
             Client.objects.filter(user_id=auth.get_user(request).id).update(
                 company_name=request.POST['company_name'],
                 address=request.POST['address'],
