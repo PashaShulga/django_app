@@ -615,11 +615,13 @@ def data_analytics_custom(request):
         main_ = []
         result_query = []
         type_chart = []
+        parameters = []
         if chart.exists():
             args['exist'] = True
             for chart_object in list(chart):
                 ar = chart_object.columns_name
                 ar = ast.literal_eval(ar)
+                parameters.append(ar)
                 if len(ar) == 1:
                     query = ("select %s from %s" % (ar[0], chart_object.table_name))
                 else:
@@ -649,6 +651,8 @@ def data_analytics_custom(request):
             args['axis'] = axis
             args['main'] = [i for i in range(len(result))]
             args['j_data'] = main_
+            print(parameters)
+            args['parameter'] = parameters
         else:
             args['exist'] = False
     return args

@@ -10,9 +10,10 @@
 
     <div class="row">
         {% if exist %}
-            {% for foo in main %}
-                <div id="chart_{{ foo }}"></div>
-            {% endfor %}
+                {% for foo in main %}
+{#                        <p>This chart build {{ foo }}</p>#}
+                    <div id="chart_{{ foo }}"></div>
+                {% endfor %}
         {% else %}
             <p>No charts</p>
         {% endif %}
