@@ -1,0 +1,54 @@
+<div class="row_tile">
+    {% for table in tables %}
+        <a href="/product/{{ table }}/">
+        <div class="col-sm-2 col-xs-4">
+            <div id="tile" class="tile">
+                <div class="carousel slide" data-ride="carousel">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-table bigicon"></span>
+                            </div>
+
+                            <div class="icontext">
+                               <p>{{ table }}</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    {% endfor %}
+</div>
+<style>
+
+    .dynamicTile .col-sm-2.col-xs-4 {
+        padding: 5px;
+    }
+
+    .icontext {
+        color: white;
+        font-size: 20px;
+        width: auto;
+        height: auto;
+    }
+
+    .dynamicTile .col-sm-4.col-xs-8 {
+        padding: 5px;
+    }
+
+    .bigicon {
+        font-size: 67px;
+        color: white;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    #tile {
+        background: #3B579D;
+    }
+
+</style>

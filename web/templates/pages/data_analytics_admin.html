@@ -4,9 +4,11 @@
 <div class="row">
     {% if exist %}
         {% for foo in main %}
-            <button class="btn btn-sm btn-danger" id="delete" name="delete" onclick="deleteChart({{ foo }});">
+            <button class="btn btn-sm btn-danger" id="delete" name="delete" onclick="deleteChart({{ foo }});"
+                    style="padding: 5px; margin-left: 16px;">
                 Delete
             </button>
+            <div id="lable_chart_{{ foo }}" style="padding: 5px;margin-left: 1%;"></div>
             <div id="chart_{{ foo }}"></div>
             <hr>
         {% endfor %}
@@ -31,10 +33,13 @@
     {% autoescape off %}
         var j_data = {{ j_data }};
         var axis = {{ axis }};
+        var label_chart = {{ label_chart }};
     {% endautoescape %}
     var c = 0;
     {% for iter in main %}
+        var lable_chart_div = document.getElementById('lable_chart_{{ iter }}');
         for (var j = 0; j < j_data[0][{{ iter }}-{{ iter }}+c].length; j++) {
+            lable_chart_div.innerHTML = "<p>"+ label_chart[c] +"</p>";
             var chart = c3.generate({
                 bindto: '#chart_{{ iter }}',
                 data: j_data[0][{{ iter }}-{{ iter }}+c][j]

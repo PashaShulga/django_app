@@ -613,17 +613,18 @@ def data_analytics_custom(request):
         main_ = []
         result_query = []
         type_chart = []
-        parameters = []
+        label_chart = []
         if chart.exists():
             args['exist'] = True
             for chart_object in list(chart):
                 ar = chart_object.columns_name
                 ar = ast.literal_eval(ar)
-                parameters.append(ar)
+                label_chart.append(ar)
                 if len(ar) == 1:
                     query = ("select %s from %s" % (ar[0], chart_object.table_name))
                 else:
-                    query = ("select %s from %s" % (tuple(ar), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
+                    query = ("select %s from %s" % (tuple(ar), chart_object.table_name)).replace("'", '').\
+                        replace("(", " ").replace(")", " ")
                 c.execute(query)
                 result_query.append(c.fetchall())
                 type_chart.append(ast.literal_eval(chart_object.chart_type)[0])
@@ -649,8 +650,7 @@ def data_analytics_custom(request):
             args['axis'] = axis
             args['main'] = [i for i in range(len(result))]
             args['j_data'] = main_
-            print(parameters)
-            args['parameter'] = parameters
+            args['label_chart'] = label_chart
         else:
             args['exist'] = False
     return args
@@ -666,6 +666,7 @@ def data_analytics_admin(request, cursor, id):
         custom_user = CustomUser.objects.filter(company_id=id).first()
         chart = Charts.objects.filter(company_id=custom_user.company_id)
         axis = {}
+        label_chart = []
         result = []
         main_ = []
         result_query = []
@@ -677,6 +678,7 @@ def data_analytics_admin(request, cursor, id):
                 id_list.append(chart_object.id)
                 ar = chart_object.columns_name
                 ar = ast.literal_eval(ar)
+                label_chart.append(chart_object.table_name)
                 if len(ar) == 1:
                     query = ("select %s from %s" % (ar[0], chart_object.table_name))
                 else:
@@ -706,6 +708,7 @@ def data_analytics_admin(request, cursor, id):
             args['axis'] = axis
             args['main'] = id_list
             args['j_data'] = main_
+            args['label_chart'] = label_chart
         else:
             args['exist'] = False
     return args

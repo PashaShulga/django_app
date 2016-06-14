@@ -11,7 +11,7 @@
     <div class="row">
         {% if exist %}
                 {% for foo in main %}
-{#                        <p>This chart build {{ foo }}</p>#}
+                    <div id="label_chart_{{ foo }}"></div>
                     <div id="chart_{{ foo }}"></div>
                 {% endfor %}
         {% else %}
@@ -20,19 +20,23 @@
     </div>
 
     <script>
-        var ite = {{ main }};
         {% autoescape off %}
             var j_data = {{ j_data }};
             var axis = {{ axis }};
+            var label_chart = {{ label_chart }};
         {% endautoescape %}
+        var c = 0;
         {% for iter in main %}
+            var label_chart_div = document.getElementById('label_chart_{{ iter }}');
             for (var j = 0; j < j_data[0][{{ iter }}].length; j++) {
+                label_chart_div.innerHTML = "<p>"+ label_chart[c] +"</p>";
                 var chart = c3.generate({
                     bindto: '#chart_{{ iter }}',
                     data: j_data[0][{{ iter }}][j]
                     //axis: axis
                 });
             }
+            c++;
         {% endfor %}
 
     </script>

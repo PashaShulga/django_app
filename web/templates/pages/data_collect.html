@@ -23,12 +23,13 @@
         </div>
         <!-- /.col-lg-12 -->
     </div>
-    <div class="container" style="margin-top: 40px; width: 100%">
+    <div class="container" style="width: 100%">
         <ul class="nav nav-tabs">
-            <li><a href="/product/general/">General</a></li>
-            {% for table in tables %}
-                <li><a href="/product/{{ table }}/">{{ table }}</a></li>
-            {% endfor %}
+            <li><a href="/product/general/">Add data</a></li>
+            <li><a href="/product/data_collect_files/">Data Collect Files</a></li>
+{#            {% for table in tables %}#}
+{#                <li><a href="/product/{{ table }}/">{{ table }}</a></li>#}
+{#            {% endfor %}#}
         </ul>
         <br>
 
@@ -38,10 +39,15 @@
         <div class="col-lg-10">
             {% include "pages/xls_uploader.html" %}
         </div>
+    {% elif request.path == '/product/data_collect_files/' %}
+        <div class="col-lg-10">
+            {% include "pages/data_collect_files.html" %}
+        </div>
+
     {% endif %}
 
 
-    {% if request.path != '/product/general/' %}
+    {% if request.path != '/product/general/' and request.path != '/product/data_collect_files/' %}
         <div class="col-lg-2">
             <button class="btn btn-sm btn-danger" id="delete" name="delete" onclick="deleteItem();">
                 Delete all
