@@ -15,7 +15,6 @@ from django.http import QueryDict
 from django.contrib.auth.models import Permission
 from itertools import groupby
 import ast
-import os, os.path
 
 
 def get_perm(request):
@@ -781,3 +780,9 @@ def chart_delete(request, company_id, chart_id):
     if request.is_ajax():
         if request.method == "DELETE":
             Charts.objects.filter(id=chart_id).delete()
+
+
+def documentation(request):
+    args = {}
+    args.update(get_perm(request))
+    return render_to_response("pages/documentation.html", args)

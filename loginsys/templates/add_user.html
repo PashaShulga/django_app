@@ -21,7 +21,7 @@
                     <div class="form-group">
                         <label>Username</label>
                         {{ form.username }}
-                        </div>
+                    </div>
                     <div class="form-group">
                         <label>Email</label>
                         {{ form.email }}
@@ -34,8 +34,12 @@
                         <label>Password again</label>
                         {{ form.password2 }}
                     </div>
-                    <div class="radio-inline">
-                        {{ form.roles }}
+                    <div class="form-group">
+                        {% for radio in form.roles %}
+                            <label class="radio">
+                                {{ radio }}
+                            </label>
+                        {% endfor %}
                     </div>
                     <div class="form-group">
                         <input class="btn btn-lg btn-info    btn-block" type="submit" value="Add user">

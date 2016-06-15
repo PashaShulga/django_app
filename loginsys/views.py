@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render_to_response
+from web.views import get_perm
 from django.contrib import auth
 from .form import *
 from django.core.context_processors import csrf
@@ -20,15 +21,15 @@ from django.utils.translation import ugettext_lazy as _
 from web.models import CustomUser, Company, Client, UserBD, update_settings
 from django.template import RequestContext
 
-def get_perm(request):
-    args = {}
-    request_object = auth.get_user(request)
-    get_custom_user = CustomUser.objects.filter(id=request_object.id)
-    company = Company.objects.filter(id=get_custom_user[0].company_type)
-    if company.exists():
-        args['company_type'] = str(company[0].title)
-    args['user_permission'] = request.user.get_all_permissions()
-    return args
+# def get_perm(request):
+#     args = {}
+#     request_object = auth.get_user(request)
+#     get_custom_user = CustomUser.objects.filter(id=request_object.id)
+#     company = Company.objects.filter(id=get_custom_user[0].company_type)
+#     if company.exists():
+#         args['company_type'] = str(company[0].title)
+#     args['user_permission'] = request.user.get_all_permissions()
+#     return args
 
 
 def registration(request):
@@ -291,6 +292,12 @@ class ChangePassword(FormView):
     success_url = '/auth/change_password/'
     form_class = ChangePassForm
 
+    def get(self, request, *args, **kwargs):
+        args = {}
+        args.update(get_perm(request))
+        args['form'] = self.form_class
+        return render_to_response("change_password.html", args)
+
     def post(self, request, *args, **kwargs):
         UserModel = get_user_model()
         form = self.form_class(request.POST)
@@ -325,7 +332,6 @@ class AdminChangePassword(FormView):
         UserModel = get_user_model()
         form = self.form_class(request.POST)
         try:
-            print(form.data['username'])
             user = UserModel._default_manager.get(pk=form.data['username'])
         except:
             user = None
