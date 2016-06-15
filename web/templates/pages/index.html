@@ -13,7 +13,192 @@
     <div class="row_tile">
         <div class="container dynamicTile">
             <div class="row ">
+                {% if admin %}
+                    <div class="col-sm-2 col-xs-4">
+                    <div id="tile1" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-industry bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Companies
+                                    </div>
+                                    <div class="icontext">
+                                        {{ companies }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-sm-2 col-xs-4">
+                    <div id="tile2" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-check bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Package L
+                                    </div>
+                                    <div class="icontext">
+                                        {{ package_l }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-sm-2 col-xs-4">
+                    <div id="tile1" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-check-square-o bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Package XL
+                                    </div>
+                                    <div class="icontext">
+                                        {{ package_lx }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-sm-2 col-xs-4">
+                    <div id="tile2" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-table bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Data Collect files
+                                    </div>
+                                    <div class="icontext">
+                                        {{ count_of_datacollect }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-sm-2 col-xs-4">
+                    <div id="tile1" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-line-chart bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Data Analytics
+                                    </div>
+                                    <div class="icontext">
+                                        {{ count_of_charts }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs-4">
+                    <div id="tile2" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-users bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Users
+                                    </div>
+                                    <div class="icontext">
+                                        {{ count_of_clients }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs-4">
+                    <div id="tile1" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-server bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        System
+                                    </div>
+                                    <div class="icontext">
+                                        V.{{ version }}
+                                        {{ realise }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs-4">
+                    <div id="tile2" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-database bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Data Connect
+                                    </div>
+                                    <div class="icontext">
+                                        {{ count_of_connection }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-sm-2 col-xs-4">
+                    <div id="tile1" class="tile">
+                        <div class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active text-center">
+                                    <div>
+                                        <span class="fa fa-user-plus bigicon"></span>
+                                    </div>
+                                    <div class="icontext">
+                                        Admin Users
+                                    </div>
+                                    <div class="icontext">
+                                        {{ admin_users }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                    {% else %}
+
+                    <div class="col-sm-2 col-xs-4">
                     <div id="tile1" class="tile">
                         <div class="carousel slide" data-ride="carousel">
                             <!-- Wrapper for slides -->
@@ -40,7 +225,7 @@
                             <div class="carousel-inner">
                                 <div class="item active text-center">
                                     <div>
-                                        <span class="fa fa-bar-chart-o bigicon"></span>
+                                        <span class="fa fa-line-chart bigicon"></span>
                                     </div>
                                     <div class="icontext">
                                         Data Analytics
@@ -54,7 +239,7 @@
                     </div>
                 </div>
                 <div class="col-sm-2 col-xs-4">
-                    <div id="tile3" class="tile">
+                    <div id="tile1" class="tile">
                         <div class="carousel slide" data-ride="carousel">
                             <!-- Wrapper for slides -->
                             <div class="carousel-inner">
@@ -74,7 +259,7 @@
                     </div>
                 </div>
                 <div class="col-sm-2 col-xs-4">
-                    <div id="tile4" class="tile">
+                    <div id="tile2" class="tile">
                         <div class="carousel slide" data-ride="carousel">
                             <!-- Wrapper for slides -->
                             <div class="carousel-inner">
@@ -94,13 +279,13 @@
                     </div>
                 </div>
                 <div class="col-sm-2 col-xs-4">
-                    <div id="tile5" class="tile">
+                    <div id="tile1" class="tile">
                         <div class="carousel slide" data-ride="carousel">
                             <!-- Wrapper for slides -->
                             <div class="carousel-inner">
                                 <div class="item active text-center">
                                     <div>
-                                        <span class="fa fa-gears bigicon"></span>
+                                        <span class="fa fa-server bigicon"></span>
                                     </div>
                                     <div class="icontext">
                                         System
@@ -115,7 +300,7 @@
                     </div>
                 </div>
                 <div class="col-sm-2 col-xs-4">
-                    <div id="tile6" class="tile">
+                    <div id="tile2" class="tile">
                         <div class="carousel slide" data-ride="carousel">
                             <!-- Wrapper for slides -->
                             <div class="carousel-inner">
@@ -134,6 +319,8 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
+
             </div>
         </div>
     </div>
@@ -155,7 +342,7 @@
 
         .icontext {
             color: white;
-            font-size: 27px;
+            font-size: 20px;
         }
 
         .bigicondark {
@@ -167,7 +354,7 @@
 
         .icontextdark {
             color: black;
-            font-size: 27px;
+            font-size: 20px;
         }
 
         .dynamicTile .col-sm-4.col-xs-8 {
@@ -179,22 +366,6 @@
         }
 
         #tile2 {
-            background: #3B579D;
-        }
-
-        #tile3 {
-            background: #7C91C7;
-        }
-
-        #tile4 {
-            background: #3B579D;
-        }
-
-        #tile5 {
-            background: #7C91C7;
-        }
-
-        #tile6 {
             background: #3B579D;
         }
 
