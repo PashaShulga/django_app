@@ -618,7 +618,7 @@ def data_analytics_custom(request):
             for chart_object in list(chart):
                 ar = chart_object.columns_name
                 ar = ast.literal_eval(ar)
-                label_chart.append(ar)
+                label_chart.append(chart_object.table_name)
                 if len(ar) == 1:
                     query = ("select %s from %s" % (ar[0], chart_object.table_name))
                 else:
