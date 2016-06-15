@@ -328,6 +328,12 @@ class AdminChangePassword(FormView):
     success_url = '/'
     form_class = ChangeAdminPassword
 
+    def get(self, request, *args, **kwargs):
+        args = {}
+        args.update(get_perm(request))
+        args['form'] = self.form_class
+        return render_to_response("change_password.html", args)
+
     def post(self, request, *args, **kwargs):
         UserModel = get_user_model()
         form = self.form_class(request.POST)
