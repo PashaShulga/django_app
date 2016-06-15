@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-lg-12">
 
-            <table class="table table-bordered">
+            <table class="table table-bordered table-sieve">
                 <thead>
                 <tr>
                     <th>Company name</th>
@@ -23,17 +23,24 @@
                 <tbody>
                 {% for foo in company %}
                     <tr>
-                    <td>{{ foo.company_name }}</td>
-                    <td>{{ foo.address }}</td>
-                    <td>{{ foo.email }}</td>
-                    <td>{{ foo.postal_code }}</td>
-                    <td>{{ foo.phone }}</td>
-                    <td>{{ foo.website }}</td>
-                    <td><a class="btn btn-sm btn-info" href="/list_company/change/{{ foo.id }}/">Change</a></td>
-                </tr>
+                        <td>{{ foo.company_name }}</td>
+                        <td>{{ foo.address }}</td>
+                        <td>{{ foo.email }}</td>
+                        <td>{{ foo.postal_code }}</td>
+                        <td>{{ foo.phone }}</td>
+                        <td>{{ foo.website }}</td>
+                        <td><a class="btn btn-sm btn-info" href="/list_company/change/{{ foo.id }}/">Change</a></td>
+                    </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+    <script>
+        var searchTemplate = "<div class='row form-inline'><label style='float: right;'>Search: <input type='text' placeholder='(start typing)'></label></div>";
+        $(".table-sieve").sieve({searchTemplate: searchTemplate});
+
+{#        searchTemplate = "<div class='row form-inline'><label style='float: right;'>Find a Quote: <input type='text' placeholder='(try typing &quot;einstein&quot;)'></label></div>";#}
+{#        $(".p-sieve").sieve({searchTemplate: searchTemplate, itemSelector: "p"});#}
+    </script>
 {% endblock %}
