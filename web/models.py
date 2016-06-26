@@ -39,6 +39,7 @@ class CustomUser(User):
     company_type = models.IntegerField(choices=CHOICES, default=CHOICES[0][0])
     user = models.ForeignKey('UserBD')
     company = models.ForeignKey('Client')
+    primary_root = models.BooleanField(default=False)
     objects = UserManager()
 
     # class Meta:
@@ -69,6 +70,7 @@ class Charts(models.Model):
     columns_name = models.CharField(max_length=512)
     chart_type = models.CharField(max_length=50)
     y_name = models.CharField(max_length=50, blank=True)
+    grouping_by = models.CharField(max_length=50)
     company = models.ForeignKey("Client")
 
     class Meta:

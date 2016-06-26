@@ -1,0 +1,51 @@
+<form role="form" method="post" id="data_report" action="javascript:void(null);" onsubmit="call('data_report')">
+    {% csrf_token %}
+    <div class="form-group" style="width: 20%;">
+        <label>Title report:</label>
+        {{ report_text.title_report }}
+    </div>
+    <div class="form-group">
+        {{ report_text.text|safe }}
+    </div>
+
+{#    <div class="form-group" style="width: 20%;">#}
+{#        <label for="charts">Select Chart(s):</label>#}
+{#        <select multiple class="form-control" id="charts">#}
+{#            {% for id in main %}#}
+{#                <option>{{ id }}</option>#}
+{#            {% endfor %}#}
+{#        </select>#}
+{#    </div>#}
+
+    <div class="form-group" style="width: 50%">
+        <input class="btn btn-lg btn-info btn-block" type="submit" value="Create report">
+    </div>
+</form>
+{#{% for foo in main %}#}
+{#    <div id="lable_chart_{{ foo }}" style="padding: 5px;margin-left: 1%;"></div>#}
+{#    <div id="chart2_{{ foo }}"></div>#}
+{#    <hr>#}
+{#{% endfor %}#}
+
+<script>
+    {% autoescape off %}
+        var j_data = {{ j_data }};
+        var axis = {{ axis }};
+        var label_chart = {{ label_chart }};
+    {% endautoescape %}
+
+    var c = 0;
+    {% for iter in main %}
+        var lable_chart_div = document.getElementById('lable_chart_{{ iter }}');
+        for (var j = 0; j < j_data[0][{{ iter }}-{{ iter }}+c].length; j++) {
+            lable_chart_div.innerHTML = "<p>" + label_chart[c] + "</p>";
+            var chart = c3.generate({
+                bindto: '#chart2_{{ iter }}',
+                data: j_data[0][{{ iter }}-{{ iter }}+c][j]
+                //axis: axis
+            });
+        }
+        c++;
+
+    {% endfor %}
+</script>

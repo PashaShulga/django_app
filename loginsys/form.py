@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from web.models import CustomUser
 from django.db import connections
 from web.models import UserBD
+from django_summernote.widgets import SummernoteInplaceWidget, SummernoteWidget
 
 
 class UserCreationForm(forms.ModelForm):
@@ -348,3 +349,8 @@ class ChangeCompanyPackage(forms.Form):
 
     package = forms.ChoiceField(required=True, widget=forms.Select(attrs={'class': 'form-control'}), choices=CHOICES_PACKAGE)
     update = forms.ChoiceField(required=True, widget=forms.Select(attrs={'class': 'form-control'}), choices=CHOICES_UPDATE)
+
+
+class ReportForm(forms.Form):
+    title_report = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Title report"}))
+    text = forms.CharField(widget=SummernoteWidget(attrs={'width': '100%', 'height': '200px', 'iframe': 'false'}))

@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^profile/modify/$', profile_modify),
     url(r'^profile/$', profile),
     # url(r'^add_column/$', add_column),
+    url(r'^summernote/', include('django_summernote.urls')),
 
     url(r'^product/(?P<page_slug>[\w-]+)/$', product),
     url(r'^product/(?P<page_slug>[\w-]+)/update/$', product_update),

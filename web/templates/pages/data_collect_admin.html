@@ -1,22 +1,9 @@
-{% block product_header %}
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,600,400" rel="stylesheet" type="text/css">
-
-    <link rel="stylesheet" type="text/css" href="/static/jsgrid/jsgrid.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/jsgrid/jsgrid-theme.min.css">
-
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/cupertino/jquery-ui.css">
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
-
-    <script>window.jQuery || document.write('<script src="/js/jquery-1.8.3.js"><\/script>')</script>
-
-    <script src="/static/jsgrid/jsgrid.min.js"></script>
-    <script src="/static/jsgrid/i18n/jsgrid-fr.js"></script>
-{% endblock %}
-
 {% block product_content %}
-
+    <style>
+        .jsgrid-table {
+            width: 100% !important;
+        }
+    </style>
     <div class="col-lg-12">
         {% for table in tables %}
             <H2>Table: <strong style="color: red;">{{ table }}</strong></H2>
@@ -25,124 +12,219 @@
 
     </div>
 
-    <script>
-{% autoescape off %}
-            var clients = {{ items }};
-        {% endautoescape %}
-var c = 0;
-{% for table in tables %}
-        $("#{{ table }}").jsGrid({
+    <script type="text/javascript">
 
-            width: "100%",
+        var UserGridComponent = (function ($) {
+            function Component(uid, controller) {
+                this.controller = controller;
+                this.uid = uid;
+            }
 
-            inserting: true,
-            sorting: true,
-            editing: true,
-            paging: true,
-            autoload: true,
-            confirmDeleting: false,
-            pageSize: 15,
-            pageButtonCount: 5,
+            Component.prototype.createTable = function (settings) {
+                settings.controller = settings.controller || this.controller;
 
-            controller: {
-                loadData: function () {
-                    return clients[c];
-                },
-
-                insertItem: function (item) {
-                    item.csrfmiddlewaretoken = '{{ csrf_token }}';
-                    return $.ajax({
-                        type: "POST",
-                        url: "{{ request.path }}insert/",
-                        data: item,
-                        dataType: "json",
-                        success: window.location.href = "{{ request.path }}"
-                    });
-                },
-
-                updateItem: function (item) {
-                    item.csrfmiddlewaretoken = '{{ csrf_token }}';
-                    return $.ajax({
-                        type: "PUT",
-                        url: "{{ request.path }}update/",
-                        data: item,
-                        dataType: "json",
-                        success: window.location.href = "{{ request.path }}"
-                    });
-                },
-
-                deleteItem: function (item) {
-                    item.csrfmiddlewaretoken = '{{ csrf_token }}';
-                    return $.ajax({
-                        type: "DELETE",
-                        url: "{{ request.path }}delete/",
-                        data: item,
-                        dataType: "json",
-                        success: window.location.href = "{{ request.path }}"
-                    });
+                if (settings.fields && settings.fields.constructor === Array) {
+                    settings.fields = settings.fields.concat(this.controller.fields);
+                } else {
+                    settings.fields = this.controller.fields;
                 }
-            },
 
-            {% autoescape off %}
+                var $wrapElement = $("#" + this.uid);
+                $wrapElement.jsGrid(settings);
+            };
+
+            return Component;
+        }(jQuery));
+
+        var UserGridController = (function ($) {
+            function Controller(path, clients, fields, hashFn) {
+                this.basePath = path;
+                this.clients = clients;
+                this.fields = fields;
+                this.getItemUniqueStr = hashFn || getObjectSCDHash;
+
+                this.selectedItems = Object.create(null);
+            }
+
+            Controller.prototype.loadData = function () {
+                return this.clients;
+            };
+
+            Controller.prototype.insertItem = function (item) {
+                var path = this.basePath + 'insert/';
+                return request("POST", path, item);
+            };
+
+            Controller.prototype.updateItem = function (item) {
+                var path = this.basePath + 'update/';
+                return request("PUT", path, item);
+            };
+
+            Controller.prototype.deleteItem = function (item) {
+                var path = this.basePath + 'delete/';
+                {#                item.csrfmiddlewaretoken = "{{ csrf_token }}";#}
+                return request("DELETE", path, item);
+            };
+
+            Controller.getIDSFromMap = function (items) {
+                var result = [];
+
+                for (var hash in items) {
+                    var value = items[hash];
+                    if ("id" in value) {
+                        result.push(value);
+                    }
+                }
+
+                return result;
+            };
+
+            Controller.prototype.deleteMultipleItems = function (items) {
+                var path = this.basePath + 'delete/';
+                items = Controller.getIDSFromMap(items);
+
+                if (items.length <= 0) {
+                    return;
+                }
+
+                return request("DELETE", path, {
+                    "items": items
+                });
+            };
+
+            Controller.prototype.selectItem = function (item) {
+                var hash = this.getItemUniqueStr(item);
+                this.selectedItems[hash] = item;
+            };
+
+            Controller.prototype.uncheckItem = function (item) {
+                var hash = this.getItemUniqueStr(item);
+                if (this.isItemSelected(null, hash)) {
+                    delete this.selectedItems[hash];
+                }
+            };
+
+            Controller.prototype.isItemSelected = function (item, hash) {
+                hash = hash || this.getItemUniqueStr(item);
+                return (hash in this.selectedItems);
+            };
+
+            Controller.prototype.toggleItem = function (item) {
+                if (!this.isItemSelected(item)) {
+                    this.selectItem(item);
+                } else {
+                    this.uncheckItem(item);
+                }
+            };
+
+            Controller.prototype.deleteSelectedItems = function () {
+                console.log(this.selectedItems); // DEBUG ONLY;
+                if (!confirm("Are you sure?")) {
+                    return;
+                }
+
+                this.deleteMultipleItems(this.selectedItems);
+            };
+
+            return Controller;
+        }(jQuery));
+
+        function reloadPage() {
+            document.location.reload(true);
+        }
+
+        function request(type, url, data) {
+            return $.ajax({
+                type: type,
+                url: url,
+                headers: {'X-CSRFToken': "{{ csrf_token }}"},
+                data: data,
+                dataType: "json",
+                success: reloadPage
+            });
+        }
+
+        function getObjectSCDHash(obj) {
+            if (obj === null || typeof obj !== 'object') {
+                return "[null]";
+            }
+
+            var strImpl = JSON.stringify(obj);
+            var hash = 0;
+
+            for (var i = 0; i < strImpl.length; i++) {
+                var chr = strImpl.charCodeAt(i);
+                hash = ((hash << 5) - hash) + chr;
+                hash = hash & hash; // first 32 bits
+            }
+
+            return "h" + hash;
+        }
+
+        function getUID(item) {
+            return ("id" in item) ? "u" + item.id : "[null]";
+        }
+
+        var requestPath = "{{ request.path }}";
+        {% autoescape off %}
+            var clientCollection = {{ items }};
+            var fieldsCollection = {{ flds }};
+            var tablesCollection = {{ tables }};
+        {% endautoescape %}
+
+        var headerRendererFn = function () {
+            var self = this;
+            return $("<button>").attr("type", "button").text("Delete")
+                    .on("click", function () {
+                        self.deleteSelectedItems();
+                    });
+        };
+
+        var itemRendererFn = function (_, item) {
+            var self = this;
+            var isChecked = self.isItemSelected(item);
+            return $("<input>").attr("type", "checkbox").prop("checked", isChecked)
+                    .on("click", function () {
+                        self.toggleItem(item);
+                    });
+        };
+
+
+        for (var index = 0; index < tablesCollection.length; index++) {
+            var userController = new UserGridController(
+                    requestPath,
+                    clientCollection[index],
+                    fieldsCollection[index]
+            );
+
+            var elementIDName = tablesCollection[index];
+            var userGTable = new UserGridComponent(elementIDName, userController);
+            var headerTemplateFn = headerRendererFn.bind(userController);
+            var itemTemplateFn = itemRendererFn.bind(userController);
+
+            var settings = {
+                width: "100%",
+                inserting: true,
+                sorting: true,
+                editing: true,
+                paging: true,
+                autoload: true,
+                confirmDeleting: true,
+                pageSize: 15,
+                pageButtonCount: 5,
+
+                onRefreshed: itemTemplateFn,
+
                 fields: [{
-                    headerTemplate: function () {
-                        return $("<button>").attr("type", "button").text("Delete")
-                                .on("click", function () {
-                                    deleteSelectedItems();
-                                });
-                    },
-                    itemTemplate: function (_, item) {
-                        return $("<input>").attr("type", "checkbox")
-                                .on("change", function () {
-                                    return false;
-                                })
-                                .on("click", function () {
-
-                                    $(this).is(":checked") ? selectItem(item) : unselectItem(item);
-                                });
-                    },
+                    headerTemplate: headerTemplateFn,
+                    itemTemplate: itemTemplateFn,
                     align: "center",
                     width: 75,
                     sorting: false
-                }
-                ].concat({{ flds }}[c])
-            {% endautoescape %}
-
-        });
-    c++;
-{% endfor %}
-        var selectedItems = [];
-
-        var selectItem = function (item) {
-            selectedItems.push(item);
-        };
-
-        var unselectItem = function (item) {
-            selectedItems = $.grep(selectedItems, function (i) {
-                return i !== item;
-            });
-        };
-
-        var deleteSelectedItems = function () {
-            if (!selectedItems.length || !confirm("Are you sure?")) {
-                return;
-            }
-
-            $.each(selectedItems, function (_, item) {
-                deleteItem: {
-                    item.csrfmiddlewaretoken = '{{ csrf_token }}';
-                    return $.ajax({
-                        type: "DELETE",
-                        url: "{{ request.path }}delete/",
-                        data: item,
-                        dataType: "json",
-                        success: window.location.href = "{{ request.path }}"
-                    });
-                }
-            });
-
-            selectedItems = [];
-        };
+                }]
+            };
+            userGTable.createTable(settings);
+        }
     </script>
 
 {% endblock %}

@@ -12,37 +12,33 @@
     {% endblock %}
 
     <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/jsgrid/jsgrid-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/jsgrid/jsgrid.min.css">
     <link href="/static/bootstrap.min.css" rel="stylesheet">
-
     <link href="/static/rs/css/bs.css" rel="stylesheet">
-
     <!-- MetisMenu CSS -->
     <link href="/static/metisMenu/rd/metisMenu.min.css" rel="stylesheet">
-
-    <!-- DataTables CSS -->
-    <link href="/static/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css"
-          rel="stylesheet">
-
-    <!-- DataTables Responsive CSS -->
-    {#    <link href="/static/bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">#}
-
     <!-- Custom CSS -->
     <link href="/static/rs/css/sb-admin-2.css" rel="stylesheet">
-
     <!-- Custom Fonts -->
-    <link href="/static/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet"
-          type="text/css">
-
+    <link href="/static/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="/static/c3.css" type="text/css" rel="stylesheet">
-
     <link href="/static/font-awesome-4.6.3/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,600,400" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/cupertino/jquery-ui.css">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <script src="/static/bower_components/jquery/rd/jquery.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/bower_components/bootstrap/rd/js/bootstrap.min.js"></script>
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/static/metisMenu/rd/metisMenu.min.js"></script>
+    <script src="/static/js/main.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="/static/rs/js/sb-admin-2.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-notify-3.1.3/bootstrap-notify.min.js"></script>
+    <script src="/static/bootstrap-notify-3.1.3/notifycations.js"></script>
+    <script src="/static/jsgrid/jsgrid.min.js"></script>
+    <script src="/static/jsgrid/i18n/jsgrid-fr.js"></script>
     {% block product_header %}{% endblock %}
 </head>
 <body>
@@ -72,43 +68,6 @@
     <!-- /#page-wrapper -->
 </div>
 
-<script src="/static/bower_components/jquery/rd/jquery.min.js"></script>
 
-<!-- Bootstrap Core JavaScript -->
-<script src="/static/bower_components/bootstrap/rd/js/bootstrap.min.js"></script>
-
-<!-- Metis Menu Plugin JavaScript -->
-<script src="/static/metisMenu/rd/metisMenu.min.js"></script>
-
-<!-- DataTables JavaScript -->
-<script src="/static/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
-<script src="/static/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
-<script src="/static/bower_components/datatables-responsive/js/dataTables.responsive.js"></script>
-<script src="/static/js/main.js"></script>
-
-<!-- Custom Theme JavaScript -->
-<script src="/static/rs/js/sb-admin-2.js"></script>
-<script type="text/javascript" src="/static/bootstrap-notify-3.1.3/bootstrap-notify.min.js"></script>
-<script src="/static/bootstrap-notify-3.1.3/notifycations.js"></script>
-<script src="/static/search/jquery.sieve.js"></script>
-{#<script src="/static/search/jquery.sieve.coffee"></script>#}
-
-<script>
-    $(document).ready(function () {
-        $('#dataTables-example').DataTable({
-            responsive: true
-        });
-    });
-</script>
-{#<script>#}
-{#  document.forms.upload.onsubmit = function() {#}
-{#    var input = this.elements.myfile;#}
-{#    var file = input.files[0];#}
-{#    if (file) {#}
-{#      upload(file);#}
-{#    }#}
-{#    return false;#}
-{#  }#}
-{#</script>#}
 </body>
 </html>

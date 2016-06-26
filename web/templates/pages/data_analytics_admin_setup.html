@@ -10,7 +10,7 @@
             <form role="form" method="post" id="analytics" action="javascript:void(null);" onsubmit="call('analytics')">
                 {% csrf_token %}
                 <fieldset>
-                    <H4>Choose tables</H4>
+                    <H4>Choose tables:</H4>
                     <div class="form-group">
                         {% for checkbox in checkboxes %}
                             <div class="checkbox-inline">
@@ -20,7 +20,7 @@
                             </div>
                         {% endfor %}
                     </div>
-                    <H4>Chart type</H4>
+                    <H4>Chart type:</H4>
                     <div class="form-group">
                         <select id="chart_type" name="chart_type">
                             {% for chart in charts %}
@@ -28,10 +28,16 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <H4>Column names</H4>
+                    <H4>Column names:</H4>
                     <div class="form-group">
                         <div class="input_fields_wrap"></div>
                     </div>
+
+                    <H4>Grouping by:</H4>
+                    <div class="form-group">
+                        <div class="grouping_by"></div>
+                    </div>
+
                     <div class="form-group">
                         <input class="btn btn-lg btn-info btn-block" type="submit" value="Save">
                     </div>
@@ -43,6 +49,8 @@
     <script>
         $(document).ready(function () {
             var wrapper = $(".input_fields_wrap");
+            var grouping_by = $(".grouping_by");
+
             $("input:checkbox").change(function () {
                 var tbl = $(this).val();
                 if ($(this).is(":checked")) {
@@ -58,6 +66,7 @@
                             var data = JSON.parse(response)['data'];
                             for (var i = 0; i < data.length; i++) {
                                 $(wrapper).append("<label id='" + data[i] + "'>" + data[i] + "</label>&nbsp;<input type='checkbox' name='"+tbl+"' id='"+tbl+"' value='" + data[i] + "'>&nbsp;");
+                                $(grouping_by).append("<label id=grouping_" + data[i] + ">" + data[i] + "</label>&nbsp;<input type='checkbox' name=grouping_"+tbl+" id=grouping_"+tbl+" value=" + data[i] + ">&nbsp;");
                             }
                         }
                     });
@@ -75,11 +84,16 @@
                             for (var i = 0; i < data.length; i++) {
                                 var elem = document.getElementById(data[i]);
                                 elem.parentNode.removeChild(elem);
+{#                                alert("grouping_"+tbl);#}
+                                var grp = document.getElementById("grouping_"+tbl);
+                                grp.parentNode.removeChild(grp);
                             }
 
                             for (var j = 0; j <= data.length; ++j){
                                 var elem2 = document.getElementById(tbl);
                                 elem2.parentNode.removeChild(elem2);
+                                var grp2 = document.getElementById("grouping_"+data[j]);
+                                grp2.parentNode.removeChild(grp2);
                             }
                         }
 

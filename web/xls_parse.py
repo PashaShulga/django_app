@@ -69,7 +69,8 @@ class XLSParse(object):
                             s2 = ' VALUES {}'.format(tuple(iter_))
                             c.execute(s+s2)
                 except Exception as e:
-                    print(e)
+                    import traceback
+                    print(traceback.format_exc())
 
     def xls_parse(self):
         wb = load_workbook(filename=self.path+self.file_name)
@@ -104,28 +105,32 @@ class XLSParse(object):
     def csv_parse(self):
         # self.path+str(self._file)
         columns_name = []
-        with open(self.path+str(self.file_name)) as csvfile:
-            reader = csv.reader(csvfile)
-            k = 0
-            buff = []
-            while k < 2:
-                for row in reader:
-                    if row != []:
-                        buff.append(row)
-                        k += 1
-                        break
-            buff[0] = [k for k in buff[0]]
-            buff[1] = [y for y in buff[1]]
+        try:
+            with open(self.path+str(self.file_name)) as csvfile:
+                reader = csv.reader(csvfile)
+                k = 0
+                buff = []
+                while k < 2:
+                    for row in reader:
+                        if row != []:
+                            buff.append(row)
+                            k += 1
+                            break
+                buff[0] = [k for k in buff[0]]
+                buff[1] = [y for y in buff[1]]
 
-            for y in buff[0]:
-                for t in buff[1]:
-                    columns_name.append([y.replace("-", '').replace(" ", ''), type(t)])
-                    del buff[1][0]
-                    break
-            k = 0
-            data_ = []
-            while k < len(columns_name):
-                for data in reader:
-                    data_.append([i.strftime('%Y-%m-%d %H:%M:%S') if type(i) == datetime.datetime else i for i in data])
-                k += 1
-        self.queryset(columns_name, data_)
+                for y in buff[0]:
+                    for t in buff[1]:
+                        columns_name.append([y.replace("-", '').replace(" ", ''), type(t)])
+                        del buff[1][0]
+                        break
+                k = 0
+                data_ = []
+                while k < len(columns_name):
+                    for data in reader:
+                        data_.append([i.strftime('%Y-%m-%d %H:%M:%S') if type(i) == datetime.datetime else i for i in data])
+                    k += 1
+            # print(columns_name, data_)
+            self.queryset(columns_name, data_)
+        except Exception as e:
+            print(e)

@@ -16,6 +16,7 @@ from django.contrib.auth.models import Permission
 from itertools import groupby
 import ast
 import os
+from .pdf_maker import *
 
 def get_perm(request):
     args = {}
@@ -177,6 +178,7 @@ def product_insert(request, page_slug):
 
 @csrf_exempt
 def product_delete(request, page_slug):
+    print(request)
     if request.is_ajax():
         request_object = auth.get_user(request)
         c_u = CustomUser.objects.filter(username=request_object.username)
@@ -193,6 +195,7 @@ def product_delete(request, page_slug):
 
 @csrf_exempt
 def delete_all(request, page_slug):
+    print(request)
     if request.is_ajax():
         request_object = auth.get_user(request)
         c_u = CustomUser.objects.filter(username=request_object.username)
@@ -236,8 +239,6 @@ def custom_product(request, id):
                         k += 1
                         break
                 args['titles'] = title_list
-                # args['id'] = result[0]
-                # args['inputs'] = range(0, len(title_list))
                 mail_list = []
                 try:
                     for table in table_names:
@@ -262,10 +263,10 @@ def custom_product(request, id):
                             del title_list[0]
                             del l[0]
                             mail_list.append(ls)
+                            break
                 except Exception as e:
                     print(e)
                 b = json.dumps(mail_list)
-                # print(b)
                 args['items'] = b
                 fields_main = []
                 for table in table_names:
@@ -280,6 +281,8 @@ def custom_product(request, id):
                             i[1] = "text"
                         elif i[1] == "integer":
                             i[1] = "number"
+                        elif i[1] == "character varying":
+                            i[1] = "text"
                         fi.update({
                             "name": i[0],
                             "type": i[1],
@@ -288,16 +291,13 @@ def custom_product(request, id):
                             "selecting": 'true'
                         })
                         fields.append(fi.copy())
-                    fields.append({"type": "control", "width": 70,})
+                    fields.append({"type": "control", "width": "70px",})
                     fields_main.append(fields)
-
                 args['flds'] = json.dumps(fields_main)
             except Exception as e:
                 print(e)
             finally:
                 c.close()
-            # print(args['items'])
-            # print(args['fields'])
             return args
 
 
@@ -400,7 +400,7 @@ def product(request, page_slug):
                     })
                     b = json.dumps(fi)
                     fields.append(json.loads(b))
-                fields.append({"type": "control", "width": 70,})
+                fields.append({"type": "control", "width": "70px",})
                 args['fields'] = json.dumps(fields)
             except Exception as e:
                 print(e)
@@ -408,43 +408,6 @@ def product(request, page_slug):
                 c.close()
         return render_to_response('pages/data_collect.html', args, context_instance=RequestContext(request))
     return redirect('/auth/login/')
-
-
-# def upload_file(request):
-#     args = {}
-#     args.update(csrf(request))
-#     args['form'] = UploadFileForm()
-#     client = Client.objects.filter(user__username=auth.get_user(request).username)
-#     if client.exists():
-#         args['brand'] = client[0].company_logo
-#     if request.POST:
-#         form = UploadFileForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             try:
-#                 UploadHandler(request.FILES['file']).handler()
-#                 return redirect('/')
-#             except:
-#                 return redirect('/')
-#     return render_to_response('pages/xls_uploader.html', args)
-
-
-# def add_column(request):
-#     args = {}
-#     args.update(csrf(request))
-#     args['user'] = ''
-#     if auth.get_user(request).is_staff:
-#         args.update(get_perm(request))
-#         client = Client.objects.filter(user__username=auth.get_user(request).username)
-#         if client.exists():
-#             args['brand'] = client[0].company_logo
-#         args['user'] = 'is_staff'
-#         args['form'] = AdditionalForm()
-#         form = AdditionalForm(request.POST)
-#         if request.POST and form.is_valid():
-#             name_column, type_column = form.cleaned_data['name_column'], form.cleaned_data['type_column']
-#             c = connections[form.cleaned_data['user']].cursor()
-#             c.execute("ALTER TABLE product ADD COLUMN %s %s" % (name_column, type_column))
-#     return render_to_response('pages/add_column.html', args)
 
 
 def modify_company(request):
@@ -489,10 +452,6 @@ def company_users(request):
     request_object = auth.get_user(request)
     args.update(csrf(request))
     args['form'] = EditUser
-    # if request.is_ajax():
-    #     initial_user = CustomUser.objects.get(id=request.POST['id'])
-    #     args['form'] = EditUser(initial={"username": initial_user.username, "email": initial_user.email,
-    #                                      "first_name": initial_user.first_name, "last_name": initial_user.last_name})
     if request_object:
         args.update(get_perm(request))
         company = Client.objects.filter(user_id=auth.get_user(request).id)
@@ -587,8 +546,9 @@ def charts_save(query_dict, cursor, company_id):
     for table in query_dict['table']:
         if table in tables_name:
             query_list.append(table)
+            js = query_dict
             charts = Charts(table_name=table, columns_name=query_dict[table], chart_type=query_dict['chart_type'],
-                   y_name="", company_id=company_id)
+                   y_name="", company_id=company_id, grouping_by=js["grouping_"+js["table"][0]])
             charts.save()
 
 
@@ -597,7 +557,7 @@ def get_table_columns_ajax(request):
     if request.is_ajax():
         if request.POST:
             company_id = request.POST['company_id'].split("/")[3]
-            custom_user = CustomUser.objects.get(company_id=company_id)
+            custom_user = CustomUser.objects.get(company_id=company_id, primary_root=True)
             c = connections[custom_user.username].cursor()
             try:
                 c.execute("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" %
@@ -750,7 +710,8 @@ def list_company_change(request, id):
         args['pp_form'] = ChangeCompanyPackage()
         args['user'] = 'is_staff'
         args['table_form'] = AdditionalForm()
-        custom_user = CustomUser.objects.filter(company_id=id)
+        args['report_text'] = ReportForm()
+        custom_user = CustomUser.objects.filter(company_id=id, primary_root=True)
         c = connections[custom_user[0].username].cursor()
         if request.is_ajax():
             if request.POST['form_type'] == 'analytics':
@@ -775,18 +736,30 @@ def list_company_change(request, id):
                                                     contact_name=change_company.data['contact_name'],
                                                     phone=change_company.data['phone'])
                 redirect('/list_company/change/%s/', id)
+            report = ReportForm(request.POST)
+            if report.is_valid():
+                PDFMaker(request.get_host(), report.cleaned_data['text'], report.cleaned_data['title_report']).make()
+
         c.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
         tables_name = [tab_name[0] for tab_name in c.fetchall()]
+        tables = []
+        columns = []
+        for table in tables_name:
+            c.execute("select column_name from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '%s'" % (table,))
+            # tables.append([res[0] for res in c.fetchall()])
+            # tables_json = {
+            #     "table_name": table,
+            #     "columns": [res[0] for res in c.fetchall()]
+            # }
+            columns.append([res[0] for res in c.fetchall()])
+            tables.append(table)
+        args['tables_change'] = tables
+        args['columns_change'] = columns
+
         args['charts'] = ['line', 'scatter plot', 'bar', 'pie', 'combination']
         args['checkboxes'] = tables_name
         args.update(data_analytics_admin(request, c, id))
         args.update(custom_product(request, id))
-        # try:
-        # table_name = list().append(client.user_id)
-        # args.update(custom_product(request, id))
-        # except:
-        #     pass
-    # print(args['main'])
     return render_to_response('pages/list_company_change.html', args, context_instance=RequestContext(request))
 
 
