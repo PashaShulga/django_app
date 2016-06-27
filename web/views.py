@@ -178,7 +178,6 @@ def product_insert(request, page_slug):
 
 @csrf_exempt
 def product_delete(request, page_slug):
-    print(request)
     if request.is_ajax():
         request_object = auth.get_user(request)
         c_u = CustomUser.objects.filter(username=request_object.username)
@@ -195,7 +194,6 @@ def product_delete(request, page_slug):
 
 @csrf_exempt
 def delete_all(request, page_slug):
-    print(request)
     if request.is_ajax():
         request_object = auth.get_user(request)
         c_u = CustomUser.objects.filter(username=request_object.username)
@@ -633,7 +631,7 @@ def data_analytics_custom(request):
 def data_analytics_admin(request, cursor, id):
     args = {}
     request_object = auth.get_user(request)
-    ar = None
+    columns_name = None
     if request_object:
         args.update(get_perm(request))
         c = cursor
@@ -650,13 +648,19 @@ def data_analytics_admin(request, cursor, id):
             args['exist'] = True
             for chart_object in list(chart):
                 id_list.append(chart_object.id)
-                ar = chart_object.columns_name
-                ar = ast.literal_eval(ar)
+                columns_name = chart_object.columns_name
+                columns_name = ast.literal_eval(columns_name)
+                grouping_by = chart_object.grouping_by
+                grouping_by = ast.literal_eval(grouping_by)
+                columns_name.append(grouping_by[0])
+
                 label_chart.append(chart_object.table_name)
-                if len(ar) == 1:
-                    query = ("select %s from %s" % (ar[0], chart_object.table_name))
+                # print(chart_object.table_name)
+                if len(columns_name) == 1:
+                    query = ("select %s from %s" % (columns_name[0], chart_object.table_name))
                 else:
-                    query = ("select %s from %s" % (tuple(ar), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
+                    query = ("select %s from %s" % (tuple(columns_name), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
+
                 c.execute(query)
                 result_query.append(c.fetchall())
                 type_chart.append(ast.literal_eval(chart_object.chart_type)[0])
@@ -665,16 +669,20 @@ def data_analytics_admin(request, cursor, id):
                 result1 = []
                 for k, group in groupby(res, lambda x: x[0]):
                     e = [r[1] for r in group]
-                    e.insert(0, str(k))
-                    result1.append(e)
+                    t = e.copy()
+                    t.insert(0, str(k))
+                    result1.append(t)
+                    # result1.append(['x', 1, 2, 12])
                 result.append(result1)
+            # result.append()
             j_data = json.dumps(result)
+            print(j_data)
             chart = ChartsHandler().plotting(json_data=j_data, type_chart=type_chart)
             main_.append(chart)
             axis.update({
                 "y": {
                     "label": {
-                        "text": ar[0],
+                        "text": columns_name[0],
                         "position": "outer-middle"
                     }
                 }

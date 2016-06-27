@@ -1,9 +1,8 @@
-from django.db import connections
 import json
 
 
 class ChartsHandler(object):
-    def plotting(self, json_data=None, type_chart=["line"]):
+    def plotting(self, json_data=None, type_chart=["line"], group=''):
         data = {}
         res = []
 
@@ -14,6 +13,7 @@ class ChartsHandler(object):
             for i in json_data:
                 for t in type_chart:
                     data = {
+                        # "x": "x",
                         "columns": i,
                         "type": t
                     }
