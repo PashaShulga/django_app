@@ -13,6 +13,19 @@
     </div>
 
     <script type="text/javascript">
+    var setParentWidthDecorator = function (func) {
+    return function () {
+        var result = func.apply(this, arguments);
+        // By default parent container set to @{this.width}.
+        if (this.width !== "auto") {
+            // resize to max width of parent container.
+            $(this._bodyGrid).width("100%");
+        }
+        return result;
+    };
+};
+
+window.jsGrid.Grid.prototype._refreshWidth = setParentWidthDecorator(window.jsGrid.Grid.prototype._refreshWidth);
 
         var UserGridComponent = (function ($) {
             function Component(uid, controller) {
@@ -62,7 +75,6 @@
 
             Controller.prototype.deleteItem = function (item) {
                 var path = this.basePath + 'delete/';
-                {#                item.csrfmiddlewaretoken = "{{ csrf_token }}";#}
                 return request("DELETE", path, item);
             };
 

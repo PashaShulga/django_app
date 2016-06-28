@@ -28,8 +28,7 @@ class XLSParse(object):
                 elif it[1] == float:
                     it[1] = "FLOAT"
                 else:
-                    it[1] = "CHARACTER(255)"
-                print(it[0])
+                    it[1] = "VARCHAR(255)"
                 cursor.execute("ALTER TABLE %s ADD %s %s" % (self.table, it[0].replace(" ", "_"), it[1]))
         except Exception as e:
             print(e)

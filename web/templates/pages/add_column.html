@@ -12,7 +12,10 @@
                                 </h4>
                             </div>
                             <div id="el_{{ table }}" class="panel-collapse collapse">
-                                <div class="panel-body" id="bd_{{ table }}"></div>
+                                <div class="panel-body" id="bd_{{ table }}">
+                                    <button class="btn btn-sm btn-danger" id="delete" name="delete" value="{{ table }}" onclick="deleteItem(event);">delete table</button>
+                                </div>
+
                             </div>
                         </div>
                     {% endfor %}
@@ -22,6 +25,21 @@
     </div>
 
     <script>
+    function deleteItem(event){
+       var target;
+        if (event.target){target= event.target;}else{target= event.srcElement;}
+            if (confirm("Are you sure?")) {
+                return $.ajax({
+                    type: "DELETE",
+                    url: "{{ request.path }}delete_table/",
+                    headers: {'X-CSRFToken': "{{ csrf_token }}"},
+                    data: {table: target.value},
+                    dataType: "json",
+                    success: window.location.href = "{{ request.path }}"
+                });
+            }
+        }
+
         {% autoescape off %}
             var columns = {{ columns_change }};
             var table = {{ tables_change }};

@@ -207,6 +207,21 @@ def delete_all(request, page_slug):
         return HttpResponse(status=200)
 
 
+def delete_table(request, page_slug):
+    if request.is_ajax():
+        c_u = CustomUser.objects.filter(company_id=page_slug, primary_root=True)
+        user_db = UserBD.objects.filter(id=c_u[0].user_id)
+        c = connections[user_db[0].username].cursor()
+        if request.method == 'DELETE':
+            try:
+                _delete_table = QueryDict(request.body)['table']
+                c.execute("DROP TABLE %s" % (_delete_table,))
+                Charts.objects.filter(table_name=_delete_table).delete()
+            except (KeyError, Exception) as e:
+                print(e)
+        return HttpResponse(status=200)
+
+
 def custom_product(request, id):
     args = {}
     request_object = auth.get_user(request)
@@ -375,7 +390,7 @@ def product(request, page_slug):
                 fi = {}
                 for i in c.fetchall():
                     i = list(i)
-                    if i[1] == "character" or i[1] == "date":
+                    if i[1] == "character" or i[1] == "character varying" or i[1] == "date":
                         i[1] = "text"
                     elif i[1] == "integer":
                         i[1] = "number"
@@ -397,6 +412,7 @@ def product(request, page_slug):
                         "selecting": True
                     })
                     b = json.dumps(fi)
+                    print(b)
                     fields.append(json.loads(b))
                 fields.append({"type": "control", "width": "70px",})
                 args['fields'] = json.dumps(fields)
@@ -650,17 +666,11 @@ def data_analytics_admin(request, cursor, id):
                 id_list.append(chart_object.id)
                 columns_name = chart_object.columns_name
                 columns_name = ast.literal_eval(columns_name)
-                grouping_by = chart_object.grouping_by
-                grouping_by = ast.literal_eval(grouping_by)
-                columns_name.append(grouping_by[0])
-
                 label_chart.append(chart_object.table_name)
-                # print(chart_object.table_name)
                 if len(columns_name) == 1:
                     query = ("select %s from %s" % (columns_name[0], chart_object.table_name))
                 else:
                     query = ("select %s from %s" % (tuple(columns_name), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
-
                 c.execute(query)
                 result_query.append(c.fetchall())
                 type_chart.append(ast.literal_eval(chart_object.chart_type)[0])
@@ -676,7 +686,6 @@ def data_analytics_admin(request, cursor, id):
                 result.append(result1)
             # result.append()
             j_data = json.dumps(result)
-            print(j_data)
             chart = ChartsHandler().plotting(json_data=j_data, type_chart=type_chart)
             main_.append(chart)
             axis.update({
