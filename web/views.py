@@ -16,7 +16,7 @@ from django.contrib.auth.models import Permission
 from itertools import groupby
 import ast
 import os
-from .pdf_maker import *
+# from .pdf_maker import *
 
 
 def get_perm(request):
@@ -775,7 +775,8 @@ def list_company_change(request, id):
                 redirect('/list_company/change/%s/', id)
             report = ReportForm(request.POST)
             if report.is_valid():
-                PDFMaker(request.get_host(), report.cleaned_data['text'], report.cleaned_data['title_report']).make()
+                pass
+                # PDFMaker(request.get_host(), report.cleaned_data['text'], report.cleaned_data['title_report']).make()
 
         c.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
         tables_name = [tab_name[0] for tab_name in c.fetchall()]
