@@ -38,7 +38,7 @@ class CustomUser(User):
     )
     company_type = models.IntegerField(choices=CHOICES, default=CHOICES[0][0])
     user = models.ForeignKey('UserBD')
-    company = models.ForeignKey('Client')
+    company = models.ForeignKey('Client', blank=True, null=True)
     primary_root = models.BooleanField(default=False)
     objects = UserManager()
 
