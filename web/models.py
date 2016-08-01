@@ -99,7 +99,7 @@ def update_settings():
                                                   "USER": user.username,
                                                   'ENGINE': 'django.db.backends.postgresql',
                                                   'HOST': '127.0.0.1',
-                                                  'PORT': '5432',}
+                                                  'PORT': '5433fe',}
                                   })
     except Exception as e:
         print(e)

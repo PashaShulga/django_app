@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="PostgreSQL - milanaled@localhost" uuid="6f74b2ca-059b-4ee8-ad11-8e3c3c47edee">
+      <secret-storage>master_key</secret-storage>
+      <user-name>milanaled_user</user-name>
+      <schema-pattern>milanaled.pg_catalog milanaled.public</schema-pattern>
+      <default-schemas>milanaled.public</default-schemas>
+    </data-source>
+    <data-source name="PostgreSQL - db_maurice@185.69.153.214" uuid="df577f07-e7ab-4dea-843e-6eb2fb99a495">
+      <secret-storage>master_key</secret-storage>
+      <user-name>maurice</user-name>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <proxy-host>185.69.153.214</proxy-host>
+        <proxy-port>22</proxy-port>
+        <secret-storage>master_key</secret-storage>
+        <user>root</user>
+        <use-password>false</use-password>
+        <private-key-path>$USER_HOME$/.ssh/id_rsa</private-key-path>
+      </ssh-properties>
+    </data-source>
+    <data-source name="PostgreSQL - milanaled@localhost [2]" uuid="01f318a2-9f63-42df-81ae-42cb77c04256">
+      <secret-storage>master_key</secret-storage>
+      <user-name>postgres</user-name>
+      <schema-pattern>milanaled.pg_catalog milanaled.public</schema-pattern>
+      <default-schemas>milanaled.public</default-schemas>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <proxy-host>185.69.153.214</proxy-host>
+        <proxy-port>22</proxy-port>
+        <secret-storage>master_key</secret-storage>
+        <user>root</user>
+        <use-password>false</use-password>
+        <private-key-path>$USER_HOME$/.ssh/id_rsa</private-key-path>
+      </ssh-properties>
+    </data-source>
+    <data-source name="PostgreSQL - db_user777@localhost" uuid="9b4ec973-ed05-449d-85f8-6b4f385cd832">
+      <secret-storage>master_key</secret-storage>
+      <user-name>user777</user-name>
+      <schema-pattern>db_user777.pg_catalog db_user777.public</schema-pattern>
+      <default-schemas>db_user777.public</default-schemas>
+    </data-source>
+    <data-source name="PostgreSQL - milanaled@localhost [3]" uuid="45ced3c6-caee-4e22-877d-a6538dfc734c">
+      <secret-storage>master_key</secret-storage>
+      <user-name>postgres</user-name>
+      <schema-pattern>milanaled.pg_catalog milanaled.public</schema-pattern>
+      <default-schemas>milanaled.public</default-schemas>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <proxy-host>146.185.132.36</proxy-host>
+        <proxy-port>22</proxy-port>
+        <secret-storage>master_key</secret-storage>
+        <user>root</user>
+        <use-password>false</use-password>
+        <private-key-path>$USER_HOME$/.ssh/id_rsa</private-key-path>
+      </ssh-properties>
+    </data-source>
+  </component>
+</project>

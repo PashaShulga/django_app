@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'web',
-    'loginsys'
+    'loginsys',
+    'api',
+    'django_summernote'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -117,6 +119,14 @@ FILE_UPLOAD_HANDLERS = [
 ]
 
 
+AUTHENTICATION_BACKENDS = (
+    'loginsys.auth_backends.CustomUserModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+CUSTOM_USER_MODEL = 'accounts.CustomUser'
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -136,10 +146,10 @@ USE_TZ = True
 # STATIC_ROOT = '/var/www/django_app/static/'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = "/var/www/django_app/static/"
+# STATIC_ROOT = "/var/www/django_app/static/"
 
 STATICFILES_DIRS = [
-    '/var/www/django_app/static/',
+    # '/var/www/django_app/static/',
     os.path.join(BASE_DIR, "static"),
     ]
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="3394748411">
+    <data-source source="LOCAL" name="PostgreSQL - milanaled@localhost" uuid="6f74b2ca-059b-4ee8-ad11-8e3c3c47edee">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/milanaled</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="PostgreSQL - db_maurice@185.69.153.214" uuid="df577f07-e7ab-4dea-843e-6eb2fb99a495">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://185.69.153.214:5432/db_maurice</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="PostgreSQL - milanaled@localhost [2]" uuid="01f318a2-9f63-42df-81ae-42cb77c04256">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/milanaled</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="PostgreSQL - db_user777@localhost" uuid="9b4ec973-ed05-449d-85f8-6b4f385cd832">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/db_user777</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="PostgreSQL - milanaled@localhost [3]" uuid="45ced3c6-caee-4e22-877d-a6538dfc734c">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5433/milanaled</jdbc-url>
+    </data-source>
+  </component>
+</project>
