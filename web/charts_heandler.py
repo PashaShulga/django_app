@@ -2,7 +2,8 @@ import json
 
 
 class ChartsHandler(object):
-    def plotting(self, json_data=None, type_chart=["line"], group=''):
+
+    def plotting(self, json_data=None, type_chart=["line"], group=list):
         data = {}
         res = []
 

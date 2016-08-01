@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render_to_response
 from web.views import get_perm
 from django.contrib import auth
 from .form import *
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
@@ -20,16 +20,6 @@ from web.create_user_db import create_db
 from django.utils.translation import ugettext_lazy as _
 from web.models import CustomUser, Company, Client, UserBD, update_settings
 from django.template import RequestContext
-
-# def get_perm(request):
-#     args = {}
-#     request_object = auth.get_user(request)
-#     get_custom_user = CustomUser.objects.filter(id=request_object.id)
-#     company = Company.objects.filter(id=get_custom_user[0].company_type)
-#     if company.exists():
-#         args['company_type'] = str(company[0].title)
-#     args['user_permission'] = request.user.get_all_permissions()
-#     return args
 
 
 def registration(request):

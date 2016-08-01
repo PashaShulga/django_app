@@ -3,9 +3,9 @@ from django.template import RequestContext
 from django.shortcuts import redirect, render_to_response, HttpResponse
 from django.contrib import auth
 from loginsys.form import *
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
-from web.models import Client, UserBD, CustomUser, Company, Charts
+from web.models import Client, UserBD, CustomUser, Company, Charts, UserDatafiles
 from .upload_handler import UploadHandler
 from django.db import connections
 from .xls_parse import XLSParse
@@ -18,6 +18,7 @@ import ast
 import os
 from .pdf_maker import *
 
+
 def get_perm(request):
     args = {}
     request_object = auth.get_user(request)
@@ -26,7 +27,7 @@ def get_perm(request):
         company = Company.objects.filter(id=get_custom_user[0].company_type)
         if company.exists():
             args['company_type'] = str(company[0].title)
-        args['user_permission'] = request.user.get_all_permissions()
+        args['user_permission'] = request_object.get_all_permissions()
     return args
 
 
@@ -34,7 +35,7 @@ def home(request):
     args = {}
     user = auth.get_user(request)
     if str(user) != 'AnonymousUser':
-        if user.is_superuser is not True:
+        if user.is_superuser is False:
             user_db = UserBD.objects.filter(username=request.user.username)
             c = connections[user_db[0].username].cursor()
             c.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='public'")
@@ -44,8 +45,7 @@ def home(request):
             else:
                 args['count_of_datacollect'] = 0
 
-            client = CustomUser.objects.filter(id=request.user.id)
-            args['count_of_clients'] = client.count()
+            args['count_of_clients'] = CustomUser.objects.filter(company__user_id=request.user.id).count()
             args['count_of_charts'] = Charts.objects.filter(company__user_id=request.user.id).count()
             packages = CustomUser.objects.filter(id=request.user.id)
             if packages.exists():
@@ -336,13 +336,19 @@ def product(request, page_slug):
                 if request.POST:
                     upform = UploadFileForm(request.POST, request.FILES)
                     if upform.is_valid():
-                        UploadHandler(request.FILES['file']).handler()
+                        upload_handler = UploadHandler(file=request.FILES['file_data[]'], user_id=request_object.id)
+                        upload_handler.handler()
+
                         if upform.cleaned_data['file_type'] == 'xls':
-                            XLSParse(request.FILES['file'], request,
-                                     str(upform.cleaned_data['table_name']).lower()).xls_parse()
+                            XLSParse(request.FILES['file_data[]'], request,
+                                     str(upform.cleaned_data['table_name']).lower(),
+                                     upload_handler.user_datafiles_id).xls_parse()
+
                         elif upform.cleaned_data['file_type'] == 'csv':
-                            XLSParse(request.FILES['file'], request,
-                                     str(upform.cleaned_data['table_name']).lower()).csv_parse()
+                            XLSParse(request.FILES['file_data[]'], request,
+                                     str(upform.cleaned_data['table_name']).lower(),
+                                     upload_handler.user_datafiles_id).csv_parse()
+
                         return redirect('/product/%s/' % (page_slug,))
 
                     if upform.cleaned_data['table_name'] in table_names:
@@ -386,7 +392,7 @@ def product(request, page_slug):
 
                 fields = []
                 c.execute("SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" % (
-                page_slug,))
+                    page_slug,))
                 fi = {}
                 for i in c.fetchall():
                     i = list(i)
@@ -412,15 +418,15 @@ def product(request, page_slug):
                         "selecting": True
                     })
                     b = json.dumps(fi)
-                    print(b)
                     fields.append(json.loads(b))
                 fields.append({"type": "control", "width": "70px",})
                 args['fields'] = json.dumps(fields)
+                args['file_name'] = UserDatafiles.objects.filter(user_id=request_object.id, table_name=page_slug).first()
             except Exception as e:
                 print(e)
             finally:
                 c.close()
-        return render_to_response('pages/data_collect.html', args, context_instance=RequestContext(request))
+        return render_to_response('pages/data_collect.html', context=args, context_instance=RequestContext(request))
     return redirect('/auth/login/')
 
 
@@ -648,10 +654,11 @@ def data_analytics_admin(request, cursor, id):
     args = {}
     request_object = auth.get_user(request)
     columns_name = None
+    c = cursor
     if request_object:
         args.update(get_perm(request))
-        c = cursor
         custom_user = CustomUser.objects.filter(company_id=id).first()
+        print(custom_user.username)
         chart = Charts.objects.filter(company_id=custom_user.company_id)
         axis = {}
         label_chart = []
@@ -660,6 +667,7 @@ def data_analytics_admin(request, cursor, id):
         result_query = []
         type_chart = []
         id_list = []
+        x_axial = []
         if chart.exists():
             args['exist'] = True
             for chart_object in list(chart):
@@ -667,25 +675,34 @@ def data_analytics_admin(request, cursor, id):
                 columns_name = chart_object.columns_name
                 columns_name = ast.literal_eval(columns_name)
                 label_chart.append(chart_object.table_name)
+
+                # print(columns_name)
+
                 if len(columns_name) == 1:
-                    query = ("select %s from %s" % (columns_name[0], chart_object.table_name))
+                    query = ("select %s from %s ORDER BY %s" % (columns_name[0], chart_object.table_name, (ast.literal_eval(chart_object.grouping_by)[0],)))
                 else:
-                    query = ("select %s from %s" % (tuple(columns_name), chart_object.table_name)).replace("'", '').replace("(", " ").replace(")", " ")
+                    query = ("select %s from %s ORDER BY %s" % (
+                        tuple(columns_name), chart_object.table_name,
+                        ast.literal_eval(chart_object.grouping_by)[0])). \
+                        replace("'", '').replace("(", " ").replace(")", " ")
                 c.execute(query)
                 result_query.append(c.fetchall())
                 type_chart.append(ast.literal_eval(chart_object.chart_type)[0])
-
+                # print(result_query)
             for res in result_query:
                 result1 = []
                 for k, group in groupby(res, lambda x: x[0]):
                     e = [r[1] for r in group]
                     t = e.copy()
                     t.insert(0, str(k))
+                    x_axial.append(k)
                     result1.append(t)
-                    # result1.append(['x', 1, 2, 12])
                 result.append(result1)
-            # result.append()
+            x_axial.insert(0, "x")
+            result.append(x_axial)
             j_data = json.dumps(result)
+            # print(j_data)
+
             chart = ChartsHandler().plotting(json_data=j_data, type_chart=type_chart)
             main_.append(chart)
             axis.update({
@@ -694,7 +711,10 @@ def data_analytics_admin(request, cursor, id):
                         "text": columns_name[0],
                         "position": "outer-middle"
                     }
-                }
+                },
+                "x": {
+                    "type": 'category',
+                    }
             })
             args['axis'] = axis
             args['main'] = id_list

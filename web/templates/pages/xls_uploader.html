@@ -1,67 +1,35 @@
 {% block content %}
     <div class="system-message">
         <h3 style="font-size: 20px">Add data</h3>
-    <p class="text-danger">Enter table name! If the table doesn't exist the system will make new table!</p>
+        <p class="text-danger">Enter table name! If the table doesn't exist the system will make new table!</p>
     </div>
 
-    <form method="post" enctype="multipart/form-data" onsubmit="return Validate(this);">
+    <form role="form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
             <label for="table_name">Enter table name:</label>
-            {#        </div>#}
-            {#        <div class="col-sm-10">#}
-{#            <div class="col-sm-2">#}
             <div style="width: 40%">{{ form.table_name }}</div>
-{#        </div>#}
         </div>
-{#        <div class="col-sm-2">#}
         <div class="form-group">
             <label for="file_type">Choices file type:</label>
-{#        </div>#}
-{#        <div class="col-sm-10">#}
-                {% for radio in form.file_type %}
-                    <label class="radio">
+            {% for radio in form.file_type %}
+                <label class="radio">
                     {{ radio }}
-                    </label>
-                {% endfor %}
+                </label>
+            {% endfor %}
         </div>
-{#        <div class="col-sm-3">#}
-{#        </div>#}
-{#        <div class="col-sm-9">#}
-            <div class="form-group">
-                <label>Choices file on the computer:</label>
-                {{ form.file }}
-            </div>
-{#        </div>#}
-        <input type="submit" class="btn btn-sm btn-info" value="Upload">
+        <div class="row1">
+            <label class="control-label">Select File</label>
+            <input id="file_data" name="file_data[]" type="file" multiple class="file-loading">
+        </div>
+{#        <input type="submit" class="btn btn-sm btn-info" id="upload" value="Upload">#}
     </form>
 
     <script>
-        var _validFileExtensions = [".csv", ".xls", ".xlsx"];
-        function Validate(oForm) {
-            var arrInputs = oForm.getElementsByTagName("input");
-            for (var i = 0; i < arrInputs.length; i++) {
-                var oInput = arrInputs[i];
-                if (oInput.type == "file") {
-                    var sFileName = oInput.value;
-                    if (sFileName.length > 0) {
-                        var blnValid = false;
-                        for (var j = 0; j < _validFileExtensions.length; j++) {
-                            var sCurExtension = _validFileExtensions[j];
-                            if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
-                                blnValid = true;
-                                break;
-                            }
-                        }
 
-                        if (!blnValid) {
-                            alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
+        $(document).on('ready', function () {
+            $("#file_data").fileinput({showCaption: false});
+        });
+
     </script>
 {% endblock %}

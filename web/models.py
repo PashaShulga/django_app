@@ -61,6 +61,7 @@ class UserBD(models.Model):
     password = models.CharField(max_length=520)
 
     class Meta:
+        managed = True
         db_table = "user_db"
 
 
@@ -75,6 +76,14 @@ class Charts(models.Model):
 
     class Meta:
         db_table = "charts"
+
+
+class UserDatafiles(models.Model):
+    id = models.AutoField(primary_key=True)
+    file_name = models.CharField(max_length=100)
+    created = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey('CustomUser')
+    table_name = models.CharField(max_length=100)
 
 
 def update_settings():
@@ -96,4 +105,4 @@ def update_settings():
         print(e)
 
 
-update_settings()
+# update_settings()

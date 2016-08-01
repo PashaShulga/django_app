@@ -29,10 +29,13 @@
 
 
     {% if request.path != '/product/general/' and request.path != '/product/data_collect_files/' %}
-        <div class="col-lg-2">
+        <div class="col-lg-10">
             <button class="btn btn-sm btn-danger" id="delete" name="delete" onclick="deleteItem();">
-                Delete all
+                Delete all data
             </button>
+        </div>
+        <div class="col-lg-2">
+            <p>{{ file_name.file_name }}</p>
         </div>
         <br>
         {% for table in tables %}

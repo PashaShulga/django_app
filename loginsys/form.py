@@ -189,7 +189,11 @@ class UploadFileForm(forms.Form):
     )
     table_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Table name'}))
     file_type = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES, required=True)
-    file = forms.FileField(label='Choose the file', widget=forms.FileInput(attrs={"name": "file"}))
+    # file = forms.FileField(label='Choose the file', widget=forms.FileInput(attrs={"name": "file_data[]",
+    #                                                                               "id": "file_data",
+    #                                                                               "multiple": True,
+    #                                                                               "class": "file-loading"
+    #                                                                               }))
 
 
 class AdditionalForm(forms.Form):

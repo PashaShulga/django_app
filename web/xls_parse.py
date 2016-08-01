@@ -1,6 +1,7 @@
 from openpyxl import load_workbook
 import os
-from web.models import UserBD
+from web.models import UserBD, UserDatafiles
+from .upload_handler import UploadHandler
 from django.db import connections
 from django.contrib import auth
 import datetime
@@ -11,10 +12,14 @@ class XLSParse(object):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     path = os.path.join(BASE_DIR+'/static/files/')
 
-    def __init__(self, file_name, request, table):
+    def __init__(self, file_name, request, table, upload_handler):
         self.file_name = str(file_name)
         self.request = request
         self.table = table
+        self.upload_handler = upload_handler
+
+    def user_datafile(self):
+        UserDatafiles.objects.filter(id=self.upload_handler).update(table_name=self.table)
 
     def table_header(self, cursor, args):
         try:
@@ -67,9 +72,11 @@ class XLSParse(object):
                                 iter_[iter_.index(None)] = ''
                             s2 = ' VALUES {}'.format(tuple(iter_))
                             c.execute(s+s2)
+                    self.user_datafile()
                 except Exception as e:
-                    import traceback
-                    print(traceback.format_exc())
+                    print(e)
+                    # import traceback
+                    # print(traceback.format_exc())
 
     def xls_parse(self):
         wb = load_workbook(filename=self.path+self.file_name)
@@ -93,7 +100,7 @@ class XLSParse(object):
                 del buff[1][0]
                 break
 
-        k = 0
+        # k = 0
         d = []
         # while k < len(columns_name):
         for data in sheet_ranges:

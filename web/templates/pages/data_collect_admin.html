@@ -1,15 +1,9 @@
 {% block product_content %}
-{#    <style>#}
-{#        .jsgrid-table {#}
-{#            width: 100% !important;#}
-{#        }#}
-{#    </style>#}
     <div class="col-lg-12">
         {% for table in tables %}
             <H2>Table: <strong style="color: red;">{{ table }}</strong></H2>
             <div id="{{ table }}" class="jsGrid"></div>
         {% endfor %}
-
     </div>
 
     <script type="text/javascript">

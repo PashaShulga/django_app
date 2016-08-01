@@ -1,28 +1,45 @@
-<div class="row">
-    {% if exist %}
-        {% for foo in main %}
+<style>
+    .legend span {
+        width: 33.333333%;
+        display: inline-block;
+        text-align: center;
+        cursor: pointer;
+        color: white;
+    }
+</style>
+
+
+{% if exist %}
+    {% for foo in main %}
+        <div class="col-lg-6" style="margin-bottom: 40px">
             <button class="btn btn-sm btn-danger" id="delete" name="delete" onclick="deleteChart({{ foo }});"
-                    style="padding: 5px; margin-left: 16px;">
-                Delete
-            </button>
-            <div class="col-lg-12" style="text-align: right;">
+                    style="padding: 5px; margin-left: 16px;">Delete</button>
+            <div class="col-lg-6">
+                <div id="lable_chart_{{ foo }}" style="padding: 5px;margin-left: 1%;"></div>
+            </div>
+
+            <div class="col-lg-6" style="align-content: right">
                 <label style="font-style: normal; font-weight: 500; font-size: 12px; color: #656565">Article: {{ foo }}</label>
             </div>
-            <div id="lable_chart_{{ foo }}" style="padding: 5px;margin-left: 1%;"></div>
-            <div id="chart_{{ foo }}"></div>
-            <hr>
-        {% endfor %}
-    {% else %}
-        <p>No charts</p>
-    {% endif %}
-</div>
+
+            <div id="chart_{{ foo }}" class="chart"></div>
+        </div>
+
+
+{#        <div class="container" style="width: auto">#}
+{##}
+{#        </div>#}
+    {% endfor %}
+{% else %}
+    <p>No charts</p>
+{% endif %}
 
 <script>
     function deleteChart(id_chart) {
         if (confirm("Are you sure?")) {
             return $.ajax({
                 type: "DELETE",
-                url: "{{ request.path }}delete/"+id_chart,
+                url: "{{ request.path }}delete/" + id_chart,
                 data: {},
                 dataType: "json",
                 success: window.location.href = "{{ request.path }}"
@@ -36,17 +53,51 @@
         var label_chart = {{ label_chart }};
     {% endautoescape %}
     var c = 0;
+
     {% for iter in main %}
         var lable_chart_div = document.getElementById('lable_chart_{{ iter }}');
         for (var j = 0; j < j_data[0][{{ iter }}-{{ iter }}+c].length; j++) {
-            lable_chart_div.innerHTML = "<p>"+ label_chart[c] +"</p>";
+            lable_chart_div.innerHTML = "<p>" + label_chart[c] + "</p>";
+{#            alert(j_data[0][{{ iter }}-{{ iter }}+c][j]);#}
             var chart = c3.generate({
                 bindto: '#chart_{{ iter }}',
-                data: j_data[0][{{ iter }}-{{ iter }}+c][j]
-                //axis: axis
+                data: j_data[0][{{ iter }}-{{ iter }}+c][j],
+                legend: {
+                    show: true
+                }
             });
         }
         c++;
+        chart.resize({
+            width: 500
+        });
     {% endfor %}
 
+
+
+    {##}
+    {#    function toggle(id) {#}
+    {#        chart.toggle(id);#}
+    {#    }#}
+    {#    d3.select('.container').insert('div', '.chart_41').attr('class', 'legend').selectAll('span')#}
+    {#            .data(['data1', 'data2', 'loel', 'data3'])#}
+    {#            .enter().append('span')#}
+    {#            .attr('data-id', function (id) {#}
+    {#                return id;#}
+    {#            })#}
+    {#            .html(function (id) {#}
+    {#                return id;#}
+    {#            })#}
+    {#            .each(function (id) {#}
+    {#                d3.select(this).style('background-color', chart.color(id));#}
+    {#            })#}
+    {#            .on('mouseover', function (id) {#}
+    {#                chart.focus(id);#}
+    {#            })#}
+    {#            .on('mouseout', function (id) {#}
+    {#                chart.revert();#}
+    {#            })#}
+    {#            .on('click', function (id) {#}
+    {#                chart.toggle(id);#}
+    {#            });#}
 </script>
