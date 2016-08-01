@@ -40,10 +40,12 @@ def registration(request):
             except:
                 args['error'] = _("Warning! Database is not create, try again or inform staff")
 
+            print(username, password, email, c_title, c_type)
+
             u_db = UserBD.objects.filter(username=username)
             if u_db.exists():
                 new_user = CustomUser.objects.create_user(username=username, password=password, email=email,
-                                                      company_type=c_type, user_id=u_db[0].id)
+                                                      company_type=c_type, user_id=u_db[0].id, primary_root=True)
                 new_user.save()
                 company = Client(company_name=c_title, user_id=new_user.id)
                 company.save()
