@@ -2,7 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from web.models import UserBD
 import traceback
-con = create_engine('postgresql+psycopg2://%s:%s@127.0.0.1:5432/postgres' % ('postgres', "Reload_777"))
+from untitled2.settings import DATABASES
+con = create_engine('postgresql+psycopg2://%s:%s@127.0.0.1:5433/postgres' % (DATABASES['default']['USER'], DATABASES['default']['PASSWORD']))
 
 
 def create_db(dbname, password, username):
@@ -28,7 +29,7 @@ def create_db(dbname, password, username):
 
 
     try:
-        c = create_engine('postgresql+psycopg2://%s:%s@127.0.0.1:5432/%s' % (username, password, dbname))
+        c = create_engine('postgresql+psycopg2://%s:%s@127.0.0.1:5433/%s' % (username, password, dbname))
         s = sessionmaker(bind=c)()
         s.connection().connection.set_isolation_level(0)
         # s.execute("CREATE TABLE product(id SERIAL NOT NULL PRIMARY KEY)")

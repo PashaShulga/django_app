@@ -43,9 +43,11 @@ def registration(request):
             print(username, password, email, c_title, c_type)
 
             u_db = UserBD.objects.filter(username=username)
+            print(u_db.exists())
+
             if u_db.exists():
                 new_user = CustomUser.objects.create_user(username=username, password=password, email=email,
-                                                      company_type=c_type, user_id=u_db[0].id, primary_root=True)
+                                                          company_type=c_type, user_id=u_db[0].id, primary_root=True)
                 new_user.save()
                 company = Client(company_name=c_title, user_id=new_user.id)
                 company.save()
