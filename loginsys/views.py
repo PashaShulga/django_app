@@ -48,10 +48,10 @@ def registration(request):
             if u_db.exists():
                 new_user = CustomUser.objects.create_user(username=username, password=password, email=email,
                                                           company_type=c_type, user_id=u_db[0].id, primary_root=True)
-                new_user.save()
                 company = Client(company_name=c_title, user_id=new_user.id)
                 company.save()
                 CustomUser.objects.filter(id=new_user.id).update(company_id=company.id)
+                new_user.save()
 
             u = CustomUser.objects.get(username=username)
             permission = None
