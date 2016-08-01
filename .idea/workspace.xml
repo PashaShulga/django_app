@@ -2,26 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fc892f04-519d-4538-a45e-bf0cba471879" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/models.py" afterPath="$PROJECT_DIR$/web/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/loginsys/form.py" afterPath="$PROJECT_DIR$/loginsys/form.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/loginsys/urls.py" afterPath="$PROJECT_DIR$/loginsys/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/loginsys/views.py" afterPath="$PROJECT_DIR$/loginsys/views.py" />
     </list>
-    <list id="fa95d09b-d011-4a20-8e5a-57c347b85283" name="New changelist" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dataSources.ids" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/pasha.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/untitled2.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/untitled2/settings.py" afterPath="$PROJECT_DIR$/untitled2/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/migrations/0001_initial.py" afterPath="$PROJECT_DIR$/web/migrations/0001_initial.py" />
-    </list>
+    <list id="fa95d09b-d011-4a20-8e5a-57c347b85283" name="New changelist" comment="" />
     <ignored path="untitled2.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <file path="$PROJECT_DIR$/untitled2/settings.py" ignored="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,8 +20,8 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/untitled2$l__1_.coverage" NAME="l (1) Coverage Results" MODIFIED="1470040268029" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/untitled2$create_user_db.coverage" NAME="create_user_db Coverage Results" MODIFIED="1461612229935" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/web" />
+    <SUITE FILE_PATH="coverage/untitled2$l__1_.coverage" NAME="l (1) Coverage Results" MODIFIED="1470040268029" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/untitled2$l.coverage" NAME="l Coverage Results" MODIFIED="1463739265247" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/web" />
     <SUITE FILE_PATH="coverage/untitled2$manage.coverage" NAME="manage Coverage Results" MODIFIED="1461570553162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/untitled2$csv_parse.coverage" NAME="csv_parse Coverage Results" MODIFIED="1463398119220" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/web" />
@@ -75,21 +65,132 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/web/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7461213">
+            <state vertical-scroll-proportion="0.0">
               <caret line="101" column="65" selection-start-line="101" selection-start-column="65" selection-end-line="101" selection-end-column="65" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="charts_heandler.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/charts_heandler.py">
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/untitled2/urls.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="35" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
+              <caret line="3" column="32" selection-start-line="3" selection-start-column="32" selection-end-line="3" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/loginsys/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="2" selection-end-line="343" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/loginsys/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="15" column="97" selection-start-line="5" selection-start-column="6" selection-end-line="15" selection-end-column="97" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="form.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/loginsys/form.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="360" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/web/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="32" column="1" selection-start-line="32" selection-start-column="1" selection-end-line="32" selection-end-column="1" />
+              <folding>
+                <marker date="1470041714481" expanded="true" signature="1525:1601" placeholder="SELECT TABLE... TABLES" />
+                <marker date="1470041714481" expanded="true" signature="6873:6901" placeholder="update missi... " />
+                <marker date="1470041714481" expanded="true" signature="7609:7624" placeholder="insert into missing_value... " />
+                <marker date="1470041714481" expanded="true" signature="8364:8390" placeholder="delete from " />
+                <marker date="1470041714481" expanded="true" signature="8933:8945" placeholder="delete from " />
+                <marker date="1470041714481" expanded="true" signature="9499:9510" placeholder="DROP TABLE m... " />
+                <marker date="1470041714481" expanded="true" signature="10184:10260" placeholder="SELECT TABLE... TABLES" />
+                <marker date="1470041714481" expanded="true" signature="10593:10667" placeholder="select colum... columns" />
+                <marker date="1470041714481" expanded="true" signature="11260:11274" placeholder="select * fro... missing_value" />
+                <marker date="1470041714481" expanded="true" signature="12595:12680" placeholder="SELECT colum... COLUMNS" />
+                <marker date="1470041714481" expanded="true" signature="14397:14473" placeholder="SELECT TABLE... TABLES" />
+                <marker date="1470041714481" expanded="true" signature="16000:16015" placeholder="insert into missing_value... " />
+                <marker date="1470041714481" expanded="true" signature="16269:16343" placeholder="select colum... columns" />
+                <marker date="1470041714481" expanded="true" signature="16663:16677" placeholder="select * fro... missing_value" />
+                <marker date="1470041714481" expanded="true" signature="17612:17697" placeholder="SELECT colum... COLUMNS" />
+                <marker date="1470041714481" expanded="true" signature="21602:22060" placeholder="SELECT auth_... auth_user" />
+                <marker date="1470041714481" expanded="true" signature="22192:22633" placeholder="SELECT auth_... auth_user" />
+                <marker date="1470041714481" expanded="true" signature="26123:26199" placeholder="SELECT TABLE... TABLES" />
+                <marker date="1470041714481" expanded="true" signature="27073:27147" placeholder="SELECT colum... COLUMNS" />
+                <marker date="1470041714481" expanded="true" signature="28509:28524" placeholder="select missi... missing_value" />
+                <marker date="1470041714481" expanded="true" signature="28620:28635" placeholder="select missi... missing_value" />
+                <marker date="1470041714481" expanded="true" signature="30958:30985" placeholder="select missi... missing_value" />
+                <marker date="1470041714481" expanded="true" signature="31141:31168" placeholder="select missi... missing_value" />
+                <marker date="1470041714481" expanded="true" signature="34858:34887" placeholder="ALTER TABLE missing_value... " />
+                <marker date="1470041714481" expanded="true" signature="35806:35882" placeholder="SELECT TABLE... TABLES" />
+                <marker date="1470041714481" expanded="true" signature="36058:36132" placeholder="select colum... COLUMNS" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="upload_handler.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/web/upload_handler.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="2" selection-end-line="23" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pdf_maker.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/web/pdf_maker.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="csv_parse.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/web/csv_parse.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="create_user_db.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/web/create_user_db.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -118,9 +219,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/web/templates/pages/list_company.html" />
-        <option value="$PROJECT_DIR$/untitled2/settings.py" />
-        <option value="$PROJECT_DIR$/web/pdf_maker.py" />
         <option value="$PROJECT_DIR$/web/templates/pages/data_report.html" />
         <option value="$PROJECT_DIR$/static/bootstrap.min.css" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/01f318a2-9f63-42df-81ae-42cb77c04256/console.sql" />
@@ -130,18 +228,15 @@
         <option value="$PROJECT_DIR$/static/reports/test.txt" />
         <option value="$PROJECT_DIR$/static/jsgrid/jsgrid.min.css" />
         <option value="$PROJECT_DIR$/web/templates/pages/add_column.html" />
-        <option value="$PROJECT_DIR$/untitled2/urls.py" />
         <option value="dbtable:/3be7b811/9b4ec973-ed05-449d-85f8-6b4f385cd832/db_user777.public.food" />
         <option value="dbtable:/3be7b811/9b4ec973-ed05-449d-85f8-6b4f385cd832/db_user777.public.csv" />
         <option value="dbtable:/3be7b811/9b4ec973-ed05-449d-85f8-6b4f385cd832/db_user777.public.qwq" />
         <option value="$PROJECT_DIR$/web/templates/pages/data_collect_admin.html" />
         <option value="$PROJECT_DIR$/templates/i.html" />
-        <option value="$PROJECT_DIR$/loginsys/views.py" />
         <option value="$PROJECT_DIR$/web/templates/pages/menu.html" />
         <option value="$PROJECT_DIR$/web/migrations/0006_auto_20160704_1053.py" />
         <option value="dbtable:/3be7b811/6f74b2ca-059b-4ee8-ad11-8e3c3c47edee/milanaled.public.web_userdatafiles" />
         <option value="$PROJECT_DIR$/web/templates/pages/data_collect_files.html" />
-        <option value="$PROJECT_DIR$/web/upload_handler.py" />
         <option value="$PROJECT_DIR$/web/migrations/0007_auto_20160704_1307.py" />
         <option value="$PROJECT_DIR$/web/xls_parse.py" />
         <option value="$PROJECT_DIR$/web/templates/pages/data_analytics_admin_setup.html" />
@@ -155,20 +250,26 @@
         <option value="$PROJECT_DIR$/test,json" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/6f74b2ca-059b-4ee8-ad11-8e3c3c47edee/console.sql" />
         <option value="$PROJECT_DIR$/web/templates/pages/data_analytics_admin.html" />
-        <option value="$PROJECT_DIR$/web/views.py" />
         <option value="dbtable:/3be7b811/6f74b2ca-059b-4ee8-ad11-8e3c3c47edee/milanaled.public.web_customuser" />
         <option value="dbtable:/3be7b811/45ced3c6-caee-4e22-877d-a6538dfc734c/milanaled.public.user_db" />
         <option value="dbtable:/3be7b811/6f74b2ca-059b-4ee8-ad11-8e3c3c47edee/milanaled.public.auth_group" />
         <option value="dbtable:/3be7b811/6f74b2ca-059b-4ee8-ad11-8e3c3c47edee/milanaled.public.auth_group_permissions" />
         <option value="dbtable:/3be7b811/6f74b2ca-059b-4ee8-ad11-8e3c3c47edee/milanaled.public.auth_permission" />
         <option value="dbtable:/3be7b811/6f74b2ca-059b-4ee8-ad11-8e3c3c47edee/milanaled.public.django_content_type" />
-        <option value="$PROJECT_DIR$/loginsys/form.py" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/45ced3c6-caee-4e22-877d-a6538dfc734c/console.sql" />
         <option value="dbtable:/3be7b811/45ced3c6-caee-4e22-877d-a6538dfc734c/milanaled.public.web_customuser" />
         <option value="$PROJECT_DIR$/questions.txt" />
         <option value="$PROJECT_DIR$/l.py" />
         <option value="$PROJECT_DIR$/web/charts_heandler.py" />
         <option value="$PROJECT_DIR$/web/models.py" />
+        <option value="$PROJECT_DIR$/web/views.py" />
+        <option value="$PROJECT_DIR$/web/upload_handler.py" />
+        <option value="$PROJECT_DIR$/web/create_user_db.py" />
+        <option value="$PROJECT_DIR$/web/admin.py" />
+        <option value="$PROJECT_DIR$/untitled2/urls.py" />
+        <option value="$PROJECT_DIR$/loginsys/views.py" />
+        <option value="$PROJECT_DIR$/loginsys/urls.py" />
+        <option value="$PROJECT_DIR$/loginsys/form.py" />
       </list>
     </option>
   </component>
@@ -208,7 +309,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -241,8 +341,37 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="untitled2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="untitled2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="untitled2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="untitled2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="untitled2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="loginsys" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -632,12 +761,6 @@
       <option name="number" value="Default" />
       <updated>1461357009957</updated>
     </task>
-    <task id="LOCAL-00061" summary="ver 1.1">
-      <created>1462621419520</created>
-      <option name="number" value="00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1462621419521</updated>
-    </task>
     <task id="LOCAL-00062" summary="ver 1.1">
       <created>1462621539781</created>
       <option name="number" value="00062" />
@@ -926,7 +1049,13 @@
       <option name="project" value="LOCAL" />
       <updated>1470040463567</updated>
     </task>
-    <option name="localTasksCounter" value="110" />
+    <task id="LOCAL-00110" summary="new branch">
+      <created>1470041719444</created>
+      <option name="number" value="00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1470041719444</updated>
+    </task>
+    <option name="localTasksCounter" value="111" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -940,7 +1069,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1440" y="0" width="1920" height="1030" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4127844" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -948,9 +1077,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16423358" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1637122" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47510824" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33549783" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20260021" sideWeight="0.49166667" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3997833" sideWeight="0.5083333" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -960,9 +1087,11 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32681867" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47510824" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20260021" sideWeight="0.49166667" order="2" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1004,34 +1133,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/web/migrations/0007_auto_20160704_1307.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.60998154">
-          <caret line="26" column="12" selection-start-line="16" selection-start-column="10" selection-end-line="26" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web/templates/pages/data_analytics_admin_setup.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7938144">
-          <caret line="85" column="66" selection-start-line="85" selection-start-column="66" selection-end-line="85" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web/templates/pages/notifications.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web/templates/pages/profile_modify.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/EcmaScript.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.14938684">
@@ -1043,13 +1144,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/untitled2/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="49" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
         </state>
       </provider>
     </entry>
@@ -1192,13 +1286,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/csv_parse.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="dbDummy://dbtable:/3be7b811/6f74b2ca-059b-4ee8-ad11-8e3c3c47edee/milanaled.public.user_db">
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1218,24 +1305,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/upload_handler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/web/xls_parse.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.050223213">
           <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web/pdf_maker.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.16741072">
-          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
         </state>
       </provider>
     </entry>
@@ -1332,13 +1405,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/loginsys/form.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/6f74b2ca-059b-4ee8-ad11-8e3c3c47edee/console.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1355,13 +1421,6 @@
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
           <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="10" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
         </state>
       </provider>
     </entry>
@@ -1397,23 +1456,97 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.08370536">
           <caret line="5" column="10" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="32" column="1" selection-start-line="32" selection-start-column="1" selection-end-line="32" selection-end-column="1" />
+          <folding>
+            <marker date="1470041714481" expanded="true" signature="1525:1601" placeholder="SELECT TABLE... TABLES" />
+            <marker date="1470041714481" expanded="true" signature="6873:6901" placeholder="update missi... " />
+            <marker date="1470041714481" expanded="true" signature="7609:7624" placeholder="insert into missing_value... " />
+            <marker date="1470041714481" expanded="true" signature="8364:8390" placeholder="delete from " />
+            <marker date="1470041714481" expanded="true" signature="8933:8945" placeholder="delete from " />
+            <marker date="1470041714481" expanded="true" signature="9499:9510" placeholder="DROP TABLE m... " />
+            <marker date="1470041714481" expanded="true" signature="10184:10260" placeholder="SELECT TABLE... TABLES" />
+            <marker date="1470041714481" expanded="true" signature="10593:10667" placeholder="select colum... columns" />
+            <marker date="1470041714481" expanded="true" signature="11260:11274" placeholder="select * fro... missing_value" />
+            <marker date="1470041714481" expanded="true" signature="12595:12680" placeholder="SELECT colum... COLUMNS" />
+            <marker date="1470041714481" expanded="true" signature="14397:14473" placeholder="SELECT TABLE... TABLES" />
+            <marker date="1470041714481" expanded="true" signature="16000:16015" placeholder="insert into missing_value... " />
+            <marker date="1470041714481" expanded="true" signature="16269:16343" placeholder="select colum... columns" />
+            <marker date="1470041714481" expanded="true" signature="16663:16677" placeholder="select * fro... missing_value" />
+            <marker date="1470041714481" expanded="true" signature="17612:17697" placeholder="SELECT colum... COLUMNS" />
+            <marker date="1470041714481" expanded="true" signature="21602:22060" placeholder="SELECT auth_... auth_user" />
+            <marker date="1470041714481" expanded="true" signature="22192:22633" placeholder="SELECT auth_... auth_user" />
+            <marker date="1470041714481" expanded="true" signature="26123:26199" placeholder="SELECT TABLE... TABLES" />
+            <marker date="1470041714481" expanded="true" signature="27073:27147" placeholder="SELECT colum... COLUMNS" />
+            <marker date="1470041714481" expanded="true" signature="28509:28524" placeholder="select missi... missing_value" />
+            <marker date="1470041714481" expanded="true" signature="28620:28635" placeholder="select missi... missing_value" />
+            <marker date="1470041714481" expanded="true" signature="30958:30985" placeholder="select missi... missing_value" />
+            <marker date="1470041714481" expanded="true" signature="31141:31168" placeholder="select missi... missing_value" />
+            <marker date="1470041714481" expanded="true" signature="34858:34887" placeholder="ALTER TABLE missing_value... " />
+            <marker date="1470041714481" expanded="true" signature="35806:35882" placeholder="SELECT TABLE... TABLES" />
+            <marker date="1470041714481" expanded="true" signature="36058:36132" placeholder="select colum... COLUMNS" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/upload_handler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="2" selection-end-line="23" selection-end-column="26" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/pdf_maker.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/csv_parse.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/web/create_user_db.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.01674107">
+          <caret line="1" column="28" selection-start-line="0" selection-start-column="2" selection-end-line="48" selection-end-column="42" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/web/charts_heandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.2845982">
           <caret line="17" column="35" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
           <folding />
         </state>
@@ -1421,8 +1554,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/web/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7461213">
+        <state vertical-scroll-proportion="0.0">
           <caret line="101" column="65" selection-start-line="101" selection-start-column="65" selection-end-line="101" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/untitled2/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="3" column="32" selection-start-line="3" selection-start-column="32" selection-end-line="3" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/loginsys/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="2" selection-end-line="343" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/loginsys/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="97" selection-start-line="5" selection-start-column="6" selection-end-line="15" selection-end-column="97" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/loginsys/form.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="360" selection-end-column="0" />
           <folding />
         </state>
       </provider>
