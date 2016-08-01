@@ -3,9 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="fc892f04-519d-4538-a45e-bf0cba471879" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/loginsys/form.py" afterPath="$PROJECT_DIR$/loginsys/form.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/loginsys/urls.py" afterPath="$PROJECT_DIR$/loginsys/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/loginsys/views.py" afterPath="$PROJECT_DIR$/loginsys/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/urls.py" afterPath="$PROJECT_DIR$/api/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/views.py" afterPath="$PROJECT_DIR$/api/views.py" />
     </list>
     <list id="fa95d09b-d011-4a20-8e5a-57c347b85283" name="New changelist" comment="" />
     <ignored path="untitled2.iws" />
@@ -107,7 +106,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="form.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="form.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/loginsys/form.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
@@ -118,48 +117,23 @@
         </entry>
       </file>
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/views.py">
+        <entry file="file://$PROJECT_DIR$/api/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="32" column="1" selection-start-line="32" selection-start-column="1" selection-end-line="32" selection-end-column="1" />
-              <folding>
-                <marker date="1470041714481" expanded="true" signature="1525:1601" placeholder="SELECT TABLE... TABLES" />
-                <marker date="1470041714481" expanded="true" signature="6873:6901" placeholder="update missi... " />
-                <marker date="1470041714481" expanded="true" signature="7609:7624" placeholder="insert into missing_value... " />
-                <marker date="1470041714481" expanded="true" signature="8364:8390" placeholder="delete from " />
-                <marker date="1470041714481" expanded="true" signature="8933:8945" placeholder="delete from " />
-                <marker date="1470041714481" expanded="true" signature="9499:9510" placeholder="DROP TABLE m... " />
-                <marker date="1470041714481" expanded="true" signature="10184:10260" placeholder="SELECT TABLE... TABLES" />
-                <marker date="1470041714481" expanded="true" signature="10593:10667" placeholder="select colum... columns" />
-                <marker date="1470041714481" expanded="true" signature="11260:11274" placeholder="select * fro... missing_value" />
-                <marker date="1470041714481" expanded="true" signature="12595:12680" placeholder="SELECT colum... COLUMNS" />
-                <marker date="1470041714481" expanded="true" signature="14397:14473" placeholder="SELECT TABLE... TABLES" />
-                <marker date="1470041714481" expanded="true" signature="16000:16015" placeholder="insert into missing_value... " />
-                <marker date="1470041714481" expanded="true" signature="16269:16343" placeholder="select colum... columns" />
-                <marker date="1470041714481" expanded="true" signature="16663:16677" placeholder="select * fro... missing_value" />
-                <marker date="1470041714481" expanded="true" signature="17612:17697" placeholder="SELECT colum... COLUMNS" />
-                <marker date="1470041714481" expanded="true" signature="21602:22060" placeholder="SELECT auth_... auth_user" />
-                <marker date="1470041714481" expanded="true" signature="22192:22633" placeholder="SELECT auth_... auth_user" />
-                <marker date="1470041714481" expanded="true" signature="26123:26199" placeholder="SELECT TABLE... TABLES" />
-                <marker date="1470041714481" expanded="true" signature="27073:27147" placeholder="SELECT colum... COLUMNS" />
-                <marker date="1470041714481" expanded="true" signature="28509:28524" placeholder="select missi... missing_value" />
-                <marker date="1470041714481" expanded="true" signature="28620:28635" placeholder="select missi... missing_value" />
-                <marker date="1470041714481" expanded="true" signature="30958:30985" placeholder="select missi... missing_value" />
-                <marker date="1470041714481" expanded="true" signature="31141:31168" placeholder="select missi... missing_value" />
-                <marker date="1470041714481" expanded="true" signature="34858:34887" placeholder="ALTER TABLE missing_value... " />
-                <marker date="1470041714481" expanded="true" signature="35806:35882" placeholder="SELECT TABLE... TABLES" />
-                <marker date="1470041714481" expanded="true" signature="36058:36132" placeholder="select colum... COLUMNS" />
-              </folding>
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="2" selection-end-line="10" selection-end-column="49" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="upload_handler.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/upload_handler.py">
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/api/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="2" selection-end-line="23" selection-end-column="26" />
-              <folding />
+            <state vertical-scroll-proportion="0.08370536">
+              <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -219,8 +193,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/web/templates/pages/data_report.html" />
-        <option value="$PROJECT_DIR$/static/bootstrap.min.css" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/01f318a2-9f63-42df-81ae-42cb77c04256/console.sql" />
         <option value="$PROJECT_DIR$/web/templates/pages/notifications.html" />
         <option value="$PROJECT_DIR$/static/rs/js/sb-admin-2.js" />
@@ -270,6 +242,8 @@
         <option value="$PROJECT_DIR$/loginsys/views.py" />
         <option value="$PROJECT_DIR$/loginsys/urls.py" />
         <option value="$PROJECT_DIR$/loginsys/form.py" />
+        <option value="$PROJECT_DIR$/api/views.py" />
+        <option value="$PROJECT_DIR$/api/urls.py" />
       </list>
     </option>
   </component>
@@ -365,7 +339,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="loginsys" />
+              <option name="myItemId" value="api" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -761,12 +735,6 @@
       <option name="number" value="Default" />
       <updated>1461357009957</updated>
     </task>
-    <task id="LOCAL-00062" summary="ver 1.1">
-      <created>1462621539781</created>
-      <option name="number" value="00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1462621539781</updated>
-    </task>
     <task id="LOCAL-00063" summary="ver 1.1">
       <created>1462621990514</created>
       <option name="number" value="00063" />
@@ -1055,7 +1023,13 @@
       <option name="project" value="LOCAL" />
       <updated>1470041719444</updated>
     </task>
-    <option name="localTasksCounter" value="111" />
+    <task id="LOCAL-00111" summary="new branch">
+      <created>1470041767594</created>
+      <option name="number" value="00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1470041767595</updated>
+    </task>
+    <option name="localTasksCounter" value="112" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -1133,20 +1107,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/EcmaScript.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.14938684">
-          <caret line="420" column="3" selection-start-line="420" selection-start-column="3" selection-end-line="420" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/untitled2/data_bases.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/lib/python3.5/dist-packages/django/core/handlers/wsgi.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334">
@@ -1591,6 +1551,24 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="360" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="2" selection-end-line="10" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.08370536">
+          <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
