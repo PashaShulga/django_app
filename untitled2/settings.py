@@ -87,10 +87,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'milanaled',
-        'USER': 'milanaled_user',
-        'PASSWORD': 'qwerty',
+        'USER': 'postgres',
+        'PASSWORD': 'SD/wWD[</-Gy7Z=9bn&xUWZ@e?C/G!',
         'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'PORT': '5433',
     }
 }
 
